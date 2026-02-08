@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@google/genai": "^1.39.0",
-    "googleapis": "^128.0.0",
+    "googleapis": "^171.4.0",
     "google-auth-library": "^9.6.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
