@@ -12,7 +12,7 @@
     "googleapis": "^128.0.0",
     "google-auth-library": "^9.6.3",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
+    "dotenv": "^17.2.4",
     "express": "^4.19.2",
     "nats": "^2.29.2",
     "pg": "^8.14.1",
