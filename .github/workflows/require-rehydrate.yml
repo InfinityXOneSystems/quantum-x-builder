@@ -21,18 +21,42 @@ jobs:
       - name: Ensure baseline tag exists
         run: |
           TAG_NAME="qxb-phase5-lock-2026-02-06"
+          # Expected base commit from Phase 5 governance documentation
+          EXPECTED_COMMIT="5c74904882ef8989c76754e34d52ccf71e34db85"
+          
           if ! git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
             echo "⚠️ Tag $TAG_NAME not found, creating it..."
-            # Find the grafted base commit
-            BASE_COMMIT=$(git log --all --oneline --format="%H" | tail -1)
+            
+            # Verify the expected commit exists
+            if git rev-parse --verify "$EXPECTED_COMMIT" >/dev/null 2>&1; then
+              BASE_COMMIT="$EXPECTED_COMMIT"
+            else
+              # Fallback: find the root commit
+              BASE_COMMIT=$(git rev-list --max-parents=0 HEAD | head -1)
+              echo "ℹ️ Expected commit not found, using root commit: $BASE_COMMIT"
+            fi
+            
             if [ -n "$BASE_COMMIT" ]; then
               git config user.name "github-actions[bot]"
               git config user.email "github-actions[bot]@users.noreply.github.com"
               git tag -a "$TAG_NAME" "$BASE_COMMIT" -m "Phase 5 Lock - Authoritative baseline for Phase 5 post-lock work (2026-02-06)"
-              git push origin "$TAG_NAME" || echo "⚠️ Could not push tag (may already exist on remote)"
-              echo "✅ Tag created: $TAG_NAME at $BASE_COMMIT"
+              
+              # Attempt to push the tag with detailed error handling
+              if git push origin "$TAG_NAME" 2>&1; then
+                echo "✅ Tag created and pushed: $TAG_NAME at $BASE_COMMIT"
+              else
+                PUSH_STATUS=$?
+                if git ls-remote --tags origin | grep -q "$TAG_NAME"; then
+                  echo "ℹ️ Tag already exists on remote - no action needed"
+                else
+                  echo "⚠️ Failed to push tag (exit code: $PUSH_STATUS)"
+                  echo "   This may be due to permissions or network issues."
+                  echo "   Tag was created locally at: $BASE_COMMIT"
+                fi
+              fi
             else
               echo "⚠️ Could not find base commit to tag"
+              exit 1
             fi
           else
             HASH=$(git rev-parse "$TAG_NAME")
