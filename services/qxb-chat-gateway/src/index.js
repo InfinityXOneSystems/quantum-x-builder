@@ -84,6 +84,11 @@ app.post('/chat/select', async (req, res) => {
   }
 });
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', service: 'qxb-chat-gateway', timestamp: new Date().toISOString() });
+});
+
 const server = createServer(app);
 const wss = new WebSocketServer({ server, path: '/ws' });
 
@@ -91,6 +96,7 @@ wss.on('connection', (socket) => {
   socket.send(JSON.stringify({ status: 'connected' }));
 });
 
-server.listen(8090, () => {
-  console.log('QXB chat gateway listening on 8090');
+const port = process.env.PORT || 8090;
+server.listen(port, () => {
+  console.log(`QXB chat gateway listening on ${port}`);
 });

@@ -1,8 +1,17 @@
+import express from 'express';
 import { connect, StringCodec } from 'nats';
 import { QXB_STREAMS } from '../../packages/qxb-protocol/src/index.js';
 
 const natsUrl = process.env.NATS_URL || 'nats://localhost:4222';
 const sc = StringCodec();
+
+// Health endpoint
+const app = express();
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', service: 'qxb-pubsub', timestamp: new Date().toISOString() });
+});
+const port = process.env.PORT || 3004;
+app.listen(port, () => console.log(`QXB pubsub health endpoint on ${port}`));
 
 function logEvent(msg, extra = {}) {
   console.log(
