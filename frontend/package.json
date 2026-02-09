@@ -136,7 +136,7 @@
     "test": "node -e \"console.log('Tests coming soon')\""
   },
   "devDependencies": {
-    "@types/node": "^22.14.0",
+    "@types/node": "^22.19.10",
     "@types/vscode": "^1.85.0",
     "@vitejs/plugin-react": "^5.0.0",
     "@vscode/vsce": "^3.7.1",
