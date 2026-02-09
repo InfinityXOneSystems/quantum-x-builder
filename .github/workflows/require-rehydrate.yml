@@ -42,7 +42,7 @@ jobs:
               git tag -a "$TAG_NAME" "$BASE_COMMIT" -m "Phase 5 Lock - Authoritative baseline for Phase 5 post-lock work (2026-02-06)"
               
               # Attempt to push the tag with detailed error handling
-              if git push origin "$TAG_NAME" 2>&1; then
+              if git push origin "$TAG_NAME"; then
                 echo "✅ Tag created and pushed: $TAG_NAME at $BASE_COMMIT"
               else
                 PUSH_STATUS=$?
