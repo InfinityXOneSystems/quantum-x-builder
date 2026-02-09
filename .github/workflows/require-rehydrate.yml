@@ -6,15 +6,43 @@ on:
     branches:
       - "*"
 
+permissions:
+  contents: write
+
 jobs:
   require_rehydrate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GIT_PAT || github.token }}
+      
+      - name: Ensure baseline tag exists
+        run: |
+          TAG_NAME="qxb-phase5-lock-2026-02-06"
+          if ! git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
+            echo "⚠️ Tag $TAG_NAME not found, creating it..."
+            # Find the grafted base commit
+            BASE_COMMIT=$(git log --all --oneline --format="%H" | tail -1)
+            if [ -n "$BASE_COMMIT" ]; then
+              git config user.name "github-actions[bot]"
+              git config user.email "github-actions[bot]@users.noreply.github.com"
+              git tag -a "$TAG_NAME" "$BASE_COMMIT" -m "Phase 5 Lock - Authoritative baseline for Phase 5 post-lock work (2026-02-06)"
+              git push origin "$TAG_NAME" || echo "⚠️ Could not push tag (may already exist on remote)"
+              echo "✅ Tag created: $TAG_NAME at $BASE_COMMIT"
+            else
+              echo "⚠️ Could not find base commit to tag"
+            fi
+          else
+            HASH=$(git rev-parse "$TAG_NAME")
+            echo "✅ Tag $TAG_NAME already exists at $HASH"
+          fi
+      
       - name: Check for Rehydration Snapshot
         run: |
           if [ ! -f "_OPS/_STATE/REHYDRATED_SNAPSHOT.json" ]; then
             echo "ERROR: Rehydration snapshot missing"
             exit 1
           fi
-          echo "Rehydration snapshot present"
+          echo "✅ Rehydration snapshot present"
