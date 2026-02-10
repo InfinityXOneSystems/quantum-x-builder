@@ -21,6 +21,7 @@
   },
   "baseline_tag": "qxb-phase5-lock-2026-02-06",
   "baseline_commit": "5c74904882ef8989c76754e34d52ccf71e34db85",
+  "baseline_commit_note": "Grafted base commit; historical ref bf78a9e predates grafting",
   "lock_timestamp": "2026-02-06T20:05:27.0810372-05:00",
   "unlock_timestamp": "2026-02-08T12:00:00Z",
   "authorized_by": "Neo",

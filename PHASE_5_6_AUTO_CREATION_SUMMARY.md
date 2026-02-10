@@ -80,10 +80,12 @@ Machine-readable Phase 6 status including:
 | **Kill Switch** | ARMED |
 | **Rollback** | Available |
 | **Baseline Tag** | `qxb-phase5-lock-2026-02-06` |
-| **Baseline Commit** | `5c74904882ef8989c76754e34d52ccf71e34db85` |
+| **Baseline Commit** | `5c74904` (grafted base, authoritative) |
 | **API Endpoints** | 40+ |
 | **AI Providers** | 4 (Gemini, Vertex AI, Groq, Ollama) |
 | **Security Fixes** | 17 vulnerabilities fixed |
+
+**Note**: Historical reference `bf78a9e` from command.json predates repo grafting.
 
 **Key Components**:
 - Control Plane (`_OPS/`)

@@ -7,7 +7,7 @@ on:
       - "*"
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   require_rehydrate:
@@ -18,49 +18,33 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GIT_PAT || github.token }}
       
-      - name: Ensure baseline tag exists
+      - name: Validate baseline tag exists
         run: |
           TAG_NAME="qxb-phase5-lock-2026-02-06"
           # Expected base commit from Phase 5 governance documentation
           EXPECTED_COMMIT="5c74904882ef8989c76754e34d52ccf71e34db85"
           
           if ! git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
-            echo "⚠️ Tag $TAG_NAME not found, creating it..."
-            
-            # Verify the expected commit exists
-            if git rev-parse --verify "$EXPECTED_COMMIT" >/dev/null 2>&1; then
-              BASE_COMMIT="$EXPECTED_COMMIT"
-            else
-              # Fallback: find the root commit
-              BASE_COMMIT=$(git rev-list --max-parents=0 HEAD | head -1)
-              echo "ℹ️ Expected commit not found, using root commit: $BASE_COMMIT"
-            fi
-            
-            if [ -n "$BASE_COMMIT" ]; then
-              git config user.name "github-actions[bot]"
-              git config user.email "github-actions[bot]@users.noreply.github.com"
-              git tag -a "$TAG_NAME" "$BASE_COMMIT" -m "Phase 5 Lock - Authoritative baseline for Phase 5 post-lock work (2026-02-06)"
-              
-              # Attempt to push the tag with detailed error handling
-              if git push origin "$TAG_NAME"; then
-                echo "✅ Tag created and pushed: $TAG_NAME at $BASE_COMMIT"
-              else
-                PUSH_STATUS=$?
-                if git ls-remote --tags origin | grep -q "$TAG_NAME"; then
-                  echo "ℹ️ Tag already exists on remote - no action needed"
-                else
-                  echo "⚠️ Failed to push tag (exit code: $PUSH_STATUS)"
-                  echo "   This may be due to permissions or network issues."
-                  echo "   Tag was created locally at: $BASE_COMMIT"
-                fi
-              fi
-            else
-              echo "⚠️ Could not find base commit to tag"
-              exit 1
-            fi
-          else
-            HASH=$(git rev-parse "$TAG_NAME")
-            echo "✅ Tag $TAG_NAME already exists at $HASH"
+            echo "❌ ERROR: Tag $TAG_NAME does not exist"
+            echo "   This tag is required for Phase 5 rollback operations."
+            echo "   Expected commit: $EXPECTED_COMMIT"
+            echo ""
+            echo "   To create the tag manually:"
+            echo "   git tag -a $TAG_NAME $EXPECTED_COMMIT -m 'Phase 5 Lock'"
+            echo "   git push origin $TAG_NAME"
+            exit 1
+          fi
+          
+          # Validate the tag points to the expected commit
+          ACTUAL_COMMIT=$(git rev-parse "$TAG_NAME^{}")
+          echo "✅ Tag $TAG_NAME exists"
+          echo "   Points to commit: $ACTUAL_COMMIT"
+          
+          if [ "$ACTUAL_COMMIT" != "$EXPECTED_COMMIT" ]; then
+            echo "⚠️  WARNING: Tag points to different commit than expected"
+            echo "   Expected: $EXPECTED_COMMIT"
+            echo "   Actual:   $ACTUAL_COMMIT"
+            echo "   Please verify the baseline commit is correct for rollback operations."
           fi
       
       - name: Check for Rehydration Snapshot

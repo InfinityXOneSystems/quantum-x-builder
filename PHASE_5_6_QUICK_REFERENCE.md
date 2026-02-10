@@ -211,7 +211,10 @@ If autonomy needs to be immediately stopped:
 1. **Kill Switch**: Edit `_OPS/SAFETY/KILL_SWITCH.json`
    ```json
    {
-     "status": "DISABLE_AUTONOMY"
+     "removal": "HUMAN_ONLY",
+     "authority": "Neo",
+     "kill_switch": "DISARMED",
+     "behavior": "IMMEDIATE_HALT"
    }
    ```
 

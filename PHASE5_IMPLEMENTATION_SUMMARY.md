@@ -85,15 +85,16 @@ _OPS/
 
 This tag represents the stable, validated baseline for Phase 5 operations. All rollback operations reference this tag.
 
-**Auto-Creation Workflow**: `.github/workflows/require-rehydrate.yml`
-- Automatically creates baseline tag if missing
-- Validates tag existence before operations
+**Validation Workflow**: `.github/workflows/require-rehydrate.yml`
+- Validates baseline tag exists
+- Verifies tag points to expected commit
 - Ensures rollback point availability
 
 **Tag Details**:
-- Commit: `5c74904882ef8989c76754e34d52ccf71e34db85`
+- Commit: `5c74904882ef8989c76754e34d52ccf71e34db85` (grafted base, current authoritative baseline)
 - Date: February 6, 2026
 - Purpose: Stable rollback point for Phase 5 operations
+- Note: Historical reference `bf78a9ee9bc3fd2fb7471564fc8c80bafebc59df` from `_OPS/COMMANDS/20260206_145713-command.json` predates repo grafting
 
 ### 4. Rollback System
 
@@ -169,9 +170,10 @@ Ensures system state consistency:
 | Date | Event | Status |
 |------|-------|--------|
 | **2026-02-06 20:05** | Phase 5 Lock Created | ✅ Baseline established |
-| **2026-02-06** | Tag `qxb-phase5-lock-2026-02-06` created | ✅ Rollback point set |
+| **2026-02-06** | Tag `qxb-phase5-lock-2026-02-06` created locally | ✅ Local rollback point |
 | **2026-02-08 12:00** | Phase 5 Unlock | ✅ Autonomy activated |
 | **2026-02-08** | Control plane validated | ✅ Operational |
+| **2026-02-09** | Tag validated and pushed to remote | ✅ Remote rollback available |
 | **2026-02-09** | Phase 5 ongoing | ✅ Active |
 
 **Authorized By**: Neo / USER  
