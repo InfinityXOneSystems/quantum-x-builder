@@ -1,4 +1,5 @@
 import { requirePatFor } from '../middleware/pat.js';
+import { rateLimiters } from '../middleware/rate-limit.js';
 import { callGemini } from '../providers/gemini.js';
 import { callGroq } from '../providers/groq.js';
 import { callOllama } from '../providers/ollama.js';
@@ -13,7 +14,7 @@ const WORKSPACE_ROOT = path.resolve(__dirname, '..', '..', '..');
 // Phase 3b: AI Service Integration Routes
 export function registerAiIntegrationRoutes(app) {
   // Get AI service configuration and availability
-  app.get('/api/ai/services/status', async (_req, res) => {
+  app.get('/api/ai/services/status', rateLimiters.ai, async (_req, res) => {
     try {
       const configPath = path.join(WORKSPACE_ROOT, '.github', 'app-config.json');
       let aiConfig = {};
@@ -61,6 +62,7 @@ export function registerAiIntegrationRoutes(app) {
   // Get AI service configuration for a specific service
   app.get(
     '/api/ai/services/:service/config',
+    rateLimiters.ai,
     requirePatFor({ action: 'ai:services:read', scope: 'admin' }),
     async (req, res) => {
       try {
@@ -145,6 +147,7 @@ export function registerAiIntegrationRoutes(app) {
   // Update AI service configuration
   app.post(
     '/api/ai/services/:service/configure',
+    rateLimiters.ai,
     requirePatFor({ action: 'ai:services:write', scope: 'admin' }),
     async (req, res) => {
       try {
@@ -192,6 +195,7 @@ export function registerAiIntegrationRoutes(app) {
   // Get all AI integrations status and readiness
   app.get(
     '/api/ai/integrations/status',
+    rateLimiters.ai,
     requirePatFor({ action: 'ai:integrations:read', scope: 'admin' }),
     async (_req, res) => {
       try {

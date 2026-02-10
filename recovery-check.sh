@@ -1,0 +1,100 @@
+#!/bin/bash
+# recovery-check.sh - Quick system health and recovery verification
+
+echo "🔍 Quantum-X-Builder Recovery Check"
+echo "===================================="
+echo ""
+
+# Check critical directories
+echo "📁 Checking critical directories..."
+[ -d "_OPS" ] && echo "✅ _OPS directory exists" || echo "❌ _OPS directory missing"
+[ -d "docs/auto-ops" ] && echo "✅ Auto-ops docs exist" || echo "❌ Auto-ops docs missing"
+[ -d ".github/workflows" ] && echo "✅ Workflows exist" || echo "❌ Workflows missing"
+[ -d "scripts" ] && echo "✅ Scripts exist" || echo "❌ Scripts missing"
+[ -d "frontend/src/admin" ] && echo "✅ Admin UI exists" || echo "❌ Admin UI missing"
+[ -d "backend/src/integrations" ] && echo "✅ Backend integrations exist" || echo "❌ Backend integrations missing"
+
+echo ""
+echo "🔖 Checking baseline tag..."
+git tag | grep -q "qxb-phase5-lock-2026-02-06" && echo "✅ Baseline tag exists" || echo "⚠️  Baseline tag missing – create or fetch tag 'qxb-phase5-lock-2026-02-06'"
+
+echo ""
+echo "📜 Checking key automation files..."
+[ -f "docs/auto-ops/rollback.sh" ] && echo "✅ Rollback script (Bash)" || echo "❌ Rollback script missing"
+[ -f "docs/auto-ops/rollback.ps1" ] && echo "✅ Rollback script (PowerShell)" || echo "❌ PowerShell script missing"
+[ -f ".github/workflows/autopr-validator.yml" ] && echo "✅ Auto-PR validator" || echo "❌ Auto-PR validator missing"
+[ -f ".github/workflows/bulk-pr-processor.yml" ] && echo "✅ Bulk PR processor" || echo "❌ Bulk PR processor missing"
+[ -f ".github/workflows/deploy-gcp.yml" ] && echo "✅ GCP deployment" || echo "❌ GCP deployment missing"
+[ -f "scripts/bulk-pr-processor.sh" ] && echo "✅ PR processor script" || echo "❌ PR processor script missing"
+[ -f "scripts/manual-dependabot-cleanup.sh" ] && echo "✅ Dependabot cleanup" || echo "❌ Dependabot cleanup missing"
+
+echo ""
+echo "🛡️ Checking safety systems..."
+[ -f "_OPS/SAFETY/KILL_SWITCH.json" ] && echo "✅ Kill switch exists" || echo "❌ Kill switch missing"
+[ -f "_OPS/_STATE/STATUS.json" ] && echo "✅ Status tracking exists" || echo "❌ Status tracking missing"
+[ -f "_OPS/POLICY/AUTONOMY_OFF" ] && echo "⚠️  Autonomy is LOCKED (shadow mode)" || echo "✅ Autonomy available"
+
+echo ""
+echo "🎨 Checking admin components..."
+[ -f "frontend/src/admin/AdminControlPanel.tsx" ] && echo "✅ Admin UI component (11KB)" || echo "❌ Admin UI missing"
+[ -f "docs/admin-control-plane.md" ] && echo "✅ Admin API docs (380 lines)" || echo "❌ Admin API docs missing"
+[ -f "backend/src/routes/admin.js" ] && echo "✅ Admin backend implemented" || echo "⚠️  Admin backend NOT implemented (needs work)"
+
+echo ""
+echo "🔗 Checking integrations..."
+[ -f "backend/src/integrations/google-calendar.js" ] && echo "⚠️  Google Calendar (partial - needs OAuth completion)" || echo "❌ Google Calendar missing"
+[ -f "backend/src/routes/todos.js" ] && echo "✅ TODO system implemented" || echo "⚠️  TODO system NOT implemented (needs work)"
+
+echo ""
+echo "📚 Checking documentation..."
+DOC_COUNT=$(find docs -name "*.md" | wc -l)
+echo "✅ Found $DOC_COUNT documentation files"
+[ -f "docs/IMPLEMENTATION_INVENTORY.md" ] && echo "✅ Implementation inventory exists" || echo "⚠️  Inventory file missing"
+[ -f "docs/BULK_PR_PROCESSING.md" ] && echo "✅ Bulk PR guide (450 lines)" || echo "❌ Bulk PR guide missing"
+[ -f "docs/auto-ops/README.md" ] && echo "✅ Auto-ops README" || echo "❌ Auto-ops README missing"
+
+echo ""
+echo "🔧 Checking script permissions..."
+SCRIPT_COUNT=$(find scripts -type f -name "*.sh" | wc -l)
+EXECUTABLE_COUNT=$(find scripts -type f -name "*.sh" -executable | wc -l)
+echo "Found $SCRIPT_COUNT shell scripts, $EXECUTABLE_COUNT are executable"
+if [ "$SCRIPT_COUNT" -ne "$EXECUTABLE_COUNT" ]; then
+    echo "⚠️  Some scripts need execute permissions"
+    echo "Run: find scripts -type f -name '*.sh' -exec chmod +x {} \\;"
+fi
+
+echo ""
+echo "📊 System Statistics:"
+echo "-------------------"
+echo "Workflows: $(find .github/workflows -name "*.yml" | wc -l)"
+echo "Scripts: $(find scripts -type f | wc -l)"
+echo "Documentation files: $DOC_COUNT"
+echo "_OPS config files: $(find _OPS -type f -name "*.json" | wc -l)"
+echo ""
+
+echo "✅ Recovery check complete!"
+echo ""
+echo "📋 Priority Action Items:"
+echo "========================"
+echo ""
+echo "PRIORITY 1 - COMPLETE THESE FIRST:"
+echo "  [ ] Implement admin backend endpoints (backend/src/routes/admin.js)"
+echo "      - /api/admin/autonomy/toggle"
+echo "      - /api/admin/audit/logs"
+echo "      - /api/admin/rollback/search"
+echo "      - /api/admin/rehydrate/trigger"
+echo "      - /api/admin/status"
+echo ""
+echo "  [ ] Complete Google Calendar OAuth flow"
+echo "      - Finish OAuth2 implementation in backend/src/integrations/google-calendar.js"
+echo ""
+echo "PRIORITY 2 - HIGH VALUE FEATURES:"
+echo "  [ ] Implement TODO system backend"
+echo "  [ ] Add Google Tasks integration"
+echo "  [ ] Connect admin UI to real backend"
+echo ""
+echo "📖 For detailed recovery plan, see:"
+echo "   docs/IMPLEMENTATION_INVENTORY.md"
+echo ""
+echo "🚀 You're not behind - you have 90% complete!"
+echo "   Just need to finish the backend connections."

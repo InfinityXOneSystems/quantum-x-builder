@@ -46,6 +46,10 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
+    ignore:
+      # Ignore major version updates for stability
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
 
   # NPM updates for backend
   - package-ecosystem: "npm"
@@ -61,6 +65,10 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
+    ignore:
+      # Ignore major version updates for stability
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
 
   # NPM updates for website
   - package-ecosystem: "npm"
@@ -76,3 +84,7 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
+    ignore:
+      # Ignore major version updates for stability
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]

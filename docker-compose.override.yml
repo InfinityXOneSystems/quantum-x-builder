@@ -1,0 +1,52 @@
+version: '3.8'
+
+# Local development overrides
+# This file is automatically applied by docker-compose and allows local customization
+# without modifying the main docker-compose.yml
+
+services:
+  backend:
+    # Add debug port for remote debugging
+    ports:
+      - "9229:9229"
+    environment:
+      - DEBUG=false
+      - LOG_LEVEL=debug
+      - NODE_OPTIONS="--inspect=0.0.0.0:9229"
+    volumes:
+      - ./backend/src:/workspace/backend/src
+
+  frontend:
+    environment:
+      - DEBUG=false
+      - VITE_DEBUG=false
+    volumes:
+      - ./frontend/src:/workspace/frontend/src
+
+  # Optional: Add Redis for caching (uncomment to use)
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: qxb-redis
+  #   ports:
+  #     - "6379:6379"
+  #   networks:
+  #     - vizualx
+  #   command: redis-server --appendonly yes
+
+  # Optional: Add PostgreSQL for persistence (uncomment to use)
+  # postgres:
+  #   image: postgres:15-alpine
+  #   container_name: qxb-postgres
+  #   environment:
+  #     POSTGRES_USER: admin
+  #     POSTGRES_PASSWORD: password
+  #     POSTGRES_DB: vizualx
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   networks:
+  #     - vizualx
+
+# volumes:
+#   postgres_data:

@@ -45,6 +45,28 @@ Revert: `git revert <commit-sha>` then create PR for review
 
 All rollbacks require human review before merging.
 
+### Rollback Helper Scripts
+
+**Linux/macOS (Bash):**
+```bash
+cd docs/auto-ops
+./rollback.sh -t <token>    # Find specific token
+./rollback.sh -d <date>     # Find by date (YYYYMMDD)
+./rollback.sh -l <limit>    # List recent tokens
+./rollback.sh -h            # Show help
+```
+
+**Windows (PowerShell):**
+```powershell
+cd docs/auto-ops
+.\rollback.ps1 -Token <token>   # Find specific token
+.\rollback.ps1 -Date <date>     # Find by date (YYYYMMDD)
+.\rollback.ps1 -Limit <limit>   # List recent tokens
+.\rollback.ps1 -Help            # Show help
+```
+
+Both scripts provide detailed rollback instructions including commit details and commands to create revert branches and PRs.
+
 ## Audit System
 
 ### Audit Logs

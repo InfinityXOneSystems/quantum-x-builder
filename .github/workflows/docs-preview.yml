@@ -8,6 +8,11 @@ on:
       - 'website/**'
       - '.github/workflows/docs-preview.yml'
 
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 jobs:
   build-preview:
     runs-on: ubuntu-latest
@@ -90,6 +95,8 @@ jobs:
             
   lint-docs:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     defaults:
       run:
         working-directory: website

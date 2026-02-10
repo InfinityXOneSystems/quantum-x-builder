@@ -83,13 +83,26 @@ export class CommandQueue {
     }
 
     try {
+      // Validate jobId format to prevent path traversal
+      if (!jobId || typeof jobId !== 'string' || !/^cmd-[a-f0-9-]+$/i.test(jobId)) {
+        throw new Error('Invalid job ID format');
+      }
+
       // Try to get from memory first
       if (this.jobs.has(jobId)) {
         return this.jobs.get(jobId);
       }
 
-      // Try to load from file
+      // Try to load from file - use only the filename, not arbitrary paths
       const jobFile = path.join(this.queuePath, `${jobId}.json`);
+      
+      // Ensure the resolved path is within queuePath
+      const resolvedPath = path.resolve(jobFile);
+      const resolvedQueue = path.resolve(this.queuePath);
+      if (!resolvedPath.startsWith(resolvedQueue + path.sep)) {
+        throw new Error('Invalid job file path');
+      }
+      
       const content = await fs.readFile(jobFile, 'utf-8');
       const job = JSON.parse(content);
       this.jobs.set(jobId, job);

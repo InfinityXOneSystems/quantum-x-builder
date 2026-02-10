@@ -8,6 +8,9 @@ on:
       - "_OPS/POLICY/**"
       - "_OPS/_STATE/**"
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest

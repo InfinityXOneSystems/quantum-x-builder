@@ -57,6 +57,12 @@ app.post('/agents', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-app.listen(8092, () => {
-  console.log('QXB presence listening on 8092');
+// Health endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', service: 'qxb-presence', timestamp: new Date().toISOString() });
+});
+
+const port = process.env.PORT || 3002;
+app.listen(port, () => {
+  console.log(`QXB presence listening on ${port}`);
 });

@@ -2,9 +2,10 @@ import fs from 'fs/promises';
 import path from 'path';
 import { resolvePath } from '../utils/paths.js';
 import { requirePatFor } from '../middleware/pat.js';
+import { rateLimiters } from '../middleware/rate-limit.js';
 
 export function registerFsRoutes(app) {
-  app.post('/api/fs/list', async (req, res) => {
+  app.post('/api/fs/list', rateLimiters.filesystem, async (req, res) => {
     try {
       const target = resolvePath(req.body?.path || '.');
       const entries = await fs.readdir(target, { withFileTypes: true });
@@ -20,7 +21,7 @@ export function registerFsRoutes(app) {
     }
   });
 
-  app.post('/api/fs/read', async (req, res) => {
+  app.post('/api/fs/read', rateLimiters.filesystem, async (req, res) => {
     try {
       const target = resolvePath(req.body?.path);
       const content = await fs.readFile(target, 'utf8');
@@ -32,6 +33,7 @@ export function registerFsRoutes(app) {
 
   app.post(
     '/api/fs/write',
+    rateLimiters.filesystem,
     requirePatFor({ action: 'fs:write', scope: 'workspace' }),
     async (req, res) => {
       try {

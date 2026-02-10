@@ -1,0 +1,150 @@
+name: Bulk Dependabot PR Processor
+
+on:
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run mode (no actual merges)'
+        required: false
+        type: boolean
+        default: true
+      safe_only:
+        description: 'Only process safe PRs (patch/minor updates)'
+        required: false
+        type: boolean
+        default: true
+  
+  # Scheduled run - weekly on Monday morning
+  schedule:
+    - cron: '0 9 * * 1'  # Every Monday at 9 AM UTC
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read
+
+jobs:
+  process-prs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GIT_PAT || github.token }}
+
+      - name: Check kill-switch
+        id: killswitch
+        run: |
+          echo "Checking kill-switch status..."
+          if [ -f "_OPS/SAFETY/KILL_SWITCH" ]; then
+            if grep -iq "DISABLE_AUTONOMY" "_OPS/SAFETY/KILL_SWITCH"; then
+              echo "❌ Kill-switch activated: DISABLE_AUTONOMY found"
+              exit 1
+            fi
+          fi
+          if [ -f "_OPS/SAFETY/KILL_SWITCH.json" ]; then
+            if grep -iq "DISABLE_AUTONOMY" "_OPS/SAFETY/KILL_SWITCH.json"; then
+              echo "❌ Kill-switch activated: DISABLE_AUTONOMY found"
+              exit 1
+            fi
+          fi
+          echo "✅ Kill-switch check passed"
+
+      - name: Setup GitHub CLI
+        run: |
+          # GitHub CLI is pre-installed in ubuntu-latest
+          gh --version
+        env:
+          GH_TOKEN: ${{ secrets.GIT_PAT || github.token }}
+
+      - name: Make script executable
+        run: chmod +x scripts/bulk-pr-processor.sh
+
+      - name: Run bulk PR processor (dry-run first)
+        id: dry_run
+        run: |
+          bash scripts/bulk-pr-processor.sh --dry-run --safe-only
+        env:
+          GH_TOKEN: ${{ secrets.GIT_PAT || github.token }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+
+      - name: Run bulk PR processor (actual)
+        if: github.event.inputs.dry_run != 'true'
+        id: actual_run
+        run: |
+          FLAGS=""
+          
+          # Add safe-only flag if requested
+          if [ "${{ github.event.inputs.safe_only }}" = "true" ]; then
+            FLAGS="$FLAGS --safe-only"
+          fi
+          
+          # For scheduled runs, always use safe-only
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            FLAGS="$FLAGS --safe-only"
+          fi
+          
+          bash scripts/bulk-pr-processor.sh $FLAGS
+        env:
+          GH_TOKEN: ${{ secrets.GIT_PAT || github.token }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+
+      - name: Commit audit evidence
+        if: success()
+        run: |
+          TIMESTAMP=$(date -u +"%Y%m%dT%H%M%SZ")
+          ROLLBACK_TOKEN="qxb-rollback-${TIMESTAMP}"
+          
+          git config user.name "qxb-bot"
+          git config user.email "bot@infinityxonesystems.com"
+          
+          # Add audit files
+          git add _OPS/AUDIT/bulk-pr-audit.log _OPS/OUTPUT/bulk-pr/ || true
+          
+          if ! git diff --cached --quiet; then
+            git commit -m "audit: bulk PR processing evidence ${ROLLBACK_TOKEN}"
+            git push origin HEAD || echo "No changes to push"
+          else
+            echo "No audit changes to commit"
+          fi
+
+      - name: Generate summary
+        if: always()
+        run: |
+          echo "### 🤖 Bulk PR Processor Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Find the latest summary file
+          LATEST_SUMMARY=$(ls -t _OPS/OUTPUT/bulk-pr/summary-*.json 2>/dev/null | head -1)
+          
+          if [ -f "$LATEST_SUMMARY" ]; then
+            echo "#### Results" >> $GITHUB_STEP_SUMMARY
+            echo '```json' >> $GITHUB_STEP_SUMMARY
+            cat "$LATEST_SUMMARY" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "No summary file found" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "#### Configuration" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dry Run**: ${{ github.event.inputs.dry_run || 'true (scheduled)' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Safe Only**: ${{ github.event.inputs.safe_only || 'true (scheduled)' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Trigger**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📝 Full audit log: \`_OPS/AUDIT/bulk-pr-audit.log\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bulk-pr-processing-results
+          path: |
+            _OPS/OUTPUT/bulk-pr/
+            _OPS/AUDIT/bulk-pr-audit.log
+          retention-days: 90

@@ -17,6 +17,7 @@ import { execAsync } from '../utils/exec.js';
 import { policyEngine } from '../services/policy-engine.js';
 import { auditService } from '../services/audit-service.js';
 import { commandQueue } from '../services/command-queue.js';
+import { rateLimiters } from '../middleware/rate-limit.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const router = express.Router();
@@ -37,7 +38,7 @@ router.get('/control-plane/healthz', (req, res) => {
  * GET /control-plane/state
  * Read full system state
  */
-router.get('/control-plane/state', async (req, res) => {
+router.get('/control-plane/state', rateLimiters.standard, async (req, res) => {
   try {
     const stateFile = path.join(
       process.env.WORKSPACE_ROOT || '/workspace',

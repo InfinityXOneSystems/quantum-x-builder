@@ -9,6 +9,9 @@ on:
       - "_OPS/_STATE/**"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   enforce:
     runs-on: ubuntu-latest

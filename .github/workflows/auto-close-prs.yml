@@ -1,0 +1,217 @@
+name: Auto-Close PRs
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_numbers:
+        description: 'Comma-separated PR numbers to close (leave empty to close all open PRs)'
+        required: false
+        default: ''
+      close_reason:
+        description: 'Reason for closing PRs'
+        required: false
+        default: 'Bulk PR cleanup - closing unused pull requests'
+      delete_branches:
+        description: 'Delete branches after closing PRs? (true/false)'
+        required: false
+        default: 'false'
+      dry_run:
+        description: 'Dry run mode - show what would be closed without actually closing (true/false)'
+        required: false
+        default: 'false'
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  close-prs:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup GitHub CLI
+        run: |
+          type -p gh >/dev/null || (
+            type -p curl >/dev/null || (sudo apt update && sudo apt-get install curl -y)
+            curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+            sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+            sudo apt update
+            sudo apt install gh -y
+          )
+          gh --version
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Close Pull Requests
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBERS: ${{ github.event.inputs.pr_numbers }}
+          CLOSE_REASON: ${{ github.event.inputs.close_reason }}
+          DELETE_BRANCHES: ${{ github.event.inputs.delete_branches }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
+        run: |
+          set -e
+          
+          echo "╔════════════════════════════════════════════════════════════════╗"
+          echo "║            🤖 Automated PR Closure Workflow                    ║"
+          echo "╚════════════════════════════════════════════════════════════════╝"
+          echo ""
+          
+          # Determine which PRs to close
+          if [ -n "$PR_NUMBERS" ]; then
+            echo "📋 Closing specific PRs: $PR_NUMBERS"
+            IFS=',' read -ra PR_ARRAY <<< "$PR_NUMBERS"
+            # Validate and normalize PR numbers
+            PR_LIST=()
+            for raw_pr in "${PR_ARRAY[@]}"; do
+              # Trim leading/trailing whitespace
+              pr="${raw_pr#"${raw_pr%%[![:space:]]*}"}"
+              pr="${pr%"${pr##*[![:space:]]}"}"
+              # Skip empty entries
+              if [ -z "$pr" ]; then
+                continue
+              fi
+              # Ensure the PR number is numeric
+              if ! [[ "$pr" =~ ^[0-9]+$ ]]; then
+                echo "⚠️ Skipping invalid PR number: '$pr'"
+                continue
+              fi
+              PR_LIST+=("$pr")
+            done
+          else
+            echo "📋 Fetching all open PRs..."
+            mapfile -t PR_LIST < <(gh pr list --state open --json number --jq '.[].number')
+          fi
+          
+          if [ ${#PR_LIST[@]} -eq 0 ]; then
+            echo "✅ No PRs to close!"
+            exit 0
+          fi
+          
+          echo "Found ${#PR_LIST[@]} PR(s) to process"
+          echo ""
+          
+          # Show PRs to be closed
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "PRs to be closed:"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          for pr in "${PR_LIST[@]}"; do
+            if pr_info=$(gh pr view "$pr" --json number,title,author,headRefName --jq '"PR #\(.number): \(.title) (@\(.author.login)) [branch: \(.headRefName)]"' 2>&1); then
+              echo "$pr_info"
+            else
+              echo "PR #$pr: ⚠️  Could not fetch details (may be invalid or already closed)"
+            fi
+          done
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "🔍 DRY RUN MODE - No PRs will be actually closed"
+            echo ""
+            echo "Would close ${#PR_LIST[@]} PR(s) with reason: $CLOSE_REASON"
+            if [ "$DELETE_BRANCHES" = "true" ]; then
+              echo "Would also delete associated branches"
+            fi
+            exit 0
+          fi
+          
+          # Close PRs
+          SUCCESS=0
+          FAILED=0
+          COUNTER=0
+          
+          for pr in "${PR_LIST[@]}"; do
+            COUNTER=$((COUNTER + 1))
+            echo "[$COUNTER/${#PR_LIST[@]}] Processing PR #$pr..."
+            
+            # Get PR metadata needed to safely delete the branch
+            PR_INFO=$(gh pr view "$pr" --json headRefName,isCrossRepository,headRepositoryOwner 2>/dev/null || echo "{}")
+            BRANCH_NAME=$(echo "$PR_INFO" | jq -r '.headRefName // empty')
+            IS_CROSS_REPO=$(echo "$PR_INFO" | jq -r '.isCrossRepository // true')
+            HEAD_OWNER=$(echo "$PR_INFO" | jq -r '.headRepositoryOwner.login // empty')
+            
+            # Derive repository owner from GITHUB_REPOSITORY
+            REPO_OWNER="${GITHUB_REPOSITORY%%/*}"
+            
+            # Close the PR
+            if gh pr close "$pr" --comment "$CLOSE_REASON" --delete-branch=false 2>&1; then
+              echo "  ✅ Closed PR #$pr"
+              SUCCESS=$((SUCCESS + 1))
+              
+              # Delete branch if requested, it's not protected, and PR is not from a fork
+              if [ "$DELETE_BRANCHES" = "true" ] && [ -n "$BRANCH_NAME" ] && [ "$BRANCH_NAME" != "main" ] && [ "$BRANCH_NAME" != "master" ]; then
+                if [ "$IS_CROSS_REPO" = "true" ] || [ "$HEAD_OWNER" != "$REPO_OWNER" ]; then
+                  echo "  Skipping branch '$BRANCH_NAME' (cross-repository or fork PR from $HEAD_OWNER)"
+                else
+                  echo "  🗑️  Deleting branch: $BRANCH_NAME"
+                  gh api "repos/${GITHUB_REPOSITORY}/git/refs/heads/${BRANCH_NAME}" -X DELETE 2>/dev/null || echo "    ⚠️  Could not delete branch (may be already deleted or protected)"
+                fi
+              fi
+            else
+              echo "  ❌ Failed to close PR #$pr"
+              FAILED=$((FAILED + 1))
+            fi
+            
+            # Rate limiting
+            if [ $COUNTER -lt ${#PR_LIST[@]} ]; then
+              sleep 1
+            fi
+          done
+          
+          echo ""
+          echo "╔════════════════════════════════════════════════════════════════╗"
+          echo "║                    ✅ Closure Complete                          ║"
+          echo "╚════════════════════════════════════════════════════════════════╝"
+          echo ""
+          echo "📊 Summary:"
+          echo "  Total PRs processed: $COUNTER"
+          echo "  Successfully closed: $SUCCESS"
+          echo "  Failed to close:     $FAILED"
+          echo ""
+          
+          if [ $FAILED -gt 0 ]; then
+            echo "⚠️  Some PRs failed to close. Check the logs above for details."
+            exit 1
+          else
+            echo "✅ All PRs closed successfully!"
+          fi
+
+      - name: Create Summary
+        if: always()
+        run: |
+          echo "## 🤖 Automated PR Closure Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Repository**: ${{ github.repository }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered by**: @${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Time**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            echo "**Mode**: 🔍 Dry Run (no PRs were actually closed)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**Mode**: ✅ Live Closure" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -n "${{ github.event.inputs.pr_numbers }}" ]; then
+            echo "**Target PRs**: ${{ github.event.inputs.pr_numbers }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**Target PRs**: All open PRs" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Close Reason**: ${{ github.event.inputs.close_reason }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Delete Branches**: ${{ github.event.inputs.delete_branches }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Check the workflow logs for detailed results." >> $GITHUB_STEP_SUMMARY
+
+      # Removed incomplete "Comment on Repository Issue" step
+      # Users can view results in workflow logs and step summary

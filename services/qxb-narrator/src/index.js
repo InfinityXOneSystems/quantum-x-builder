@@ -1,9 +1,18 @@
+import express from 'express';
 import { connect, StringCodec } from 'nats';
 import { createCloudEvent } from '../../packages/qxb-events/src/index.js';
 import { QXB_CHAT_CHANNELS } from '../../packages/qxb-protocol/src/index.js';
 
 const natsUrl = process.env.NATS_URL || 'nats://localhost:4222';
 const sc = StringCodec();
+
+// Health endpoint
+const app = express();
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', service: 'qxb-narrator', timestamp: new Date().toISOString() });
+});
+const port = process.env.PORT || 3001;
+app.listen(port, () => console.log(`QXB narrator health endpoint on ${port}`));
 
 function logWithTrace(event, msg, extra = {}) {
   console.log(

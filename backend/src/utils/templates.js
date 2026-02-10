@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
+import { sanitizeFilename, validatePath } from './path-sanitizer.js';
 
 const templateDir = path.resolve(process.cwd(), 'backend', 'templates');
 
@@ -9,8 +10,12 @@ export async function listTemplates() {
 }
 
 export async function loadTemplate(name) {
-  const safeName = name.replace(/[^a-z0-9-_.]/gi, '');
-  const filePath = path.join(templateDir, safeName);
+  // Sanitize the filename to prevent path traversal
+  const safeName = sanitizeFilename(name);
+  
+  // Validate the path is within the template directory
+  const filePath = validatePath(safeName, templateDir);
+  
   const content = await fs.readFile(filePath, 'utf8');
   return JSON.parse(content);
 }
