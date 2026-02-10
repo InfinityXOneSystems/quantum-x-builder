@@ -1,0 +1,29 @@
+# Dependabot Validation Report
+# Generated: 2026-02-09T00:28:53.7545033-05:00
+
+## LOCAL STATUS
+echo "=== LOCAL STATUS ==="
+echo ""
+echo "1. Main branch current commit:"
+git log -1 --oneline
+
+echo ""
+echo "2. Dependabot-related files present:"
+@('DEPENDABOT_FIX_INSTRUCTIONS.md', '.github/dependabot.yml', 'scripts/manual-dependabot-cleanup.sh', 'docs/auto-ops/rollback.ps1') | ForEach-Object {
+    if (Test-Path ) { "   ✅ " } else { "   ❌ " }
+}
+
+echo ""
+echo "3. Recent commits related to Dependabot fixes:"
+git log --oneline --all --grep="dependabot" -i | Select-Object -First 5
+
+echo ""
+echo "## REMOTE STATUS"
+echo "=== REMOTE DEPENDABOT BRANCHES ==="
+echo ""
+git branch -a | Select-String "dependabot" | Measure-Object | ForEach-Object { "Total Dependabot branches: " }
+
+echo ""
+echo "=== DEPENDABOT CONFIG (Preventative Measures) ==="
+echo ""
+echo "Checking for major version ignore rules..."

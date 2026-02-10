@@ -10,7 +10,7 @@ git checkout -B phase5-postlock-work qxb-phase5-lock-2026-02-06
 ```
 
 ## Finding and Reverting Specific Changes
-
+o rollback immediately:
 Use the rollback helper scripts to find commits with rollback tokens and get revert instructions:
 
 ### Linux/macOS (Bash)
