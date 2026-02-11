@@ -65,7 +65,7 @@ function checkNpmAvailable() {
 // Load validation report
 async function loadValidationReport() {
   try {
-    const reportPath = path.join(__dirname, 'validation-report.json');
+    const reportPath = process.env.VALIDATION_REPORT || path.join(__dirname, 'validation-report.json');
     const reportContent = await fs.readFile(reportPath, 'utf8');
     return JSON.parse(reportContent);
   } catch (error) {
@@ -167,14 +167,17 @@ async function implementHealing(validationReport, config) {
     // General healing actions
     results.lint = await fixLintIssues();
     results.lint.attempted = true;
+    healingActions.push('lint-fix');
     
     results.formatting = await fixFormattingIssues();
     results.formatting.attempted = true;
+    healingActions.push('format-fix');
     
     results.security = await fixSecurityIssues();
     results.security.attempted = true;
+    healingActions.push('security-fix');
     
-    return results;
+    return { results, actions: healingActions };
   }
 
   // Parse failures and apply targeted healing

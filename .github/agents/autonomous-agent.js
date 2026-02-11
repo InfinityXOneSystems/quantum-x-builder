@@ -67,15 +67,22 @@ async function runESLintFix() {
     return { fixed: 0, errors: [] };
   }
 
-  const result = execCommand('npm run lint -- --fix 2>&1 || true', { silent: true });
+  // Check for script existence first
+  const hasLintScript = execCommand('npm run lint -- --help 2>&1', { silent: true });
+  if (!hasLintScript.success && hasLintScript.output && hasLintScript.output.includes('missing script')) {
+    console.log('⚠️  No lint script defined, skipping ESLint');
+    return { fixed: 0, errors: [], reason: 'No lint script' };
+  }
+
+  const result = execCommand('npm run lint -- --fix 2>&1', { silent: true });
   
-  if (result.success || result.output) {
+  if (result.success) {
     console.log('✅ ESLint fix completed');
     return { fixed: 1, errors: [] };
   }
   
   console.log('⚠️  ESLint encountered issues');
-  return { fixed: 0, errors: [result.error] };
+  return { fixed: 0, errors: [result.error || result.output] };
 }
 
 // Run Prettier formatting
@@ -145,10 +152,13 @@ async function runSecurityAudit() {
     console.log(`⚠️  Found ${vulnerabilityCount} vulnerabilities`);
     console.log('🔧 Attempting to fix vulnerabilities...');
     
-    const fixResult = execCommand('npm audit fix 2>&1 || true', { silent: true });
+    const fixResult = execCommand('npm audit fix 2>&1', { silent: true });
     if (fixResult.success) {
       console.log('✅ Security vulnerabilities fixed');
       return { vulnerabilities: vulnerabilityCount, fixed: vulnerabilityCount };
+    } else {
+      console.log('⚠️  Some vulnerabilities could not be automatically fixed');
+      return { vulnerabilities: vulnerabilityCount, fixed: 0 };
     }
   } else {
     console.log('✅ No security vulnerabilities found');

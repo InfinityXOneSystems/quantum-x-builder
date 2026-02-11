@@ -11,8 +11,6 @@ on:
         required: false
         type: string
         description: "Path to validation report"
-  schedule:
-    - cron: '30 */2 * * *'  # Every 2 hours at :30
 
 permissions:
   contents: write
@@ -59,7 +57,7 @@ jobs:
           fi
           
       - name: Commit Healing Changes
-        if: steps.check_changes.outputs.changes_made == 'true'
+        if: steps.check_changes.outputs.changes_made == 'true' && inputs.pr_number != ''
         run: |
           git config user.name "Healing Agent"
           git config user.email "healing-agent@github.com"

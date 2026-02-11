@@ -25,7 +25,8 @@ async function runCodemod() {
     tsConfigFilePath: './tsconfig.json',
   });
 
-  const sourceFiles = project.getSourceFiles('tools/**\/*.ts');
+  // Use a glob pattern like 'tools' + '/**' + '/*.ts' to match TypeScript files
+  const sourceFiles = project.getSourceFiles('tools' + '/**' + '/*.ts');
 
   for (const sourceFile of sourceFiles) {
     // Example: Find and transform code patterns

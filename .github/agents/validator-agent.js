@@ -66,11 +66,26 @@ async function runTests() {
     return { passed: false, reason: 'npm not available' };
   }
 
-  const result = execCommand('npm test 2>&1 || true', { silent: true });
+  const result = execCommand('npm test 2>&1', { silent: true });
   
-  if (result.success || (result.output && !result.output.includes('FAIL'))) {
+  if (result.success) {
     console.log('✅ Tests passed');
     return { passed: true, output: result.output };
+  }
+
+  const output = result.output || '';
+  const missingScript =
+    output.includes('missing script: test') ||
+    output.includes('Missing script: "test"') ||
+    output.includes('ERROR: No test specified');
+
+  if (missingScript) {
+    console.log('⚠️  No npm "test" script defined, skipping tests');
+    return {
+      passed: false,
+      output: result.output,
+      reason: 'No npm "test" script defined'
+    };
   }
   
   console.log('❌ Tests failed');
@@ -91,6 +106,20 @@ async function runLintCheck() {
   if (result.success) {
     console.log('✅ Lint check passed');
     return { passed: true };
+  }
+  
+  const output = result.output || '';
+  const missingScript =
+    output.includes('missing script: lint') ||
+    output.includes('Missing script: "lint"');
+
+  if (missingScript) {
+    console.log('⚠️  No npm "lint" script defined, skipping lint check');
+    return {
+      passed: false,
+      output: result.output,
+      reason: 'No npm "lint" script defined'
+    };
   }
   
   console.log('❌ Lint check failed');
@@ -132,6 +161,20 @@ async function runBuild() {
   if (result.success) {
     console.log('✅ Build succeeded');
     return { passed: true };
+  }
+  
+  const output = result.output || '';
+  const missingScript =
+    output.includes('missing script: build') ||
+    output.includes('Missing script: "build"');
+
+  if (missingScript) {
+    console.log('⚠️  No npm "build" script defined, skipping build');
+    return {
+      passed: false,
+      output: result.output,
+      reason: 'No npm "build" script defined'
+    };
   }
   
   console.log('❌ Build failed');
@@ -189,18 +232,42 @@ async function runSecurityScan() {
 async function validatePRChanges() {
   console.log('\n📝 Validating PR changes...');
   
-  const result = execCommand('git status --porcelain', { silent: true });
-  
+  // Prefer explicit base/head refs in CI (e.g. GitHub Actions), fall back to a sensible default
+  const baseRef = process.env.GITHUB_BASE_REF;
+  const headRef = process.env.GITHUB_HEAD_REF;
+
+  let diffCommand;
+  if (baseRef && headRef) {
+    // Compare PR base and head; assume remote refs are available
+    diffCommand = `git diff --name-only origin/${baseRef}...origin/${headRef}`;
+  } else if (baseRef) {
+    diffCommand = `git diff --name-only origin/${baseRef}...HEAD`;
+  } else {
+    // Fallback: check working tree changes (useful for local development)
+    diffCommand = 'git status --porcelain';
+  }
+
+  const result = execCommand(diffCommand, { silent: true });
+
   if (!result.output || result.output.trim() === '') {
     console.log('ℹ️  No changes detected');
     return { hasChanges: false };
   }
-  
-  const changes = result.output.trim().split('\n');
+
+  const changes = result.output
+    .split('\n')
+    .map(line => line.trim().replace(/^[MADRCU?!]\s+/, '')) // Remove git status prefixes
+    .filter(line => line.length > 0);
+
+  if (changes.length === 0) {
+    console.log('ℹ️  No changes detected');
+    return { hasChanges: false };
+  }
+
   console.log(`✅ Found ${changes.length} changed files`);
-  
-  return { 
-    hasChanges: true, 
+
+  return {
+    hasChanges: true,
     changeCount: changes.length,
     changes: changes.slice(0, 10) // First 10 changes
   };
