@@ -1,0 +1,208 @@
+{
+  "name": "Quantum-X-Builder Mobile Shortcuts",
+  "description": "GitHub mobile app integration for Natural Language Command Interface",
+  "version": "1.0.0",
+  "shortcuts": [
+    {
+      "id": "create-branch",
+      "name": "Create Branch",
+      "description": "Create a new branch from main",
+      "workflow": "nl-command-dispatcher.yml",
+      "inputs": {
+        "command": "create a new branch called feature/<branch-name>",
+        "source": "github-mobile",
+        "user_id": "${GITHUB_ACTOR}"
+      },
+      "icon": "git-branch",
+      "category": "branch-management"
+    },
+    {
+      "id": "create-pr",
+      "name": "Create Pull Request",
+      "description": "Open a new pull request",
+      "workflow": "nl-command-dispatcher.yml",
+      "inputs": {
+        "command": "open a PR from <source-branch> to main with title '<title>'",
+        "source": "github-mobile",
+        "user_id": "${GITHUB_ACTOR}"
+      },
+      "icon": "git-pull-request",
+      "category": "pull-requests"
+    },
+    {
+      "id": "create-issue",
+      "name": "Create Issue",
+      "description": "Create a new issue",
+      "workflow": "nl-command-dispatcher.yml",
+      "inputs": {
+        "command": "create an issue titled '<issue-title>'",
+        "source": "github-mobile",
+        "user_id": "${GITHUB_ACTOR}"
+      },
+      "icon": "issue-opened",
+      "category": "issues"
+    },
+    {
+      "id": "merge-pr",
+      "name": "Merge PR",
+      "description": "Merge a pull request",
+      "workflow": "nl-command-dispatcher.yml",
+      "inputs": {
+        "command": "merge PR #<pr-number>",
+        "source": "github-mobile",
+        "user_id": "${GITHUB_ACTOR}"
+      },
+      "icon": "git-merge",
+      "category": "pull-requests"
+    },
+    {
+      "id": "close-issue",
+      "name": "Close Issue",
+      "description": "Close an issue",
+      "workflow": "nl-command-dispatcher.yml",
+      "inputs": {
+        "command": "close issue #<issue-number>",
+        "source": "github-mobile",
+        "user_id": "${GITHUB_ACTOR}"
+      },
+      "icon": "issue-closed",
+      "category": "issues"
+    },
+    {
+      "id": "trigger-deployment",
+      "name": "Deploy",
+      "description": "Trigger deployment workflow",
+      "workflow": "nl-command-dispatcher.yml",
+      "inputs": {
+        "command": "trigger the deployment workflow",
+        "source": "github-mobile",
+        "user_id": "${GITHUB_ACTOR}"
+      },
+      "icon": "rocket",
+      "category": "deployment"
+    },
+    {
+      "id": "trigger-ci",
+      "name": "Run CI",
+      "description": "Trigger CI workflow",
+      "workflow": "nl-command-dispatcher.yml",
+      "inputs": {
+        "command": "trigger the ci workflow",
+        "source": "github-mobile",
+        "user_id": "${GITHUB_ACTOR}"
+      },
+      "icon": "check-circle",
+      "category": "workflows"
+    },
+    {
+      "id": "update-readme",
+      "name": "Update README",
+      "description": "Update README file",
+      "workflow": "nl-command-dispatcher.yml",
+      "inputs": {
+        "command": "update the README.md file with <content>",
+        "source": "github-mobile",
+        "user_id": "${GITHUB_ACTOR}"
+      },
+      "icon": "file",
+      "category": "files"
+    },
+    {
+      "id": "add-collaborator",
+      "name": "Add Collaborator",
+      "description": "Add a repository collaborator",
+      "workflow": "nl-command-dispatcher.yml",
+      "inputs": {
+        "command": "add collaborator <username> with write access",
+        "source": "github-mobile",
+        "user_id": "${GITHUB_ACTOR}"
+      },
+      "icon": "person-add",
+      "category": "admin"
+    },
+    {
+      "id": "enable-pages",
+      "name": "Enable Pages",
+      "description": "Enable GitHub Pages",
+      "workflow": "nl-command-dispatcher.yml",
+      "inputs": {
+        "command": "enable GitHub Pages",
+        "source": "github-mobile",
+        "user_id": "${GITHUB_ACTOR}"
+      },
+      "icon": "globe",
+      "category": "admin"
+    }
+  ],
+  "categories": {
+    "branch-management": {
+      "name": "Branch Management",
+      "icon": "git-branch",
+      "color": "#0366d6"
+    },
+    "pull-requests": {
+      "name": "Pull Requests",
+      "icon": "git-pull-request",
+      "color": "#28a745"
+    },
+    "issues": {
+      "name": "Issues",
+      "icon": "issue-opened",
+      "color": "#d73a49"
+    },
+    "workflows": {
+      "name": "Workflows",
+      "icon": "workflow",
+      "color": "#6f42c1"
+    },
+    "files": {
+      "name": "File Operations",
+      "icon": "file",
+      "color": "#fd8c73"
+    },
+    "deployment": {
+      "name": "Deployment",
+      "icon": "rocket",
+      "color": "#f66a0a"
+    },
+    "admin": {
+      "name": "Administration",
+      "icon": "gear",
+      "color": "#586069"
+    }
+  },
+  "configuration": {
+    "workflow_file": ".github/workflows/nl-command-dispatcher.yml",
+    "default_branch": "main",
+    "enable_notifications": true,
+    "notification_settings": {
+      "on_success": true,
+      "on_failure": true,
+      "on_completion": true
+    }
+  },
+  "usage_instructions": {
+    "how_to_use": [
+      "1. Open GitHub mobile app",
+      "2. Navigate to InfinityXOneSystems/quantum-x-builder repository",
+      "3. Tap 'Actions' tab",
+      "4. Select 'Natural Language Command Dispatcher' workflow",
+      "5. Tap 'Run workflow'",
+      "6. Enter your natural language command",
+      "7. Tap 'Run workflow' to execute"
+    ],
+    "examples": [
+      "create a branch called feature/new-feature",
+      "open a PR from develop to main with title 'Release v2.0'",
+      "create an issue for bug tracking",
+      "merge PR #42",
+      "trigger the deployment workflow"
+    ]
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2026-02-11",
+    "compatible_with": ["GitHub Mobile iOS", "GitHub Mobile Android"],
+    "documentation": "docs/NATURAL_LANGUAGE_CONTROL.md"
+  }
+}

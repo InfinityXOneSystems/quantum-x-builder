@@ -12,7 +12,7 @@ services:
     env_file:
       - backend/.env
     ports:
-      - "8787:8787"
+      - '8787:8787'
     environment:
       - NODE_ENV=production
       - WORKSPACE_ROOT=/workspace
@@ -23,7 +23,13 @@ services:
       - workspace-data:/workspace
       - backend-logs:/app/logs
     healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost:8787/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "require('http').get('http://localhost:8787/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -37,10 +43,10 @@ services:
           cpus: '0.5'
           memory: 512M
     logging:
-      driver: "json-file"
+      driver: 'json-file'
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: '10m'
+        max-file: '3'
 
   frontend:
     build:
@@ -53,7 +59,7 @@ services:
     env_file:
       - frontend/.env
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - NODE_ENV=production
       - VITE_API_URL=http://backend:8787
@@ -65,7 +71,7 @@ services:
       backend:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000"]
+      test: ['CMD', 'wget', '--quiet', '--tries=1', '--spider', 'http://localhost:3000']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -79,25 +85,25 @@ services:
           cpus: '0.25'
           memory: 256M
     logging:
-      driver: "json-file"
+      driver: 'json-file'
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: '10m'
+        max-file: '3'
 
   nats:
     image: nats:2.10-alpine
     container_name: qxb-nats-prod
     restart: unless-stopped
-    command: ["-js", "-m", "8222", "-sd", "/data"]
+    command: ['-js', '-m', '8222', '-sd', '/data']
     ports:
-      - "4222:4222"
-      - "8222:8222"
+      - '4222:4222'
+      - '8222:8222'
     networks:
       - qxb-network
     volumes:
       - nats-data:/data
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8222/varz"]
+      test: ['CMD', 'wget', '--quiet', '--tries=1', '--spider', 'http://localhost:8222/varz']
       interval: 30s
       timeout: 5s
       retries: 3
@@ -111,10 +117,10 @@ services:
           cpus: '0.25'
           memory: 128M
     logging:
-      driver: "json-file"
+      driver: 'json-file'
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: '10m'
+        max-file: '3'
 
   gateway:
     build:
@@ -127,14 +133,14 @@ services:
       - NATS_URL=nats://nats:4222
       - PORT=8090
     ports:
-      - "8090:8090"
+      - '8090:8090'
     networks:
       - qxb-network
     depends_on:
       nats:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8090/health"]
+      test: ['CMD', 'wget', '--quiet', '--tries=1', '--spider', 'http://localhost:8090/health']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -148,10 +154,10 @@ services:
           cpus: '0.1'
           memory: 128M
     logging:
-      driver: "json-file"
+      driver: 'json-file'
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: '10m'
+        max-file: '3'
 
   # Microservices (optional - can be enabled as needed)
   narrator:
@@ -170,7 +176,7 @@ services:
       nats:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001/health"]
+      test: ['CMD', 'wget', '--quiet', '--tries=1', '--spider', 'http://localhost:3001/health']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -186,10 +192,10 @@ services:
     profiles:
       - full
     logging:
-      driver: "json-file"
+      driver: 'json-file'
       options:
-        max-size: "5m"
-        max-file: "2"
+        max-size: '5m'
+        max-file: '2'
 
   presence:
     build:
@@ -207,7 +213,7 @@ services:
       nats:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3002/health"]
+      test: ['CMD', 'wget', '--quiet', '--tries=1', '--spider', 'http://localhost:3002/health']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -223,10 +229,10 @@ services:
     profiles:
       - full
     logging:
-      driver: "json-file"
+      driver: 'json-file'
       options:
-        max-size: "5m"
-        max-file: "2"
+        max-size: '5m'
+        max-file: '2'
 
   proposal-engine:
     build:
@@ -244,7 +250,7 @@ services:
       nats:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3003/health"]
+      test: ['CMD', 'wget', '--quiet', '--tries=1', '--spider', 'http://localhost:3003/health']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -260,10 +266,10 @@ services:
     profiles:
       - full
     logging:
-      driver: "json-file"
+      driver: 'json-file'
       options:
-        max-size: "5m"
-        max-file: "2"
+        max-size: '5m'
+        max-file: '2'
 
   pubsub:
     build:
@@ -281,7 +287,7 @@ services:
       nats:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3004/health"]
+      test: ['CMD', 'wget', '--quiet', '--tries=1', '--spider', 'http://localhost:3004/health']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -297,10 +303,10 @@ services:
     profiles:
       - full
     logging:
-      driver: "json-file"
+      driver: 'json-file'
       options:
-        max-size: "5m"
-        max-file: "2"
+        max-size: '5m'
+        max-file: '2'
 
 networks:
   qxb-network:

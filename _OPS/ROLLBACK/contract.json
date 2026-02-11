@@ -1,10 +1,6 @@
 {
-    "method":  "git_reset + artifact_restore",
-    "triggers":  [
-                     "policy_violation",
-                     "unexpected_write",
-                     "health_regression"
-                 ],
-    "time_bound":  "minutes",
-    "rollback_guarantee":  "MANDATORY"
+  "method": "git_reset + artifact_restore",
+  "triggers": ["policy_violation", "unexpected_write", "health_regression"],
+  "time_bound": "minutes",
+  "rollback_guarantee": "MANDATORY"
 }

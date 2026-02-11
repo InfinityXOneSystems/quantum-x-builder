@@ -16,16 +16,8 @@
         "phase5_locked",
         "system_paused"
       ],
-      "tests": [
-        "noop_command_validation",
-        "immutable_audit_policy",
-        "schema_validation"
-      ],
-      "parallelizable": [
-        "schema_fuzz_tests",
-        "audit_replay_verification",
-        "runner_sandbox_tests"
-      ]
+      "tests": ["noop_command_validation", "immutable_audit_policy", "schema_validation"],
+      "parallelizable": ["schema_fuzz_tests", "audit_replay_verification", "runner_sandbox_tests"]
     },
     "phase6": {
       "name": "Phase-6 Controlled Resumption",
@@ -37,15 +29,8 @@
         "kill_switch_live",
         "time_window_declared"
       ],
-      "tests": [
-        "execution_adapter_noop_test",
-        "time_window_expiry_test",
-        "kill_switch_activation"
-      ],
-      "parallelizable": [
-        "dry_run_executions",
-        "audit_append_verification"
-      ]
+      "tests": ["execution_adapter_noop_test", "time_window_expiry_test", "kill_switch_activation"],
+      "parallelizable": ["dry_run_executions", "audit_append_verification"]
     },
     "phase7": {
       "name": "Phase-7 Bounded Autonomy (Supervised)",
@@ -57,14 +42,8 @@
         "resource_quota_ceilings",
         "model_disagreement_tests"
       ],
-      "tests": [
-        "autonomous_noop_chain",
-        "partial_failure_recovery"
-      ],
-      "parallelizable": [
-        "observability_pipeline_validation",
-        "adversarial_intent_simulation"
-      ]
+      "tests": ["autonomous_noop_chain", "partial_failure_recovery"],
+      "parallelizable": ["observability_pipeline_validation", "adversarial_intent_simulation"]
     },
     "phase8": {
       "name": "Phase-8 Steady-State Autonomy (Production)",
@@ -75,24 +54,14 @@
         "cost_runaway_prevention",
         "compliance_audit_mapping"
       ],
-      "tests": [
-        "chaos_testing",
-        "long_run_audit_integrity"
-      ],
-      "parallelizable": [
-        "load_testing",
-        "failover_drills"
-      ]
+      "tests": ["chaos_testing", "long_run_audit_integrity"],
+      "parallelizable": ["load_testing", "failover_drills"]
     },
     "phase9a": {
       "name": "Phase-9 Archival",
       "description": "Permanent read-only freeze for auditors/regulators.",
       "status": "planned",
-      "checklist": [
-        "final_freeze_confirmed",
-        "legal_handoff",
-        "immutable_repository"
-      ],
+      "checklist": ["final_freeze_confirmed", "legal_handoff", "immutable_repository"],
       "tests": [],
       "parallelizable": []
     },

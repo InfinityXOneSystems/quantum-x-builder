@@ -1,0 +1,247 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/InfinityXOneSystems/quantum-x-builder/schemas/nl-command-schema.json",
+  "title": "Natural Language Command Schema",
+  "description": "Schema for validating natural language commands in the Quantum-X-Builder repository",
+  "type": "object",
+  "properties": {
+    "command": {
+      "type": "string",
+      "description": "The natural language command to execute",
+      "minLength": 3,
+      "maxLength": 500,
+      "examples": [
+        "create a new branch called feature/new-dashboard",
+        "open a PR from develop to main with title 'Release v2.0'",
+        "create an issue for bug tracking",
+        "update the README.md file with new installation instructions",
+        "trigger the deployment workflow"
+      ]
+    },
+    "source": {
+      "type": "string",
+      "description": "The source of the command",
+      "enum": ["manual", "chatgpt", "gemini", "github-mobile", "external"],
+      "default": "manual"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "User identifier for audit logging",
+      "minLength": 1,
+      "maxLength": 100,
+      "default": "system"
+    },
+    "auth_token": {
+      "type": "string",
+      "description": "Authentication token for external sources",
+      "minLength": 10,
+      "maxLength": 500
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata for the command",
+      "properties": {
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Command timestamp"
+        },
+        "ip_address": {
+          "type": "string",
+          "format": "ipv4",
+          "description": "Source IP address"
+        },
+        "user_agent": {
+          "type": "string",
+          "description": "User agent string"
+        },
+        "session_id": {
+          "type": "string",
+          "description": "Session identifier"
+        }
+      }
+    }
+  },
+  "required": ["command"],
+  "definitions": {
+    "commandType": {
+      "type": "string",
+      "enum": [
+        "createBranch",
+        "deleteBranch",
+        "switchBranch",
+        "createPR",
+        "mergePR",
+        "closePR",
+        "createIssue",
+        "closeIssue",
+        "reopenIssue",
+        "addLabel",
+        "updateFile",
+        "createFile",
+        "deleteFile",
+        "triggerWorkflow",
+        "enableWorkflow",
+        "disableWorkflow",
+        "updateDescription",
+        "enablePages",
+        "disablePages",
+        "updateTopics",
+        "addCollaborator",
+        "removeCollaborator",
+        "listSecrets",
+        "deploy",
+        "generic"
+      ]
+    },
+    "parsedCommand": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/commandType"
+        },
+        "params": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Extracted parameters from the command"
+        },
+        "raw": {
+          "type": "string",
+          "description": "Original raw command"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Confidence score of the parse"
+        }
+      },
+      "required": ["type", "params", "raw"]
+    },
+    "commandResult": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "description": "Whether the command executed successfully"
+        },
+        "message": {
+          "type": "string",
+          "description": "Result message"
+        },
+        "data": {
+          "type": "object",
+          "description": "Additional result data"
+        },
+        "error": {
+          "type": "string",
+          "description": "Error message if failed"
+        },
+        "execution_time_ms": {
+          "type": "number",
+          "description": "Execution time in milliseconds"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Execution timestamp"
+        }
+      },
+      "required": ["success", "message"]
+    },
+    "auditLog": {
+      "type": "object",
+      "properties": {
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Log timestamp"
+        },
+        "event_type": {
+          "type": "string",
+          "description": "Type of event logged"
+        },
+        "source": {
+          "type": "string",
+          "description": "Command source"
+        },
+        "user_id": {
+          "type": "string",
+          "description": "User identifier"
+        },
+        "command": {
+          "type": "string",
+          "description": "Executed command"
+        },
+        "result": {
+          "type": "string",
+          "enum": ["success", "failure", "pending", "skipped"],
+          "description": "Execution result"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Reason for result"
+        },
+        "ip_address": {
+          "type": "string",
+          "description": "Source IP address"
+        },
+        "execution_time_ms": {
+          "type": "number",
+          "description": "Execution time in milliseconds"
+        }
+      },
+      "required": ["timestamp", "event_type", "source", "user_id", "command", "result"]
+    },
+    "errorResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "description": "Error message"
+        },
+        "error_code": {
+          "type": "string",
+          "description": "Error code"
+        },
+        "details": {
+          "type": "string",
+          "description": "Detailed error information"
+        },
+        "suggestions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Suggestions for fixing the error"
+        }
+      },
+      "required": ["error"]
+    }
+  },
+  "examples": [
+    {
+      "command": "create a new branch called feature/authentication",
+      "source": "chatgpt",
+      "user_id": "chatgpt-user-123",
+      "auth_token": "chatgpt-api-key-xyz",
+      "metadata": {
+        "timestamp": "2026-02-11T21:00:00Z",
+        "session_id": "session-abc-123"
+      }
+    },
+    {
+      "command": "open a PR from develop to main with title 'Release v2.0'",
+      "source": "gemini",
+      "user_id": "gemini-user-456",
+      "auth_token": "gemini-api-key-xyz"
+    },
+    {
+      "command": "create an issue for bug tracking",
+      "source": "github-mobile",
+      "user_id": "github-user-789"
+    }
+  ]
+}

@@ -11,7 +11,7 @@ async function writeFlags(rootDir, phase3Enabled) {
   const flags = {
     version: 'v1',
     admin: { enabled: true, expansion: { phase3: { enabled: phase3Enabled } } },
-    autonomy: { enabled: false }
+    autonomy: { enabled: false },
   };
   await fs.writeFile(path.join(stateDir, 'feature_flags.v1.json'), JSON.stringify(flags, null, 2));
 }
@@ -21,7 +21,7 @@ async function startServer(workspaceRoot) {
   const { registerOpsRoutes } = await import(`${opsPath}?t=${Date.now()}`);
   const app = express();
   registerOpsRoutes(app);
-  const server = await new Promise((resolve) => {
+  const server = await new Promise(resolve => {
     const listener = app.listen(0, () => resolve(listener));
   });
   const port = server.address().port;
@@ -31,11 +31,16 @@ async function startServer(workspaceRoot) {
 function patRecord() {
   return JSON.stringify({
     policy: { allowed: ['ops:admin:capabilities'], denied: [] },
-    authority: { actor: 'ops', scope: ['admin'], permissions: ['ops:admin:capabilities'], approvals_required: false },
+    authority: {
+      actor: 'ops',
+      scope: ['admin'],
+      permissions: ['ops:admin:capabilities'],
+      approvals_required: false,
+    },
     truth: { verdict: 'PASS', evidence: ['EVIDENCE_MANIFEST.json'], hashes: ['HASHES.sha256'] },
     evidence_paths: ['EVIDENCE_MANIFEST.json'],
     hashes: ['HASHES.sha256'],
-    response_state: 'ALLOW: proceed'
+    response_state: 'ALLOW: proceed',
   });
 }
 
@@ -71,7 +76,7 @@ async function main() {
   console.log('ok');
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error(error);
   process.exit(1);
 });

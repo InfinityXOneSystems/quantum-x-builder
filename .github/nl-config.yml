@@ -1,0 +1,186 @@
+# Natural Language Command Interface Configuration
+# Quantum-X-Builder Repository
+
+# Enable/Disable the NL Command Interface
+enabled: true
+
+# Feature Toggles
+features:
+  branch_management: true
+  pull_requests: true
+  issues: true
+  file_operations: true
+  workflow_operations: true
+  repository_settings: true
+  collaborator_management: true
+  secret_management: true
+  deployment: true
+
+# Permission Boundaries
+permissions:
+  # Operations that can be performed without human approval
+  auto_approved:
+    - create_branch
+    - create_issue
+    - add_label
+    - trigger_workflow
+    - list_secrets
+  
+  # Operations that require review/approval
+  requires_approval:
+    - delete_branch
+    - merge_pr
+    - delete_file
+    - add_collaborator
+    - remove_collaborator
+    - update_repository_settings
+    - deploy_production
+  
+  # Forbidden operations (hard stop)
+  forbidden:
+    - delete_repository
+    - transfer_ownership
+    - modify_kill_switch
+    - modify_governance_policies
+
+# Rate Limiting
+rate_limiting:
+  enabled: true
+  max_requests_per_hour: 100
+  max_requests_per_day: 1000
+  burst_limit: 10
+  
+  # Per-source limits
+  per_source:
+    chatgpt: 50
+    gemini: 50
+    github-mobile: 100
+    manual: 200
+
+# Authentication Requirements
+authentication:
+  required: true
+  methods:
+    - bearer_token
+    - api_key
+    - webhook_signature
+    - jwt
+  
+  # Source-specific auth requirements
+  source_auth:
+    chatgpt:
+      method: api_key
+      env_var: CHATGPT_API_KEY
+    gemini:
+      method: api_key
+      env_var: GEMINI_API_KEY
+    github-mobile:
+      method: bearer_token
+      env_var: GITHUB_TOKEN
+
+# Audit Settings
+audit:
+  enabled: true
+  log_file: _OPS/AUDIT/nl-command-audit.log
+  log_format: json
+  retention_days: 90
+  include_user_info: true
+  include_command_details: true
+  include_execution_result: true
+  
+  # Upload audit logs as artifacts
+  upload_artifacts: true
+  artifact_retention_days: 90
+
+# Kill Switch Integration
+kill_switch:
+  enabled: true
+  check_before_execution: true
+  file_path: _OPS/SAFETY/KILL_SWITCH.json
+  abort_on_armed: true
+
+# Command Parser Settings
+parser:
+  case_sensitive: false
+  allow_partial_matches: true
+  min_confidence_score: 0.7
+  fallback_to_generic: true
+
+# Execution Settings
+execution:
+  timeout_seconds: 300
+  retry_on_failure: true
+  max_retries: 3
+  retry_delay_seconds: 5
+  
+  # Dry-run mode (simulate without executing)
+  dry_run: false
+
+# Notification Settings
+notifications:
+  enabled: true
+  on_success: true
+  on_failure: true
+  on_approval_required: true
+  
+  channels:
+    - github_issues
+    - workflow_summary
+
+# Security Settings
+security:
+  validate_inputs: true
+  sanitize_commands: true
+  prevent_injection: true
+  validate_file_paths: true
+  validate_branch_names: true
+  
+  # IP whitelist (optional)
+  ip_whitelist: []
+  
+  # User whitelist (optional)
+  user_whitelist: []
+
+# Integration Settings
+integrations:
+  chatgpt:
+    enabled: true
+    api_endpoint: "https://api.github.com/repos/InfinityXOneSystems/quantum-x-builder/dispatches"
+    event_type: "chatgpt-command"
+    config_file: "connectors/chatgpt-integration.json"
+  
+  gemini:
+    enabled: true
+    api_endpoint: "https://api.github.com/repos/InfinityXOneSystems/quantum-x-builder/dispatches"
+    event_type: "gemini-command"
+    config_file: "connectors/gemini-integration.json"
+  
+  github_mobile:
+    enabled: true
+    workflow_file: ".github/workflows/nl-command-dispatcher.yml"
+    config_file: "connectors/github-mobile-shortcuts.json"
+
+# Monitoring and Metrics
+monitoring:
+  enabled: true
+  track_execution_time: true
+  track_success_rate: true
+  track_command_types: true
+  track_sources: true
+  
+  # Alert thresholds
+  alerts:
+    failure_rate_threshold: 0.1  # 10%
+    rate_limit_warning_threshold: 0.8  # 80% of limit
+    execution_time_warning_ms: 30000  # 30 seconds
+
+# Documentation
+documentation:
+  user_guide: "docs/NATURAL_LANGUAGE_CONTROL.md"
+  api_reference: "docs/EXTERNAL_API_INTEGRATION.md"
+  integration_guide: "GITHUB_MCP_INTEGRATION_GUIDE.md"
+
+# Version and Metadata
+version: "1.0.0"
+last_updated: "2026-02-11"
+maintained_by: "InfinityXOneSystems"

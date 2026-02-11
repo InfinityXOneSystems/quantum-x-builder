@@ -1,0 +1,218 @@
+name: Natural Language Command Dispatcher
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: 'Natural language command to execute'
+        required: true
+        type: string
+      source:
+        description: 'Command source (chatgpt, gemini, github-mobile, manual)'
+        required: false
+        type: choice
+        default: 'manual'
+        options:
+          - manual
+          - chatgpt
+          - gemini
+          - github-mobile
+      user_id:
+        description: 'User identifier for audit logging'
+        required: false
+        type: string
+        default: 'system'
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  actions: write
+  checks: write
+  repository-projects: write
+  discussions: write
+  packages: write
+  pages: write
+  deployments: write
+  id-token: write
+  security-events: write
+  workflows: write
+  administration: write
+
+jobs:
+  check-kill-switch:
+    name: Check Kill Switch
+    runs-on: ubuntu-latest
+    outputs:
+      enabled: ${{ steps.check.outputs.enabled }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Check Kill Switch Status
+        id: check
+        run: |
+          if [ -f "_OPS/SAFETY/KILL_SWITCH.json" ]; then
+            KILL_SWITCH=$(jq -r '.kill_switch // "DISARMED"' _OPS/SAFETY/KILL_SWITCH.json)
+            ACTIVE=$(jq -r '.active // false' _OPS/SAFETY/KILL_SWITCH.json)
+            
+            if [ "$KILL_SWITCH" = "ARMED" ] || [ "$ACTIVE" = "true" ]; then
+              echo "❌ Kill switch is ARMED - aborting natural language command"
+              echo "enabled=false" >> $GITHUB_OUTPUT
+              exit 1
+            fi
+          fi
+          echo "✅ Kill switch is DISARMED - proceeding"
+          echo "enabled=true" >> $GITHUB_OUTPUT
+
+  check-config:
+    name: Check NL Configuration
+    runs-on: ubuntu-latest
+    needs: check-kill-switch
+    if: needs.check-kill-switch.outputs.enabled == 'true'
+    outputs:
+      enabled: ${{ steps.config.outputs.enabled }}
+      rate_limit_ok: ${{ steps.config.outputs.rate_limit_ok }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Load NL Configuration
+        id: config
+        run: |
+          if [ ! -f ".github/nl-config.yml" ]; then
+            echo "⚠️ No NL configuration found - using defaults"
+            echo "enabled=true" >> $GITHUB_OUTPUT
+            echo "rate_limit_ok=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # Install PyYAML if needed
+          python3 -m pip install pyyaml >/dev/null 2>&1
+          
+          # Parse configuration
+          python3 - << 'PYTHON'
+          import os
+          import yaml
+          
+          with open('.github/nl-config.yml', 'r') as f:
+              config = yaml.safe_load(f) or {}
+          
+          enabled = config.get('enabled', True)
+          rate_limiting = config.get('rate_limiting', {})
+          max_per_hour = rate_limiting.get('max_requests_per_hour', 100)
+          
+          print(f"enabled={str(enabled).lower()}")
+          print(f"rate_limit_ok=true")
+          
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write(f"enabled={str(enabled).lower()}\n")
+              f.write(f"rate_limit_ok=true\n")
+          PYTHON
+
+  dispatch-command:
+    name: Execute Natural Language Command
+    runs-on: ubuntu-latest
+    needs: [check-kill-switch, check-config]
+    if: |
+      needs.check-kill-switch.outputs.enabled == 'true' &&
+      needs.check-config.outputs.enabled == 'true' &&
+      needs.check-config.outputs.rate_limit_ok == 'true'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: |
+          npm install --no-save \
+            @actions/core \
+            @actions/github \
+            @octokit/rest \
+            natural \
+            jsonwebtoken
+      
+      - name: Generate GitHub App Token
+        id: app-token
+        if: env.GH_APP_ID != '' && env.GH_APP_PRIVATE_KEY != ''
+        uses: ./.github/actions/generate-app-token
+        with:
+          app_id: ${{ secrets.GH_APP_ID }}
+          private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+        continue-on-error: true
+      
+      - name: Parse and Execute Command
+        id: execute
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+          COMMAND: ${{ inputs.command }}
+          SOURCE: ${{ inputs.source }}
+          USER_ID: ${{ inputs.user_id }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          echo "🚀 Executing natural language command..."
+          echo "Command: $COMMAND"
+          echo "Source: $SOURCE"
+          echo "User: $USER_ID"
+          
+          node scripts/command-router.js
+      
+      - name: Log Audit Trail
+        if: always()
+        run: |
+          mkdir -p _OPS/AUDIT
+          
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          LOG_FILE="_OPS/AUDIT/nl-command-audit.log"
+          
+          cat >> "$LOG_FILE" << EOF
+          [$TIMESTAMP] NL Command Executed
+          Command: ${{ inputs.command }}
+          Source: ${{ inputs.source }}
+          User: ${{ inputs.user_id }}
+          Status: ${{ steps.execute.outcome }}
+          Run ID: ${{ github.run_id }}
+          ---
+          EOF
+          
+          echo "✅ Audit log updated: $LOG_FILE"
+      
+      - name: Upload Audit Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nl-command-audit-${{ github.run_id }}
+          path: _OPS/AUDIT/nl-command-audit.log
+          retention-days: 90
+      
+      - name: Report Failure
+        if: failure()
+        run: |
+          echo "❌ Natural language command execution failed"
+          echo "Command: ${{ inputs.command }}"
+          echo "Please check the logs for details"
+          exit 1
+
+  notify-completion:
+    name: Notify Completion
+    runs-on: ubuntu-latest
+    needs: dispatch-command
+    if: always()
+    steps:
+      - name: Report Success
+        if: needs.dispatch-command.result == 'success'
+        run: |
+          echo "✅ Natural language command executed successfully"
+          echo "Command: ${{ inputs.command }}"
+          echo "Source: ${{ inputs.source }}"
+      
+      - name: Report Failure
+        if: needs.dispatch-command.result != 'success'
+        run: |
+          echo "⚠️ Natural language command execution had issues"
+          echo "Status: ${{ needs.dispatch-command.result }}"

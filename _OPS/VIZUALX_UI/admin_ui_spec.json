@@ -1,17 +1,12 @@
 {
-    "panels":  [
-                   "Phase status",
-                   "Autonomy state",
-                   "Active locks",
-                   "Risk register",
-                   "Pending proposals"
-               ],
-    "contract":  "NO ACTION BUTTONS",
-    "prohibited":  [
-                       "execute",
-                       "write",
-                       "deploy",
-                       "approve"
-                   ],
-    "ui_mode":  "READ_ONLY"
+  "panels": [
+    "Phase status",
+    "Autonomy state",
+    "Active locks",
+    "Risk register",
+    "Pending proposals"
+  ],
+  "contract": "NO ACTION BUTTONS",
+  "prohibited": ["execute", "write", "deploy", "approve"],
+  "ui_mode": "READ_ONLY"
 }

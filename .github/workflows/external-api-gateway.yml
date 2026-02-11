@@ -1,0 +1,168 @@
+name: External API Gateway
+
+on:
+  repository_dispatch:
+    types: [nl-command, chatgpt-command, gemini-command, mobile-command]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  actions: write
+  checks: write
+  repository-projects: write
+  discussions: write
+  packages: write
+  pages: write
+  deployments: write
+  id-token: write
+  security-events: write
+  workflows: write
+
+jobs:
+  validate-request:
+    name: Validate External Request
+    runs-on: ubuntu-latest
+    outputs:
+      valid: ${{ steps.validate.outputs.valid }}
+      command: ${{ steps.validate.outputs.command }}
+      source: ${{ steps.validate.outputs.source }}
+      user_id: ${{ steps.validate.outputs.user_id }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install dependencies
+        run: |
+          npm install --no-save jsonwebtoken
+      
+      - name: Validate Request
+        id: validate
+        env:
+          EVENT_NAME: ${{ github.event_type }}
+          CLIENT_PAYLOAD: ${{ toJson(github.event.client_payload) }}
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+        run: |
+          echo "🔐 Validating external API request..."
+          
+          node scripts/auth-validator.js
+          
+          # Extract command details from client payload
+          COMMAND=$(echo '${{ toJson(github.event.client_payload) }}' | jq -r '.command // empty')
+          SOURCE=$(echo '${{ toJson(github.event.client_payload) }}' | jq -r '.source // "external"')
+          USER_ID=$(echo '${{ toJson(github.event.client_payload) }}' | jq -r '.user_id // "unknown"')
+          
+          if [ -z "$COMMAND" ]; then
+            echo "❌ No command provided in request"
+            echo "valid=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          
+          echo "✅ Request validated successfully"
+          echo "valid=true" >> $GITHUB_OUTPUT
+          echo "command=$COMMAND" >> $GITHUB_OUTPUT
+          echo "source=$SOURCE" >> $GITHUB_OUTPUT
+          echo "user_id=$USER_ID" >> $GITHUB_OUTPUT
+
+  check-rate-limit:
+    name: Check Rate Limits
+    runs-on: ubuntu-latest
+    needs: validate-request
+    if: needs.validate-request.outputs.valid == 'true'
+    outputs:
+      allowed: ${{ steps.rate-check.outputs.allowed }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Check Rate Limit
+        id: rate-check
+        run: |
+          echo "⏱️ Checking rate limits..."
+          
+          # Simple rate limit check - count recent audit log entries
+          if [ -f "_OPS/AUDIT/nl-command-audit.log" ]; then
+            ONE_HOUR_AGO=$(date -u -d '1 hour ago' +"%Y-%m-%dT%H:%M:%SZ" 2>/dev/null || date -u -v-1H +"%Y-%m-%dT%H:%M:%SZ" 2>/dev/null || echo "")
+            
+            if [ -n "$ONE_HOUR_AGO" ]; then
+              RECENT_COUNT=$(grep -c "\[$ONE_HOUR_AGO" _OPS/AUDIT/nl-command-audit.log 2>/dev/null || echo "0")
+              
+              if [ "$RECENT_COUNT" -gt 100 ]; then
+                echo "⚠️ Rate limit exceeded: $RECENT_COUNT requests in the last hour"
+                echo "allowed=false" >> $GITHUB_OUTPUT
+                exit 1
+              fi
+            fi
+          fi
+          
+          echo "✅ Rate limit check passed"
+          echo "allowed=true" >> $GITHUB_OUTPUT
+
+  dispatch-to-nl-command:
+    name: Dispatch to NL Command Handler
+    runs-on: ubuntu-latest
+    needs: [validate-request, check-rate-limit]
+    if: |
+      needs.validate-request.outputs.valid == 'true' &&
+      needs.check-rate-limit.outputs.allowed == 'true'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Trigger NL Command Dispatcher
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "🔄 Dispatching to Natural Language Command Dispatcher..."
+          
+          gh workflow run nl-command-dispatcher.yml \
+            -f command="${{ needs.validate-request.outputs.command }}" \
+            -f source="${{ needs.validate-request.outputs.source }}" \
+            -f user_id="${{ needs.validate-request.outputs.user_id }}"
+          
+          echo "✅ Command dispatched successfully"
+      
+      - name: Log External Request
+        run: |
+          mkdir -p _OPS/AUDIT
+          
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          LOG_FILE="_OPS/AUDIT/external-api-gateway.log"
+          
+          cat >> "$LOG_FILE" << EOF
+          [$TIMESTAMP] External API Request
+          Event: ${{ github.event_type }}
+          Source: ${{ needs.validate-request.outputs.source }}
+          User: ${{ needs.validate-request.outputs.user_id }}
+          Command: ${{ needs.validate-request.outputs.command }}
+          Status: dispatched
+          ---
+          EOF
+          
+          echo "✅ External request logged"
+
+  notify-failure:
+    name: Notify Request Failure
+    runs-on: ubuntu-latest
+    needs: [validate-request, check-rate-limit]
+    if: |
+      always() &&
+      (needs.validate-request.outputs.valid != 'true' ||
+       needs.check-rate-limit.outputs.allowed != 'true')
+    steps:
+      - name: Report Validation Failure
+        if: needs.validate-request.outputs.valid != 'true'
+        run: |
+          echo "❌ Request validation failed"
+          echo "Event: ${{ github.event_type }}"
+      
+      - name: Report Rate Limit Exceeded
+        if: needs.check-rate-limit.outputs.allowed != 'true'
+        run: |
+          echo "⚠️ Rate limit exceeded"
+          echo "Too many requests in the last hour"

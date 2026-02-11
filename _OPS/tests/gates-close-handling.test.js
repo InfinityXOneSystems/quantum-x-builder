@@ -7,13 +7,13 @@ process.env.NATS_VARZ_URL = 'http://127.0.0.1:9/varz';
 process.env.NATS_URL = 'nats://127.0.0.1:9';
 
 runIntegrityGateV3()
-  .then((report) => {
+  .then(report => {
     if (!report || report.gate !== 'INTEGRITY_V3') {
       throw new Error('Missing integrity report');
     }
     console.log('ok');
   })
-  .catch((error) => {
+  .catch(error => {
     console.error(error);
     process.exit(1);
   })

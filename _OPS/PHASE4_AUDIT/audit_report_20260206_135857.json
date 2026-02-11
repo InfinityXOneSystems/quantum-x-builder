@@ -3,12 +3,7 @@
   "verdict": "REQUIRES_HUMAN_REVIEW",
   "head_commit": "940742369f63f811432c4ff972cedcbcb970f1fe",
   "phase": "4",
-  "artifacts": [
-    "diff_name_status.txt",
-    "diff_full.patch",
-    "head_stat.txt",
-    "lock_stat.txt"
-  ],
+  "artifacts": ["diff_name_status.txt", "diff_full.patch", "head_stat.txt", "lock_stat.txt"],
   "base_commit": "940742369f63f811432c4ff972cedcbcb970f1fe",
   "autonomy": "OFF"
 }

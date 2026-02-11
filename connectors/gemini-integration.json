@@ -1,0 +1,137 @@
+{
+  "name": "quantum_x_builder_natural_language_control",
+  "description": "Natural language interface for complete repository control via Google Gemini",
+  "version": "1.0.0",
+  "api_endpoint": "https://api.github.com/repos/InfinityXOneSystems/quantum-x-builder/dispatches",
+  "authentication": {
+    "type": "bearer",
+    "header": "Authorization",
+    "token_format": "Bearer {GEMINI_API_KEY}"
+  },
+  "functions": [
+    {
+      "name": "execute_repository_command",
+      "description": "Execute a natural language command to control the Quantum-X-Builder repository. Supports branch management, pull requests, issues, file operations, workflows, and repository settings.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string",
+            "description": "Natural language command to execute. Examples: 'create a branch called feature/new', 'open a PR from develop to main', 'create an issue for bug tracking', 'update README.md', 'trigger deployment workflow', 'add collaborator with write access', 'enable GitHub Pages'"
+          },
+          "user_id": {
+            "type": "string",
+            "description": "User identifier for audit logging (optional)",
+            "default": "gemini-user"
+          }
+        },
+        "required": ["command"]
+      },
+      "request_template": {
+        "method": "POST",
+        "headers": {
+          "Accept": "application/vnd.github+json",
+          "X-GitHub-Api-Version": "2022-11-28"
+        },
+        "body": {
+          "event_type": "gemini-command",
+          "client_payload": {
+            "command": "{{command}}",
+            "source": "gemini",
+            "user_id": "{{user_id}}",
+            "auth_token": "${GEMINI_API_KEY}"
+          }
+        }
+      },
+      "response": {
+        "success_status": 204,
+        "success_message": "Command dispatched successfully",
+        "error_responses": {
+          "401": "Authentication failed - invalid API key",
+          "403": "Forbidden - insufficient permissions",
+          "422": "Invalid command format"
+        }
+      }
+    }
+  ],
+  "supported_operations": {
+    "branch_management": {
+      "operations": ["create", "delete", "switch"],
+      "examples": [
+        "create a new branch called feature/authentication",
+        "delete branch old-feature",
+        "switch to branch develop"
+      ]
+    },
+    "pull_requests": {
+      "operations": ["create", "merge", "close"],
+      "examples": [
+        "open a PR from feature/login to main with title 'Add login feature'",
+        "merge PR #42",
+        "close PR #15"
+      ]
+    },
+    "issues": {
+      "operations": ["create", "close", "reopen", "label"],
+      "examples": [
+        "create an issue titled 'Fix authentication bug'",
+        "close issue #23",
+        "reopen issue #18",
+        "add label 'bug' to issue #10"
+      ]
+    },
+    "file_operations": {
+      "operations": ["create", "update", "delete"],
+      "examples": [
+        "create file docs/GUIDE.md with installation instructions",
+        "update the README.md file with new features section",
+        "delete file old-config.json"
+      ]
+    },
+    "workflow_operations": {
+      "operations": ["trigger", "enable", "disable"],
+      "examples": [
+        "trigger the deployment workflow",
+        "enable workflow ci.yml",
+        "disable workflow old-tests.yml"
+      ]
+    },
+    "repository_settings": {
+      "operations": ["update_description", "enable_pages", "update_topics"],
+      "examples": [
+        "update repository description to 'AI-powered development platform'",
+        "enable GitHub Pages",
+        "update repository topics to 'ai, automation, ci-cd'"
+      ]
+    },
+    "collaborator_management": {
+      "operations": ["add", "remove"],
+      "examples": ["add collaborator alice with write access", "remove collaborator bob"]
+    },
+    "security_operations": {
+      "operations": ["list_secrets"],
+      "examples": ["list repository secrets"]
+    },
+    "deployment_operations": {
+      "operations": ["deploy"],
+      "examples": ["deploy to production", "deploy to staging"]
+    }
+  },
+  "rate_limits": {
+    "requests_per_hour": 100,
+    "requests_per_day": 1000,
+    "burst_limit": 10
+  },
+  "security": {
+    "audit_logging": true,
+    "kill_switch_enabled": true,
+    "rate_limiting": true,
+    "authentication_required": true
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2026-02-11",
+    "documentation": "docs/NATURAL_LANGUAGE_CONTROL.md",
+    "support": "https://github.com/InfinityXOneSystems/quantum-x-builder/issues"
+  }
+}

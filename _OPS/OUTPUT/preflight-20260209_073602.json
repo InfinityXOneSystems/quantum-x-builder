@@ -10,7 +10,419 @@
     "score": 96
   },
   "checks": [
-{"category":"phase5","name":"Phase 5 status file exists","result":"PASS","message":"","critical":true},{"category":"phase5","name":"Phase 5 autonomy is ON","result":"PASS","message":"","critical":true},{"category":"phase5","name":"Kill switch is ACTIVE","result":"PASS","message":"","critical":true},{"category":"phase5","name":"Guardrails are ACTIVE","result":"PASS","message":"","critical":true},{"category":"phase5","name":"Rollback path exists","result":"PASS","message":"","critical":false},{"category":"docs","name":"Phase 6 forensic analysis exists","result":"PASS","message":"","critical":true},{"category":"docs","name":"Phase 6 pre-flight checklist exists","result":"PASS","message":"","critical":true},{"category":"docs","name":"Docker deployment guide exists","result":"PASS","message":"","critical":true},{"category":"docs","name":"GitHub MCP integration guide exists","result":"PASS","message":"","critical":true},{"category":"docs","name":"AI service integration guide exists","result":"PASS","message":"","critical":false},{"category":"docs","name":"System integration architecture exists","result":"PASS","message":"","critical":false},{"category":"docker","name":"Docker is installed","result":"PASS","message":"","critical":true},{"category":"docker","name":"Docker daemon is running","result":"PASS","message":"","critical":true},{"category":"docker","name":"Docker Compose is installed","result":"PASS","message":"","critical":true},{"category":"docker","name":"docker-compose.yml exists","result":"PASS","message":"","critical":true},{"category":"docker","name":"Backend Dockerfile exists","result":"PASS","message":"","critical":true},{"category":"docker","name":"Frontend Dockerfile exists","result":"PASS","message":"","critical":true},{"category":"docker","name":"Docker network is configured","result":"PASS","message":"","critical":false},{"category":"docker","name":"QXB Chat Gateway Dockerfile template exists","result":"PASS","message":"","critical":false},{"category":"services","name":"Backend source exists","result":"PASS","message":"","critical":true},{"category":"services","name":"Backend index.js exists","result":"PASS","message":"","critical":true},{"category":"services","name":"Backend providers exist","result":"PASS","message":"","critical":true},{"category":"services","name":"Ollama provider exists","result":"PASS","message":"","critical":true},{"category":"services","name":"Groq provider exists","result":"PASS","message":"","critical":true},{"category":"services","name":"Vertex provider exists","result":"PASS","message":"","critical":true},{"category":"services","name":"Gemini provider exists","result":"PASS","message":"","critical":true},{"category":"services","name":"AI integration routes exist","result":"PASS","message":"","critical":true},{"category":"services","name":"Chat gateway implementation exists","result":"PASS","message":"","critical":true},{"category":"config","name":"Backend .env.example exists","result":"PASS","message":"","critical":true},{"category":"config","name":"Backend package.json exists","result":"PASS","message":"","critical":true},{"category":"config","name":"Frontend package.json exists","result":"PASS","message":"","critical":false},{"category":"config","name":"Root package.json exists","result":"PASS","message":"","critical":false},{"category":"config","name":"GitHub App OAuth script exists","result":"PASS","message":"","critical":false},{"category":"structure","name":"_OPS directory exists","result":"PASS","message":"","critical":true},{"category":"structure","name":"_OPS/COMMANDS directory exists","result":"PASS","message":"","critical":true},{"category":"structure","name":"_OPS/AUDIT directory exists","result":"PASS","message":"","critical":true},{"category":"structure","name":"_OPS/SAFETY directory exists","result":"PASS","message":"","critical":false},{"category":"structure","name":"_OPS/ROLLBACK directory exists","result":"PASS","message":"","critical":false},{"category":"structure","name":"_OPS/_STATE directory exists","result":"PASS","message":"","critical":true},{"category":"structure","name":"_OPS/PHASE6_DESIGN directory exists","result":"PASS","message":"","critical":true},{"category":"structure","name":"_OPS/PHASE6_CEREMONY directory exists","result":"PASS","message":"","critical":true},{"category":"phase6","name":"Phase 6 autonomy spec exists","result":"PASS","message":"","critical":true},{"category":"phase6","name":"Phase 6 unlock ceremony spec exists","result":"PASS","message":"","critical":true},{"category":"phase6","name":"Phase 6 is design-only","result":"PASS","message":"","critical":true},{"category":"phase6","name":"Phase 6 requires ceremony","result":"PASS","message":"","critical":true},{"category":"workflows","name":".github/workflows directory exists","result":"PASS","message":"","critical":true},{"category":"workflows","name":"CI workflow exists","result":"PASS","message":"","critical":false},{"category":"workflows","name":"Control plane workflow exists","result":"PASS","message":"","critical":false},{"category":"workflows","name":"Rehydrate workflow exists","result":"PASS","message":"","critical":false},{"category":"security","name":"Rate limit middleware exists","result":"WARN","message":"Warning: Check failed (non-critical)","critical":false},{"category":"security","name":"Path sanitizer exists","result":"WARN","message":"Warning: Check failed (non-critical)","critical":false},{"category":"security","name":"PAT middleware exists","result":"PASS","message":"","critical":false},{"category":"security","name":".gitignore exists","result":"PASS","message":"","critical":true},{"category":"security","name":".env files are gitignored","result":"PASS","message":"","critical":true},{"category":"deps","name":"Node.js is installed","result":"PASS","message":"","critical":true},{"category":"deps","name":"npm is installed","result":"PASS","message":"","critical":true},{"category":"deps","name":"Git is installed","result":"PASS","message":"","critical":true},{"category":"deps","name":"jq is installed","result":"PASS","message":"","critical":false},{"category":"deps","name":"curl is installed","result":"PASS","message":"","critical":false}
+    {
+      "category": "phase5",
+      "name": "Phase 5 status file exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "phase5",
+      "name": "Phase 5 autonomy is ON",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "phase5",
+      "name": "Kill switch is ACTIVE",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "phase5",
+      "name": "Guardrails are ACTIVE",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "phase5",
+      "name": "Rollback path exists",
+      "result": "PASS",
+      "message": "",
+      "critical": false
+    },
+    {
+      "category": "docs",
+      "name": "Phase 6 forensic analysis exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "docs",
+      "name": "Phase 6 pre-flight checklist exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "docs",
+      "name": "Docker deployment guide exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "docs",
+      "name": "GitHub MCP integration guide exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "docs",
+      "name": "AI service integration guide exists",
+      "result": "PASS",
+      "message": "",
+      "critical": false
+    },
+    {
+      "category": "docs",
+      "name": "System integration architecture exists",
+      "result": "PASS",
+      "message": "",
+      "critical": false
+    },
+    {
+      "category": "docker",
+      "name": "Docker is installed",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "docker",
+      "name": "Docker daemon is running",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "docker",
+      "name": "Docker Compose is installed",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "docker",
+      "name": "docker-compose.yml exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "docker",
+      "name": "Backend Dockerfile exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "docker",
+      "name": "Frontend Dockerfile exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "docker",
+      "name": "Docker network is configured",
+      "result": "PASS",
+      "message": "",
+      "critical": false
+    },
+    {
+      "category": "docker",
+      "name": "QXB Chat Gateway Dockerfile template exists",
+      "result": "PASS",
+      "message": "",
+      "critical": false
+    },
+    {
+      "category": "services",
+      "name": "Backend source exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "services",
+      "name": "Backend index.js exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "services",
+      "name": "Backend providers exist",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "services",
+      "name": "Ollama provider exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "services",
+      "name": "Groq provider exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "services",
+      "name": "Vertex provider exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "services",
+      "name": "Gemini provider exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "services",
+      "name": "AI integration routes exist",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "services",
+      "name": "Chat gateway implementation exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "config",
+      "name": "Backend .env.example exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "config",
+      "name": "Backend package.json exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "config",
+      "name": "Frontend package.json exists",
+      "result": "PASS",
+      "message": "",
+      "critical": false
+    },
+    {
+      "category": "config",
+      "name": "Root package.json exists",
+      "result": "PASS",
+      "message": "",
+      "critical": false
+    },
+    {
+      "category": "config",
+      "name": "GitHub App OAuth script exists",
+      "result": "PASS",
+      "message": "",
+      "critical": false
+    },
+    {
+      "category": "structure",
+      "name": "_OPS directory exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "structure",
+      "name": "_OPS/COMMANDS directory exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "structure",
+      "name": "_OPS/AUDIT directory exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "structure",
+      "name": "_OPS/SAFETY directory exists",
+      "result": "PASS",
+      "message": "",
+      "critical": false
+    },
+    {
+      "category": "structure",
+      "name": "_OPS/ROLLBACK directory exists",
+      "result": "PASS",
+      "message": "",
+      "critical": false
+    },
+    {
+      "category": "structure",
+      "name": "_OPS/_STATE directory exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "structure",
+      "name": "_OPS/PHASE6_DESIGN directory exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "structure",
+      "name": "_OPS/PHASE6_CEREMONY directory exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "phase6",
+      "name": "Phase 6 autonomy spec exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "phase6",
+      "name": "Phase 6 unlock ceremony spec exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "phase6",
+      "name": "Phase 6 is design-only",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "phase6",
+      "name": "Phase 6 requires ceremony",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "workflows",
+      "name": ".github/workflows directory exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "workflows",
+      "name": "CI workflow exists",
+      "result": "PASS",
+      "message": "",
+      "critical": false
+    },
+    {
+      "category": "workflows",
+      "name": "Control plane workflow exists",
+      "result": "PASS",
+      "message": "",
+      "critical": false
+    },
+    {
+      "category": "workflows",
+      "name": "Rehydrate workflow exists",
+      "result": "PASS",
+      "message": "",
+      "critical": false
+    },
+    {
+      "category": "security",
+      "name": "Rate limit middleware exists",
+      "result": "WARN",
+      "message": "Warning: Check failed (non-critical)",
+      "critical": false
+    },
+    {
+      "category": "security",
+      "name": "Path sanitizer exists",
+      "result": "WARN",
+      "message": "Warning: Check failed (non-critical)",
+      "critical": false
+    },
+    {
+      "category": "security",
+      "name": "PAT middleware exists",
+      "result": "PASS",
+      "message": "",
+      "critical": false
+    },
+    {
+      "category": "security",
+      "name": ".gitignore exists",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "security",
+      "name": ".env files are gitignored",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "deps",
+      "name": "Node.js is installed",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "deps",
+      "name": "npm is installed",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "deps",
+      "name": "Git is installed",
+      "result": "PASS",
+      "message": "",
+      "critical": true
+    },
+    {
+      "category": "deps",
+      "name": "jq is installed",
+      "result": "PASS",
+      "message": "",
+      "critical": false
+    },
+    {
+      "category": "deps",
+      "name": "curl is installed",
+      "result": "PASS",
+      "message": "",
+      "critical": false
+    }
   ],
   "recommendations": [
     "Warning checks require attention for production deployment",

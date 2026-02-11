@@ -1,10 +1,4 @@
 {
-    "location":  "_OPS/EVIDENCE",
-    "evidence_types":  [
-                           "hashes",
-                           "logs",
-                           "snapshots",
-                           "audit_results",
-                           "simulation_outputs"
-                       ]
+  "location": "_OPS/EVIDENCE",
+  "evidence_types": ["hashes", "logs", "snapshots", "audit_results", "simulation_outputs"]
 }
