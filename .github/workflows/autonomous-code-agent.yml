@@ -19,6 +19,8 @@ jobs:
   autonomous-fix:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    outputs:
+      has_changes: ${{ steps.check_changes.outputs.has_changes }}
     
     steps:
       - uses: actions/checkout@v4

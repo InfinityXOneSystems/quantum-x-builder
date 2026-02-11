@@ -259,7 +259,7 @@ async function saveReport(report) {
 // Main execution
 async function main() {
   console.log('🤖 Autonomous Code Agent Starting...\n');
-  console.log('=' .repeat(60));
+  console.log('='.repeat(60));
   
   const config = await loadConfig();
   
