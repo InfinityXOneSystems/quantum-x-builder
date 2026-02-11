@@ -332,8 +332,8 @@ async function main() {
 
   // Output for GitHub Actions
   if (process.env.GITHUB_OUTPUT) {
-    const fs = require('fs');
-    fs.appendFileSync(process.env.GITHUB_OUTPUT, `changes_made=${report.changesMade}\n`);
+    const fsSync = require('fs');
+    fsSync.appendFileSync(process.env.GITHUB_OUTPUT, `changes_made=${report.changesMade}\n`);
   }
 
   console.log('\n✅ Healing Agent Completed!\n');

@@ -65,7 +65,10 @@ jobs:
           git config user.email "healing-agent@github.com"
           git add -A
           git commit -m "🔧 Healing Agent: Implemented validator suggestions" || echo "No changes to commit"
-          git push || echo "Push failed - may need manual intervention"
+          git push || {
+            echo "::error::Failed to push healing changes. Manual intervention may be required."
+            exit 1
+          }
           
       - name: Re-trigger Validation
         if: steps.check_changes.outputs.changes_made == 'true' && inputs.pr_number != ''

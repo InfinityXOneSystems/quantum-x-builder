@@ -86,9 +86,9 @@ async function runLintCheck() {
     return { passed: false, reason: 'npm not available' };
   }
 
-  const result = execCommand('npm run lint 2>&1 || true', { silent: true });
+  const result = execCommand('npm run lint 2>&1', { silent: true });
   
-  if (result.success || (result.output && !result.output.includes('error'))) {
+  if (result.success) {
     console.log('✅ Lint check passed');
     return { passed: true };
   }
@@ -127,9 +127,9 @@ async function runBuild() {
     return { passed: false, reason: 'npm not available' };
   }
 
-  const result = execCommand('npm run build 2>&1 || true', { silent: true });
+  const result = execCommand('npm run build 2>&1', { silent: true });
   
-  if (result.success || (result.output && !result.output.includes('ERROR'))) {
+  if (result.success) {
     console.log('✅ Build succeeded');
     return { passed: true };
   }
@@ -365,9 +365,9 @@ async function main() {
 
   // Output for GitHub Actions
   if (process.env.GITHUB_OUTPUT) {
-    const fs = require('fs');
-    fs.appendFileSync(process.env.GITHUB_OUTPUT, `needs_healing=${!report.approved}\n`);
-    fs.appendFileSync(process.env.GITHUB_OUTPUT, `report_path=${path.join(__dirname, 'validation-report.json')}\n`);
+    const fsSync = require('fs');
+    fsSync.appendFileSync(process.env.GITHUB_OUTPUT, `needs_healing=${!report.approved}\n`);
+    fsSync.appendFileSync(process.env.GITHUB_OUTPUT, `report_path=${path.join(__dirname, 'validation-report.json')}\n`);
   }
 
   console.log('\n✅ Validation Agent Completed!\n');
