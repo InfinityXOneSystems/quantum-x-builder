@@ -19,9 +19,13 @@ import { registerOpsRoutes } from './routes/ops.js';
 import { registerAdminRoutes } from './routes/admin.js';
 import { registerAiIntegrationRoutes } from './routes/ai-integration.js';
 import { registerNlcRoutes } from './routes/nlc.js';
+import { registerAutomationRoutes } from './routes/automation.js';
 import { initDb } from './db.js';
+import { createServer } from 'http';
+import { initializeWebSocket } from './services/websocket.js';
 
 const app = express();
+const server = createServer(app);
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(traceMiddleware);
@@ -42,11 +46,16 @@ registerQxbRoutes(app);
 registerOpsRoutes(app);
 registerAdminRoutes(app);
 registerAiIntegrationRoutes(app);
+registerAutomationRoutes(app);
 await registerNlcRoutes(app);
 
 await initDb();
 
-app.listen(config.port, () => {
+// Initialize WebSocket server
+initializeWebSocket(server);
+
+server.listen(config.port, () => {
   console.log(`Vizual-X backend listening on ${config.port}`);
   console.log(`Workspace root: ${config.workspaceRoot}`);
+  console.log(`WebSocket server ready at ws://localhost:${config.port}/ws`);
 });

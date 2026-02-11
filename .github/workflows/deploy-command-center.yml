@@ -1,0 +1,97 @@
+name: Deploy Command Center to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'command-center/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Build Command Center
+        run: |
+          mkdir -p _site
+          cp -r command-center/public/* _site/
+          
+          # Create manifest.json for PWA
+          cat > _site/manifest.json << 'EOF'
+          {
+            "name": "Quantum X Builder Command Center",
+            "short_name": "QXB Command",
+            "description": "Natural language command center for Quantum X Builder",
+            "start_url": "/",
+            "display": "standalone",
+            "background_color": "#667eea",
+            "theme_color": "#764ba2",
+            "icons": [
+              {
+                "src": "icon-192.png",
+                "sizes": "192x192",
+                "type": "image/png"
+              },
+              {
+                "src": "icon-512.png",
+                "sizes": "512x512",
+                "type": "image/png"
+              }
+            ]
+          }
+          EOF
+          
+          # Create .nojekyll to bypass Jekyll processing
+          touch _site/.nojekyll
+          
+          # Create README
+          cat > _site/README.md << 'EOF'
+          # Quantum X Builder - Command Center
+          
+          This is the GitHub Pages deployment of the QXB Command Center.
+          
+          ## Features
+          
+          - Natural language command interface
+          - Monaco Editor integration
+          - ChatGPT and Gemini AI integration
+          - GitHub mobile app support
+          - Real-time WebSocket updates
+          - PWA with offline support
+          
+          ## Usage
+          
+          Visit https://infinityxonesystems.github.io/quantum-x-builder/ to access the command center.
+          EOF
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_site'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
