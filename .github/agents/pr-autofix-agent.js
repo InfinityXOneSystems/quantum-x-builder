@@ -282,7 +282,10 @@ async function main() {
   }
   
   // Process each PR (limit to avoid rate limits)
-  const maxPRsToProcess = Math.min(prs.length, config.rate_limits?.max_api_calls_per_run || 10);
+  const maxPRsToProcess = Math.min(
+    prs.length, 
+    config.pr_autofix?.max_prs_per_run || config.rate_limits?.max_prs_per_run || 10
+  );
   console.log(`\n📋 Processing ${maxPRsToProcess} of ${prs.length} unassigned PRs...\n`);
   
   const results = [];
