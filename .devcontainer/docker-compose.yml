@@ -6,34 +6,34 @@ services:
     working_dir: /workspaces/quantum-x-builder
     command: sleep infinity
     environment:
-      PORT: "8787"
+      PORT: '8787'
       WORKSPACE_ROOT: /workspaces/quantum-x-builder
       ENV_PROFILE: boxed
       DATABASE_URL: sqlite://./backend/_state/qxb.sqlite
       NATS_URL: nats://nats:4222
       NATS_VARZ_URL: http://nats:8222/varz
       NODE_OPTIONS: --max_old_space_size=1024
-      auth.github.enabled: "false"
-      auth.google.enabled: "false"
-      providers.automl.enabled: "false"
-      providers.bigquery.enabled: "false"
-      providers.gcs.enabled: "false"
-      providers.ollama.enabled: "false"
-      providers.playwright.enabled: "false"
-      providers.twilio.enabled: "false"
-      providers.vertex_search.enabled: "false"
-      providers.vertex_speech.enabled: "false"
+      auth.github.enabled: 'false'
+      auth.google.enabled: 'false'
+      providers.automl.enabled: 'false'
+      providers.bigquery.enabled: 'false'
+      providers.gcs.enabled: 'false'
+      providers.ollama.enabled: 'false'
+      providers.playwright.enabled: 'false'
+      providers.twilio.enabled: 'false'
+      providers.vertex_search.enabled: 'false'
+      providers.vertex_speech.enabled: 'false'
     volumes:
       - ..:/workspaces/quantum-x-builder:cached
     ports:
-      - "8787:8787"
+      - '8787:8787'
     depends_on:
       - nats
 
   nats:
     image: nats:2.12.4
     container_name: qxb-nats
-    command: ["-js","-m","8222"]
+    command: ['-js', '-m', '8222']
     ports:
-      - "4222:4222"
-      - "8222:8222"
+      - '4222:4222'
+      - '8222:8222'

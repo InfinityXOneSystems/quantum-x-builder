@@ -16,20 +16,8 @@
       "port": 8787,
       "entrypoint": "src/index.js",
       "runtime": "node",
-      "dependencies": [
-        "express",
-        "googleapis",
-        "google-auth-library",
-        "nats",
-        "pg",
-        "ws"
-      ],
-      "integrations": [
-        "google-calendar",
-        "google-tasks",
-        "nats-messaging",
-        "postgresql"
-      ],
+      "dependencies": ["express", "googleapis", "google-auth-library", "nats", "pg", "ws"],
+      "integrations": ["google-calendar", "google-tasks", "nats-messaging", "postgresql"],
       "healthCheck": "/health",
       "authentication": "PAT-token",
       "apis": {
@@ -52,12 +40,7 @@
       "port": 3000,
       "entrypoint": "index.tsx",
       "runtime": "vite",
-      "dependencies": [
-        "react",
-        "react-dom",
-        "@google/genai",
-        "axios"
-      ],
+      "dependencies": ["react", "react-dom", "@google/genai", "axios"],
       "features": [
         "admin-control-plane",
         "low-code-panel",
@@ -91,10 +74,7 @@
       "type": "message-broker",
       "image": "nats:2.10-alpine",
       "ports": [4222, 8222],
-      "features": [
-        "jetstream",
-        "monitoring"
-      ]
+      "features": ["jetstream", "monitoring"]
     },
     "operations": {
       "name": "ops-control-plane",
@@ -122,15 +102,8 @@
       "calendar": {
         "enabled": true,
         "module": "backend/src/integrations/google-calendar.js",
-        "accounts": [
-          "ai@infinityxonesystems.com",
-          "info@infinityxonesystems.com"
-        ],
-        "features": [
-          "bidirectional-sync",
-          "event-creation",
-          "conflict-resolution"
-        ]
+        "accounts": ["ai@infinityxonesystems.com", "info@infinityxonesystems.com"],
+        "features": ["bidirectional-sync", "event-creation", "conflict-resolution"]
       },
       "tasks": {
         "enabled": true,
@@ -139,12 +112,7 @@
       },
       "cloud": {
         "enabled": true,
-        "services": [
-          "vertex-ai",
-          "bigquery",
-          "cloud-storage",
-          "vertex-search"
-        ]
+        "services": ["vertex-ai", "bigquery", "cloud-storage", "vertex-search"]
       },
       "genai": {
         "enabled": true,
@@ -153,11 +121,7 @@
     },
     "github": {
       "enabled": true,
-      "features": [
-        "oauth",
-        "repository-access",
-        "workflow-integration"
-      ]
+      "features": ["oauth", "repository-access", "workflow-integration"]
     },
     "vscode": {
       "enabled": true,
@@ -175,20 +139,13 @@
     "containerization": {
       "type": "docker-compose",
       "file": "./docker-compose.yml",
-      "services": [
-        "backend",
-        "frontend",
-        "nats"
-      ],
+      "services": ["backend", "frontend", "nats"],
       "network": "vizualx"
     },
     "environment": {
       "backend": "backend/.env",
       "frontend": "frontend/.env",
-      "examples": [
-        "backend/.env.example",
-        "backend/.env.sample"
-      ]
+      "examples": ["backend/.env.example", "backend/.env.sample"]
     }
   },
   "data-flows": {
@@ -196,38 +153,22 @@
       "protocol": "http",
       "format": "json",
       "authentication": "PAT-token",
-      "endpoints": [
-        "/api/*",
-        "/__ops/*"
-      ]
+      "endpoints": ["/api/*", "/__ops/*"]
     },
     "backend-to-nats": {
       "protocol": "nats",
       "format": "json",
-      "subjects": [
-        "qxb.events",
-        "qxb.commands"
-      ]
+      "subjects": ["qxb.events", "qxb.commands"]
     },
     "backend-to-google": {
       "protocol": "https",
       "authentication": "OAuth2",
-      "apis": [
-        "calendar-v3",
-        "tasks-v1",
-        "vertex-ai"
-      ]
+      "apis": ["calendar-v3", "tasks-v1", "vertex-ai"]
     },
     "backend-to-ops": {
       "type": "filesystem",
-      "watch-paths": [
-        "_OPS/COMMANDS",
-        "_OPS/TODO"
-      ],
-      "output-paths": [
-        "_OPS/OUTPUT",
-        "_OPS/AUDIT"
-      ]
+      "watch-paths": ["_OPS/COMMANDS", "_OPS/TODO"],
+      "output-paths": ["_OPS/OUTPUT", "_OPS/AUDIT"]
     }
   },
   "security": {
@@ -245,18 +186,8 @@
     "autonomy-control": {
       "location": "_OPS/POLICY/AUTONOMY_ON.json",
       "status": "ON",
-      "allowed-agents": [
-        "Copilot",
-        "GPT",
-        "Validator",
-        "Architect"
-      ],
-      "forbidden": [
-        "policy_mutation",
-        "guardrail_removal",
-        "tag_deletion",
-        "silent_execution"
-      ]
+      "allowed-agents": ["Copilot", "GPT", "Validator", "Architect"],
+      "forbidden": ["policy_mutation", "guardrail_removal", "tag_deletion", "silent_execution"]
     }
   },
   "validation": {

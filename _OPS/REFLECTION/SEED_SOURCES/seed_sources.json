@@ -5,23 +5,12 @@
     "https://api.github.com/repos/pytorch/pytorch",
     "https://api.github.com/repos/tensorflow/tensorflow"
   ],
-  "ai_companies": [
-    "openai.com",
-    "google.ai",
-    "anthropic.com",
-    "stability.ai"
-  ],
+  "ai_companies": ["openai.com", "google.ai", "anthropic.com", "stability.ai"],
   "news_feeds": [
     "https://newsapi.org/v2/top-headlines?category=technology",
     "https://newsapi.org/v2/top-headlines?category=business"
   ],
-  "philosophy_tags": ["epistemology","ethics","philosophy-of-mind"],
-  "open_government_stats": [
-    "https://api.usa.gov/",
-    "https://data.gov/"
-  ],
-  "financial_intelligence": [
-    "https://api.investing.com/",
-    "https://www.alphavantage.co/"
-  ]
+  "philosophy_tags": ["epistemology", "ethics", "philosophy-of-mind"],
+  "open_government_stats": ["https://api.usa.gov/", "https://data.gov/"],
+  "financial_intelligence": ["https://api.investing.com/", "https://www.alphavantage.co/"]
 }

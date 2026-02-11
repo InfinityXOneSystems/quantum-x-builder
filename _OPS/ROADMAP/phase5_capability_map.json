@@ -1,10 +1,5 @@
 {
-  "permanently_human": [
-    "policy_changes",
-    "autonomy_toggle",
-    "prod_deploys",
-    "key_management"
-  ],
+  "permanently_human": ["policy_changes", "autonomy_toggle", "prod_deploys", "key_management"],
   "ceiling": "Maximum Safe Autonomy",
   "allowed_if_unlocked": [
     "proposal_generation",
@@ -13,10 +8,5 @@
     "bounded_self_heal",
     "continuous_health_validation"
   ],
-  "invariants": [
-    "deterministic",
-    "auditable",
-    "reversible",
-    "kill-switchable"
-  ]
+  "invariants": ["deterministic", "auditable", "reversible", "kill-switchable"]
 }

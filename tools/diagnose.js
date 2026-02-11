@@ -10,17 +10,17 @@ const path = require('path');
 
 function runCommand(command, ignoreErrors = false) {
   try {
-    const output = execSync(command, { 
+    const output = execSync(command, {
       encoding: 'utf-8',
-      stdio: 'pipe'
+      stdio: 'pipe',
     });
     return { success: true, output };
   } catch (error) {
     if (ignoreErrors) {
-      return { 
-        success: false, 
+      return {
+        success: false,
         output: error.stdout || '',
-        error: error.stderr || error.message 
+        error: error.stderr || error.message,
       };
     }
     return { success: false, error: error.message };
@@ -37,8 +37,8 @@ async function diagnose() {
       total: 0,
       passed: 0,
       failed: 0,
-      warnings: 0
-    }
+      warnings: 0,
+    },
   };
 
   // Check 1: ESLint

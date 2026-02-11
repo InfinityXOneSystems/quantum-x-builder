@@ -1,8 +1,6 @@
 {
   "name": "quantum-x-builder",
-  "dockerComposeFile": [
-    "docker-compose.yml"
-  ],
+  "dockerComposeFile": ["docker-compose.yml"],
   "service": "backend",
   "workspaceFolder": "/workspaces/quantum-x-builder",
   "overrideCommand": false,
@@ -22,9 +20,5 @@
       }
     }
   },
-  "forwardPorts": [
-    4222,
-    8222,
-    8787
-  ]
+  "forwardPorts": [4222, 8222, 8787]
 }

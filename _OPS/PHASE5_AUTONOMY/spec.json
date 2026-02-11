@@ -1,18 +1,18 @@
 {
-    "phase":  "5",
-    "status":  "LOCKED",
-    "unlock_requires":  [
-                            "human_declaration",
-                            "policy_signature",
-                            "evidence_pass",
-                            "dry_run_success",
-                            "blast_radius_acceptance",
-                            "physical_switch"
-                        ],
-    "intended_capabilities":  [
-                                  "patch_proposal",
-                                  "runner_trigger_via_gate",
-                                  "self_heal_bounded",
-                                  "health_maintenance"
-                              ]
+  "phase": "5",
+  "status": "LOCKED",
+  "unlock_requires": [
+    "human_declaration",
+    "policy_signature",
+    "evidence_pass",
+    "dry_run_success",
+    "blast_radius_acceptance",
+    "physical_switch"
+  ],
+  "intended_capabilities": [
+    "patch_proposal",
+    "runner_trigger_via_gate",
+    "self_heal_bounded",
+    "health_maintenance"
+  ]
 }

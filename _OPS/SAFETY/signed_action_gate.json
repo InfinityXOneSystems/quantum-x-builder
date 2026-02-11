@@ -2,7 +2,5 @@
   "verification": "manual + hash",
   "gate": "SIGNED_ACTION_ONLY",
   "automation": "PROHIBITED",
-  "signers": [
-    "Neo"
-  ]
+  "signers": ["Neo"]
 }
