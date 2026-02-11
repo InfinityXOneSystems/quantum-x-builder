@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-02-11T04:39:37.033Z",
+  "healthScore": 90,
+  "status": "HEALTHY",
+  "checks": {
+    "git": {
+      "uncommittedChanges": 6,
+      "branchCount": 2,
+      "healthy": false
+    },
+    "workflows": {
+      "total": 19,
+      "valid": 19,
+      "invalid": [],
+      "healthy": true
+    },
+    "dependencies": {
+      "hasPackageJson": true,
+      "hasPackageLock": false,
+      "outdatedCount": 0,
+      "healthy": true
+    },
+    "security": {
+      "vulnerabilityCount": 0,
+      "criticalCount": 0,
+      "highCount": 0,
+      "healthy": true,
+      "status": "✅ Secure"
+    }
+  },
+  "issues": [
+    "Uncommitted changes present"
+  ],
+  "recommendations": [
+    "Commit or stash uncommitted changes"
+  ]
+}

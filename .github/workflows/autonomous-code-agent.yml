@@ -1,0 +1,83 @@
+name: "Autonomous Code Agent"
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Every hour
+  push:
+    branches: [ main, develop ]
+  pull_request:
+  workflow_dispatch:
+  
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  security-events: write
+  actions: write
+
+jobs:
+  autonomous-fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install Dependencies
+        run: npm ci || npm install
+        continue-on-error: true
+        
+      - name: Run Autonomous Agent
+        id: autonomous
+        run: node .github/agents/autonomous-agent.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+          
+      - name: Check for Changes
+        id: check_changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Create PR if Changes
+        if: steps.check_changes.outputs.has_changes == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "🤖 Autonomous Agent: Auto-fixes and improvements"
+          branch: autonomous/fixes-${{ github.run_id }}
+          title: "🤖 Autonomous Agent: Auto-fixes and improvements"
+          body: |
+            ## Autonomous Agent Report
+            
+            This PR contains automated fixes and improvements.
+            
+            **Changes Made**:
+            - Code quality fixes (ESLint, Prettier)
+            - Security patches
+            - Dependency updates
+            - Workflow improvements
+            
+            **Validation**: Pending validator agent review
+            
+            ---
+            *This is an automated PR created by the Autonomous Code Agent*
+          labels: automated, autonomous-agent
+          
+  call-validator:
+    needs: autonomous-fix
+    if: needs.autonomous-fix.outputs.has_changes == 'true'
+    uses: ./.github/workflows/validation-agent.yml
+    secrets: inherit

@@ -1,0 +1,123 @@
+name: "Healing Agent"
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        required: false
+        type: string
+        description: "PR number to heal"
+      validation_report:
+        required: false
+        type: string
+        description: "Path to validation report"
+  schedule:
+    - cron: '30 */2 * * *'  # Every 2 hours at :30
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  actions: write
+
+jobs:
+  heal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install Dependencies
+        run: npm ci || npm install
+        continue-on-error: true
+        
+      - name: Run Healing Agent
+        id: heal
+        run: node .github/agents/healing-agent.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+          VALIDATION_REPORT: ${{ inputs.validation_report }}
+        continue-on-error: true
+          
+      - name: Check for Changes
+        id: check_changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changes_made=true" >> $GITHUB_OUTPUT
+          else
+            echo "changes_made=false" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Commit Healing Changes
+        if: steps.check_changes.outputs.changes_made == 'true'
+        run: |
+          git config user.name "Healing Agent"
+          git config user.email "healing-agent@github.com"
+          git add -A
+          git commit -m "🔧 Healing Agent: Implemented validator suggestions" || echo "No changes to commit"
+          git push || echo "Push failed - may need manual intervention"
+          
+      - name: Re-trigger Validation
+        if: steps.check_changes.outputs.changes_made == 'true' && inputs.pr_number != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'validation-agent.yml',
+              ref: 'main',
+              inputs: {
+                pr_number: '${{ inputs.pr_number }}'
+              }
+            });
+            
+  system-health-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install Dependencies
+        run: npm ci || npm install
+        continue-on-error: true
+      
+      - name: Check System Health
+        run: node .github/agents/system-health-check.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+          
+      - name: Auto-merge Safe PRs
+        run: node .github/agents/auto-merge.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+          
+      - name: Clean Stale Branches
+        run: node .github/agents/branch-cleanup.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+          
+      - name: Close Resolved Issues
+        run: node .github/agents/issue-cleanup.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true

@@ -1,0 +1,27 @@
+{
+  "autonomous": {
+    "enabled": true,
+    "schedule": "0 * * * *",
+    "autoMerge": {
+      "enabled": true,
+      "safeChanges": ["lint", "format", "docs", "deps-patch"],
+      "requiresApproval": ["deps-minor", "deps-major", "refactor", "feature"]
+    },
+    "healing": {
+      "maxRetries": 3,
+      "backoffMultiplier": 2,
+      "circuitBreakerThreshold": 5
+    }
+  },
+  "validator": {
+    "enabled": true,
+    "strictMode": true,
+    "requiredChecks": ["test", "lint", "typecheck", "build", "security"],
+    "coverageThreshold": 80
+  },
+  "cleanup": {
+    "staleBranchDays": 30,
+    "staleIssueDays": 60,
+    "stalePRDays": 14
+  }
+}
