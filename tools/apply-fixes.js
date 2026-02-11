@@ -11,9 +11,9 @@ const path = require('path');
 function runCommand(command, description) {
   console.log(`\n🔧 ${description}...`);
   try {
-    execSync(command, { 
+    execSync(command, {
       encoding: 'utf-8',
-      stdio: 'inherit'
+      stdio: 'inherit',
     });
     console.log(`✅ ${description} completed`);
     return true;
@@ -46,10 +46,10 @@ async function applyFixes() {
   // Step 3: Run codemods (if any exist)
   const codemodsDir = path.join(process.cwd(), 'tools', 'codemods');
   if (fs.existsSync(codemodsDir)) {
-    const codemods = fs.readdirSync(codemodsDir).filter(f => 
-      f.endsWith('.js') || f.endsWith('.ts')
-    );
-    
+    const codemods = fs
+      .readdirSync(codemodsDir)
+      .filter(f => f.endsWith('.js') || f.endsWith('.ts'));
+
     if (codemods.length > 0) {
       console.log(`\n📝 Found ${codemods.length} codemods to run`);
       for (const codemod of codemods) {

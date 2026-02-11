@@ -1,8 +1,4 @@
 {
-    "gates":  [
-                  "WRITE_GATE",
-                  "RUNNER_GATE",
-                  "DEPLOY_GATE"
-              ],
-    "enforcement":  "policy_file + human_presence"
+  "gates": ["WRITE_GATE", "RUNNER_GATE", "DEPLOY_GATE"],
+  "enforcement": "policy_file + human_presence"
 }

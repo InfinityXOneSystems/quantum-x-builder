@@ -11,7 +11,14 @@ async function main() {
   await runIntegrityGateV3();
   const nc = await connect({ servers: process.env.NATS_URL, timeout: 2000 });
   const js = await nc.jetstreamManager();
-  const required = [QXB_STREAMS.EVENTS, QXB_STREAMS.CHAT, QXB_STREAMS.RUNS, QXB_STREAMS.STATE, QXB_STREAMS.EVIDENCE, QXB_STREAMS.TASKS];
+  const required = [
+    QXB_STREAMS.EVENTS,
+    QXB_STREAMS.CHAT,
+    QXB_STREAMS.RUNS,
+    QXB_STREAMS.STATE,
+    QXB_STREAMS.EVIDENCE,
+    QXB_STREAMS.TASKS,
+  ];
   for (const stream of required) {
     await js.streams.info(stream);
   }
@@ -19,7 +26,7 @@ async function main() {
   console.log('ok');
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error(error);
   process.exit(1);
 });

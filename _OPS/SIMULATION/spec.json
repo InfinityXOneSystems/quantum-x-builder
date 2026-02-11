@@ -1,9 +1,9 @@
 {
-    "execution":  "SIMULATED_ONLY",
-    "simulations":  [
-                        "autonomy_enabled_hypothetical",
-                        "runner_write_attempt",
-                        "policy_violation_attempt",
-                        "rollback_path_test"
-                    ]
+  "execution": "SIMULATED_ONLY",
+  "simulations": [
+    "autonomy_enabled_hypothetical",
+    "runner_write_attempt",
+    "policy_violation_attempt",
+    "rollback_path_test"
+  ]
 }

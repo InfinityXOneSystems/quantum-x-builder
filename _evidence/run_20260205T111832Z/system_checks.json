@@ -71,147 +71,95 @@
     "connectors": {
       "providers.ollama": {
         "configured": false,
-        "missing_keys": [
-          "OLLAMA_URL"
-        ],
+        "missing_keys": ["OLLAMA_URL"],
         "enabled": false
       },
       "providers.twilio": {
         "configured": false,
-        "missing_keys": [
-          "TWILIO_ACCOUNT_SID",
-          "TWILIO_AUTH_TOKEN",
-          "TWILIO_FROM_NUMBER"
-        ],
+        "missing_keys": ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN", "TWILIO_FROM_NUMBER"],
         "enabled": false
       },
       "providers.vertex_speech": {
         "configured": false,
-        "missing_keys": [
-          "VERTEX_SPEECH_PROJECT_ID"
-        ],
+        "missing_keys": ["VERTEX_SPEECH_PROJECT_ID"],
         "enabled": false
       },
       "providers.vertex_search": {
         "configured": false,
-        "missing_keys": [
-          "VERTEX_SEARCH_PROJECT_ID",
-          "VERTEX_SEARCH_DATASTORE"
-        ],
+        "missing_keys": ["VERTEX_SEARCH_PROJECT_ID", "VERTEX_SEARCH_DATASTORE"],
         "enabled": false
       },
       "providers.bigquery": {
         "configured": false,
-        "missing_keys": [
-          "BIGQUERY_PROJECT_ID",
-          "BIGQUERY_DATASET"
-        ],
+        "missing_keys": ["BIGQUERY_PROJECT_ID", "BIGQUERY_DATASET"],
         "enabled": false
       },
       "providers.gcs": {
         "configured": false,
-        "missing_keys": [
-          "GCS_BUCKET"
-        ],
+        "missing_keys": ["GCS_BUCKET"],
         "enabled": false
       },
       "providers.playwright": {
         "configured": false,
-        "missing_keys": [
-          "PLAYWRIGHT_ENDPOINT"
-        ],
+        "missing_keys": ["PLAYWRIGHT_ENDPOINT"],
         "enabled": false
       },
       "providers.automl": {
         "configured": false,
-        "missing_keys": [
-          "AUTOML_PROJECT_ID"
-        ],
+        "missing_keys": ["AUTOML_PROJECT_ID"],
         "enabled": false
       },
       "auth.github": {
         "configured": false,
-        "missing_keys": [
-          "GITHUB_CLIENT_ID",
-          "GITHUB_CLIENT_SECRET"
-        ],
+        "missing_keys": ["GITHUB_CLIENT_ID", "GITHUB_CLIENT_SECRET"],
         "enabled": false
       },
       "auth.google": {
         "configured": false,
-        "missing_keys": [
-          "GOOGLE_CLIENT_ID",
-          "GOOGLE_CLIENT_SECRET"
-        ],
+        "missing_keys": ["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"],
         "enabled": false
       }
     },
     "advisories": [
       {
         "connector": "providers.ollama",
-        "missing_keys": [
-          "OLLAMA_URL"
-        ]
+        "missing_keys": ["OLLAMA_URL"]
       },
       {
         "connector": "providers.twilio",
-        "missing_keys": [
-          "TWILIO_ACCOUNT_SID",
-          "TWILIO_AUTH_TOKEN",
-          "TWILIO_FROM_NUMBER"
-        ]
+        "missing_keys": ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN", "TWILIO_FROM_NUMBER"]
       },
       {
         "connector": "providers.vertex_speech",
-        "missing_keys": [
-          "VERTEX_SPEECH_PROJECT_ID"
-        ]
+        "missing_keys": ["VERTEX_SPEECH_PROJECT_ID"]
       },
       {
         "connector": "providers.vertex_search",
-        "missing_keys": [
-          "VERTEX_SEARCH_PROJECT_ID",
-          "VERTEX_SEARCH_DATASTORE"
-        ]
+        "missing_keys": ["VERTEX_SEARCH_PROJECT_ID", "VERTEX_SEARCH_DATASTORE"]
       },
       {
         "connector": "providers.bigquery",
-        "missing_keys": [
-          "BIGQUERY_PROJECT_ID",
-          "BIGQUERY_DATASET"
-        ]
+        "missing_keys": ["BIGQUERY_PROJECT_ID", "BIGQUERY_DATASET"]
       },
       {
         "connector": "providers.gcs",
-        "missing_keys": [
-          "GCS_BUCKET"
-        ]
+        "missing_keys": ["GCS_BUCKET"]
       },
       {
         "connector": "providers.playwright",
-        "missing_keys": [
-          "PLAYWRIGHT_ENDPOINT"
-        ]
+        "missing_keys": ["PLAYWRIGHT_ENDPOINT"]
       },
       {
         "connector": "providers.automl",
-        "missing_keys": [
-          "AUTOML_PROJECT_ID"
-        ]
+        "missing_keys": ["AUTOML_PROJECT_ID"]
       },
       {
         "connector": "auth.github",
-        "missing_keys": [
-          "GITHUB_CLIENT_ID",
-          "GITHUB_CLIENT_SECRET"
-        ]
+        "missing_keys": ["GITHUB_CLIENT_ID", "GITHUB_CLIENT_SECRET"]
       },
       {
         "connector": "auth.google",
-        "missing_keys": [
-          "GOOGLE_CLIENT_ID",
-          "GOOGLE_CLIENT_SECRET"
-        ]
+        "missing_keys": ["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"]
       }
     ],
     "license": {

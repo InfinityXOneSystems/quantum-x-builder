@@ -10,10 +10,5 @@
     "analyze",
     "propose_change"
   ],
-  "forbidden": [
-    "change_policy",
-    "disable_guardrails",
-    "deploy_prod",
-    "rotate_keys"
-  ]
+  "forbidden": ["change_policy", "disable_guardrails", "deploy_prod", "rotate_keys"]
 }

@@ -13,7 +13,7 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "incremental": true,
-    
+
     // Strict Type-Checking Options
     "strict": true,
     "noImplicitAny": true,
@@ -23,7 +23,7 @@
     "strictPropertyInitialization": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
-    
+
     // Additional Checks
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -33,10 +33,7 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true
   },
-  "include": [
-    "tools/**/*.ts",
-    "tests/**/*.ts"
-  ],
+  "include": ["tools/**/*.ts", "tests/**/*.ts"],
   "exclude": [
     "node_modules",
     "dist",

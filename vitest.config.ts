@@ -4,7 +4,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
-    include: ['tests/**/*.{test,spec}.{js,ts}'],
+    include: ['tests/**/*.{test,spec}.{js,ts}', 'nlc/tests/**/*.{test,spec}.{js,ts}'],
     exclude: [
       'node_modules/**',
       'dist/**',
@@ -18,13 +18,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
-      exclude: [
-        'node_modules/',
-        'tests/',
-        '**/*.config.*',
-        '**/dist/**',
-        '**/build/**',
-      ],
+      exclude: ['node_modules/', 'tests/', '**/*.config.*', '**/dist/**', '**/build/**'],
     },
   },
 });

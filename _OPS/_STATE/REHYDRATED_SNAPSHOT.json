@@ -1,343 +1,300 @@
 ﻿{
-    "git_dirty":  true,
-    "git_branch":  "phase5-postlock-work",
-    "timestamp":  "2026-02-06T23:05:17.9050603-05:00",
-    "config_reads":  {
-                         "_OPS/RENDERER/CONFIG/renderer.json":  {
-                                                                    "renderer":  {
-                                                                                     "enabled":  false,
-                                                                                     "ui_component":  "placeholder",
-                                                                                     "last_render":  null,
-                                                                                     "next_render":  null,
-                                                                                     "constraints":  {
-                                                                                                         "no_autonomy_execution":  true
-                                                                                                     }
-                                                                                 }
-                                                                },
-                         "_OPS/_STATE/ROADMAP.json":  {
-                                                          "project":  "quantum-x-builder",
-                                                          "phase":  "5",
-                                                          "phase_status":  "locked_paused",
-                                                          "updated_at":  "2026-02-06T21:02:45.5041267-05:00",
-                                                          "definitions":  {
-                                                                              "phase5":  {
-                                                                                             "name":  "Phase-5 Ceiling Complete",
-                                                                                             "description":  "Control plane proven, execution declared but blocked, autonomy disabled, system paused.",
-                                                                                             "status":  "complete",
-                                                                                             "checklist":  [
-                                                                                                               "control_plane_proven",
-                                                                                                               "schema_enforced",
-                                                                                                               "audit_immutable",
-                                                                                                               "execution_declared_blocked",
-                                                                                                               "phase5_locked",
-                                                                                                               "system_paused"
-                                                                                                           ],
-                                                                                             "tests":  [
-                                                                                                           "noop_command_validation",
-                                                                                                           "immutable_audit_policy",
-                                                                                                           "schema_validation"
-                                                                                                       ],
-                                                                                             "parallelizable":  [
-                                                                                                                    "schema_fuzz_tests",
-                                                                                                                    "audit_replay_verification",
-                                                                                                                    "runner_sandbox_tests"
-                                                                                                                ]
-                                                                                         },
-                                                                              "phase6":  {
-                                                                                             "name":  "Phase-6 Controlled Resumption",
-                                                                                             "description":  "Human-gated resume; execution allowed with oversight but still no autonomy.",
-                                                                                             "status":  "design-only",
-                                                                                             "checklist":  [
-                                                                                                               "phase6_unlock_ceremony_signed",
-                                                                                                               "runner_isolation_tests",
-                                                                                                               "kill_switch_live",
-                                                                                                               "time_window_declared"
-                                                                                                           ],
-                                                                                             "tests":  [
-                                                                                                           "execution_adapter_noop_test",
-                                                                                                           "time_window_expiry_test",
-                                                                                                           "kill_switch_activation"
-                                                                                                       ],
-                                                                                             "parallelizable":  [
-                                                                                                                    "dry_run_executions",
-                                                                                                                    "audit_append_verification"
-                                                                                                                ]
-                                                                                         },
-                                                                              "phase7":  {
-                                                                                             "name":  "Phase-7 Bounded Autonomy (Supervised)",
-                                                                                             "description":  "Limited self-dispatch under leash with human veto.",
-                                                                                             "status":  "planned",
-                                                                                             "checklist":  [
-                                                                                                               "confidence_thresholding",
-                                                                                                               "human_interrupt_window",
-                                                                                                               "resource_quota_ceilings",
-                                                                                                               "model_disagreement_tests"
-                                                                                                           ],
-                                                                                             "tests":  [
-                                                                                                           "autonomous_noop_chain",
-                                                                                                           "partial_failure_recovery"
-                                                                                                       ],
-                                                                                             "parallelizable":  [
-                                                                                                                    "observability_pipeline_validation",
-                                                                                                                    "adversarial_intent_simulation"
-                                                                                                                ]
-                                                                                         },
-                                                                              "phase8":  {
-                                                                                             "name":  "Phase-8 Steady-State Autonomy (Production)",
-                                                                                             "description":  "Full continuous autonomous operation with monitoring and SLA.",
-                                                                                             "status":  "planned",
-                                                                                             "checklist":  [
-                                                                                                               "incident_response_automation",
-                                                                                                               "cost_runaway_prevention",
-                                                                                                               "compliance_audit_mapping"
-                                                                                                           ],
-                                                                                             "tests":  [
-                                                                                                           "chaos_testing",
-                                                                                                           "long_run_audit_integrity"
-                                                                                                       ],
-                                                                                             "parallelizable":  [
-                                                                                                                    "load_testing",
-                                                                                                                    "failover_drills"
-                                                                                                                ]
-                                                                                         },
-                                                                              "phase9a":  {
-                                                                                              "name":  "Phase-9 Archival",
-                                                                                              "description":  "Permanent read-only freeze for auditors/regulators.",
-                                                                                              "status":  "planned",
-                                                                                              "checklist":  [
-                                                                                                                "final_freeze_confirmed",
-                                                                                                                "legal_handoff",
-                                                                                                                "immutable_repository"
-                                                                                                            ],
-                                                                                              "tests":  [
-
-                                                                                                        ],
-                                                                                              "parallelizable":  [
-
-                                                                                                                 ]
-                                                                                          },
-                                                                              "phase9b":  {
-                                                                                              "name":  "Phase-9 Autonomous Trust System",
-                                                                                              "description":  "Highest trust state with minimal human intervention.",
-                                                                                              "status":  "planned",
-                                                                                              "checklist":  [
-                                                                                                                "steady_state_autonomy_verification",
-                                                                                                                "liability_insurance_in_place",
-                                                                                                                "compliance_certification"
-                                                                                                            ],
-                                                                                              "tests":  [
-
-                                                                                                        ],
-                                                                                              "parallelizable":  [
-
-                                                                                                                 ]
-                                                                                          }
-                                                                          },
-                                                          "global_parallel":  [
-                                                                                  "schema_fuzz_testing",
-                                                                                  "audit_replay_verification",
-                                                                                  "runner_sandbox_tests",
-                                                                                  "adversarial_intent_simulation"
-                                                                              ],
-                                                          "next_actions":  {
-                                                                               "resume":  {
-                                                                                              "description":  "Unpause the system for controlled execution.",
-                                                                                              "phase_target":  "phase6"
-                                                                                          },
-                                                                               "unlock":  {
-                                                                                              "description":  "Execute Phase-6 autonomy unlock ceremony (design-only).",
-                                                                                              "phase_target":  "phase6"
-                                                                                          },
-                                                                               "archive":  {
-                                                                                               "description":  "Move to archival freeze.",
-                                                                                               "phase_target":  "phase9a"
-                                                                                           }
-                                                                           }
-                                                      },
-                         "_OPS/SCRAPER/CONFIG/scraper.json":  {
-                                                                  "headless_scraper":  {
-                                                                                           "enabled":  false,
-                                                                                           "framework":  "placeholder",
-                                                                                           "async_support":  false,
-                                                                                           "last_run":  null,
-                                                                                           "next_run":  null,
-                                                                                           "constraints":  {
-                                                                                                               "no_autonomy_execution":  true,
-                                                                                                               "scrape_rate_limit_per_day":  5
-                                                                                                           },
-                                                                                           "seed_sources":  {
-                                                                                                                "github_repos":  [
-
-                                                                                                                                 ],
-                                                                                                                "ai_news":  [
-
-                                                                                                                            ],
-                                                                                                                "open_gov":  [
-
-                                                                                                                             ],
-                                                                                                                "financial_feeds":  [
-
-                                                                                                                                    ]
-                                                                                                            }
-                                                                                       }
-                                                              },
-                         "_OPS/REFLECTION/CONFIG/reflection_config.json":  {
-                                                                               "self_reflection":  {
-                                                                                                       "enabled":  false,
-                                                                                                       "iteration_per_day":  1,
-                                                                                                       "last_run":  null,
-                                                                                                       "next_run":  null,
-                                                                                                       "observation_window_hours":  24,
-                                                                                                       "metrics_tracking":  [
-                                                                                                                                "command_rate",
-                                                                                                                                "schema_changes",
-                                                                                                                                "audit_anomalies",
-                                                                                                                                "branch_activity",
-                                                                                                                                "workflow_failures"
-                                                                                                                            ],
-                                                                                                       "recommendation_constraints":  {
-                                                                                                                                          "no_autonomy_execution":  true,
-                                                                                                                                          "max_recommendations_per_run":  5
-                                                                                                                                      }
-                                                                                                   }
-                                                                           },
-                         "_OPS/VISION_CORTEX/CONFIG/vision_cortex.json":  {
-                                                                              "vision_cortex":  {
-                                                                                                    "enabled":  false,
-                                                                                                    "ingest_endpoints":  [
-
-                                                                                                                         ],
-                                                                                                    "model_registry":  [
-
-                                                                                                                       ],
-                                                                                                    "last_ingest":  null,
-                                                                                                    "next_ingest":  null,
-                                                                                                    "constraints":  {
-                                                                                                                        "no_autonomy_execution":  true,
-                                                                                                                        "validate_before_commit":  true
-                                                                                                                    }
-                                                                                                }
-                                                                          },
-                         "_OPS/SCHEDULER/CONFIG/scheduler.json":  {
-                                                                      "scheduler":  {
-                                                                                        "enabled":  false,
-                                                                                        "dry_run_mode":  true,
-                                                                                        "tasks":  [
-                                                                                                      {
-                                                                                                          "name":  "self_reflection",
-                                                                                                          "frequency_per_day":  1,
-                                                                                                          "last_run":  null,
-                                                                                                          "next_run":  null
-                                                                                                      },
-                                                                                                      {
-                                                                                                          "name":  "roadmap_sync",
-                                                                                                          "frequency_per_day":  1,
-                                                                                                          "last_run":  null,
-                                                                                                          "next_run":  null
-                                                                                                      }
-                                                                                                  ]
-                                                                                    }
-                                                                  }
-                     },
-    "existing":  {
-                     "C:\\AI\\quantum-x-builder\\_OPS\\PHASE5_AUTONOMY":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\AUDIT":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\_LOGS":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\OUTPUT":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\PHASE6_DESIGN":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\_STATE\\ROLLBACK_20260206_141932\\SAFETY":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\EVOLVING_TAXONOMY":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\PHASE4_AUDIT":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\COMMANDS":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\SELF_REFLECTION":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\ADMIN\\CONTROL_PLANE":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\PHASE5_UNLOCK":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\BOOT":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\flags":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\SEED_SOURCES":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\ADMIN":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\EVOLVING_DOCUMENTS":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\ROADMAP":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\RENDERER\\CONFIG":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\_BACKUPS\\devcontainer-20260205T203651Z":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\tests":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\SCRAPER\\HEADLESS":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\GITHUB_APP":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\PHASE5_UNLOCK\\UNLOCK_CEREMONY_20260206_140849":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\EVOLVING_TREE":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\METRICS":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\VALIDATION\\TRUTH":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\global":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\SCHEDULER":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\VISION_CORTEX\\CONFIG":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\SCHEMA":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\AUDIT_IMMUTABLE\\ci":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\SAFETY":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\VALIDATION\\POSITIVE_FILTER":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\EVOLVING_INDEX":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\AGENTS\\TEMPLATES":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\SCHEDULER":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\RENDERER\\OUTPUT":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\VISION_CORTEX\\INGEST":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\_BACKUPS\\devcontainer-20260205T203651Z\\.devcontainer":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\AUDIT_IMMUTABLE":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\PHASE6_CEREMONY":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\SCHEDULER\\HISTORY":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\OBSERVATIONS":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\TODO":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\INGESTION\\SEEDS":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\EVIDENCE":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\_RUNNER":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\SCHEDULER\\CONFIG":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\VISION_CORTEX":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\VISION_CORTEX\\MODEL":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\HISTORIES":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\_STATE\\ROLLBACK_20260206_141932\\POLICY":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\ROLLBACK":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\RECOMMENDATIONS":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\MASTER_INVOCATION":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\SCRAPER":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\EVIDENCE\\BUNDLE_20260206_135857":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\SCHEDULER\\HISTORY":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\PHASE4_SHADOW":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\GATES":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\EXECUTION_ADAPTERS":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\FREEZE_TAG":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\SCRAPER\\CONFIG":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\TIMERS":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\SCRAPER\\TEMPLATES":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\_BACKUPS":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\VALIDATION":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\TEMPLATES":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\SCRAPER":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\AGENTS":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\SCRAPER\\ASYNCIO":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\CONFIG":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\RECOMMENDATIONS":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\CEILINGS":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\_STATE\\ROLLBACK_20260206_141932\\PHASE5_AUTONOMY":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\_STATE":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\ADVISORY":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\_AUTONOMY":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\HANDOFF":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\RENDERER\\TEMPLATES":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\AGENTS\\INTELLIGENCE":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\MULTI_MODEL_SYNC":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\RISK":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\SIMULATION":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\_CLONES":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\SANDBOX":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\_CLONES\\monaco-template":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\_STATE\\ROLLBACK_20260206_141932":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\SCHEDULER\\CONFIG":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\RENDERER":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\VIZUALX_UI":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\POLICY":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\DAILY_SNAPSHOT":  true,
-                     "C:\\AI\\quantum-x-builder\\_OPS\\INGESTION":  true
-                 },
-    "phase":  "5 (locked_paused)",
-    "git_head":  "64377b8244f12210e51f5adf84c645bb707f6edb",
-    "updated_at":  "2026-02-06T23:13:29.7253893-05:00"
+  "git_dirty": true,
+  "git_branch": "phase5-postlock-work",
+  "timestamp": "2026-02-06T23:05:17.9050603-05:00",
+  "config_reads": {
+    "_OPS/RENDERER/CONFIG/renderer.json": {
+      "renderer": {
+        "enabled": false,
+        "ui_component": "placeholder",
+        "last_render": null,
+        "next_render": null,
+        "constraints": {
+          "no_autonomy_execution": true
+        }
+      }
+    },
+    "_OPS/_STATE/ROADMAP.json": {
+      "project": "quantum-x-builder",
+      "phase": "5",
+      "phase_status": "locked_paused",
+      "updated_at": "2026-02-06T21:02:45.5041267-05:00",
+      "definitions": {
+        "phase5": {
+          "name": "Phase-5 Ceiling Complete",
+          "description": "Control plane proven, execution declared but blocked, autonomy disabled, system paused.",
+          "status": "complete",
+          "checklist": [
+            "control_plane_proven",
+            "schema_enforced",
+            "audit_immutable",
+            "execution_declared_blocked",
+            "phase5_locked",
+            "system_paused"
+          ],
+          "tests": ["noop_command_validation", "immutable_audit_policy", "schema_validation"],
+          "parallelizable": [
+            "schema_fuzz_tests",
+            "audit_replay_verification",
+            "runner_sandbox_tests"
+          ]
+        },
+        "phase6": {
+          "name": "Phase-6 Controlled Resumption",
+          "description": "Human-gated resume; execution allowed with oversight but still no autonomy.",
+          "status": "design-only",
+          "checklist": [
+            "phase6_unlock_ceremony_signed",
+            "runner_isolation_tests",
+            "kill_switch_live",
+            "time_window_declared"
+          ],
+          "tests": [
+            "execution_adapter_noop_test",
+            "time_window_expiry_test",
+            "kill_switch_activation"
+          ],
+          "parallelizable": ["dry_run_executions", "audit_append_verification"]
+        },
+        "phase7": {
+          "name": "Phase-7 Bounded Autonomy (Supervised)",
+          "description": "Limited self-dispatch under leash with human veto.",
+          "status": "planned",
+          "checklist": [
+            "confidence_thresholding",
+            "human_interrupt_window",
+            "resource_quota_ceilings",
+            "model_disagreement_tests"
+          ],
+          "tests": ["autonomous_noop_chain", "partial_failure_recovery"],
+          "parallelizable": ["observability_pipeline_validation", "adversarial_intent_simulation"]
+        },
+        "phase8": {
+          "name": "Phase-8 Steady-State Autonomy (Production)",
+          "description": "Full continuous autonomous operation with monitoring and SLA.",
+          "status": "planned",
+          "checklist": [
+            "incident_response_automation",
+            "cost_runaway_prevention",
+            "compliance_audit_mapping"
+          ],
+          "tests": ["chaos_testing", "long_run_audit_integrity"],
+          "parallelizable": ["load_testing", "failover_drills"]
+        },
+        "phase9a": {
+          "name": "Phase-9 Archival",
+          "description": "Permanent read-only freeze for auditors/regulators.",
+          "status": "planned",
+          "checklist": ["final_freeze_confirmed", "legal_handoff", "immutable_repository"],
+          "tests": [],
+          "parallelizable": []
+        },
+        "phase9b": {
+          "name": "Phase-9 Autonomous Trust System",
+          "description": "Highest trust state with minimal human intervention.",
+          "status": "planned",
+          "checklist": [
+            "steady_state_autonomy_verification",
+            "liability_insurance_in_place",
+            "compliance_certification"
+          ],
+          "tests": [],
+          "parallelizable": []
+        }
+      },
+      "global_parallel": [
+        "schema_fuzz_testing",
+        "audit_replay_verification",
+        "runner_sandbox_tests",
+        "adversarial_intent_simulation"
+      ],
+      "next_actions": {
+        "resume": {
+          "description": "Unpause the system for controlled execution.",
+          "phase_target": "phase6"
+        },
+        "unlock": {
+          "description": "Execute Phase-6 autonomy unlock ceremony (design-only).",
+          "phase_target": "phase6"
+        },
+        "archive": {
+          "description": "Move to archival freeze.",
+          "phase_target": "phase9a"
+        }
+      }
+    },
+    "_OPS/SCRAPER/CONFIG/scraper.json": {
+      "headless_scraper": {
+        "enabled": false,
+        "framework": "placeholder",
+        "async_support": false,
+        "last_run": null,
+        "next_run": null,
+        "constraints": {
+          "no_autonomy_execution": true,
+          "scrape_rate_limit_per_day": 5
+        },
+        "seed_sources": {
+          "github_repos": [],
+          "ai_news": [],
+          "open_gov": [],
+          "financial_feeds": []
+        }
+      }
+    },
+    "_OPS/REFLECTION/CONFIG/reflection_config.json": {
+      "self_reflection": {
+        "enabled": false,
+        "iteration_per_day": 1,
+        "last_run": null,
+        "next_run": null,
+        "observation_window_hours": 24,
+        "metrics_tracking": [
+          "command_rate",
+          "schema_changes",
+          "audit_anomalies",
+          "branch_activity",
+          "workflow_failures"
+        ],
+        "recommendation_constraints": {
+          "no_autonomy_execution": true,
+          "max_recommendations_per_run": 5
+        }
+      }
+    },
+    "_OPS/VISION_CORTEX/CONFIG/vision_cortex.json": {
+      "vision_cortex": {
+        "enabled": false,
+        "ingest_endpoints": [],
+        "model_registry": [],
+        "last_ingest": null,
+        "next_ingest": null,
+        "constraints": {
+          "no_autonomy_execution": true,
+          "validate_before_commit": true
+        }
+      }
+    },
+    "_OPS/SCHEDULER/CONFIG/scheduler.json": {
+      "scheduler": {
+        "enabled": false,
+        "dry_run_mode": true,
+        "tasks": [
+          {
+            "name": "self_reflection",
+            "frequency_per_day": 1,
+            "last_run": null,
+            "next_run": null
+          },
+          {
+            "name": "roadmap_sync",
+            "frequency_per_day": 1,
+            "last_run": null,
+            "next_run": null
+          }
+        ]
+      }
+    }
+  },
+  "existing": {
+    "C:\\AI\\quantum-x-builder\\_OPS\\PHASE5_AUTONOMY": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\AUDIT": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\_LOGS": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\OUTPUT": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\PHASE6_DESIGN": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\_STATE\\ROLLBACK_20260206_141932\\SAFETY": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\EVOLVING_TAXONOMY": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\PHASE4_AUDIT": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\COMMANDS": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\SELF_REFLECTION": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\ADMIN\\CONTROL_PLANE": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\PHASE5_UNLOCK": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\BOOT": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\flags": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\SEED_SOURCES": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\ADMIN": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\EVOLVING_DOCUMENTS": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\ROADMAP": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\RENDERER\\CONFIG": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\_BACKUPS\\devcontainer-20260205T203651Z": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\tests": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\SCRAPER\\HEADLESS": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\GITHUB_APP": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\PHASE5_UNLOCK\\UNLOCK_CEREMONY_20260206_140849": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\EVOLVING_TREE": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\METRICS": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\VALIDATION\\TRUTH": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\global": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\SCHEDULER": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\VISION_CORTEX\\CONFIG": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\SCHEMA": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\AUDIT_IMMUTABLE\\ci": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\SAFETY": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\VALIDATION\\POSITIVE_FILTER": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\EVOLVING_INDEX": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\AGENTS\\TEMPLATES": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\SCHEDULER": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\RENDERER\\OUTPUT": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\VISION_CORTEX\\INGEST": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\_BACKUPS\\devcontainer-20260205T203651Z\\.devcontainer": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\AUDIT_IMMUTABLE": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\PHASE6_CEREMONY": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\SCHEDULER\\HISTORY": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\OBSERVATIONS": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\TODO": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\INGESTION\\SEEDS": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\EVIDENCE": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\_RUNNER": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\SCHEDULER\\CONFIG": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\VISION_CORTEX": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\VISION_CORTEX\\MODEL": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\HISTORIES": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\_STATE\\ROLLBACK_20260206_141932\\POLICY": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\ROLLBACK": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\RECOMMENDATIONS": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\MASTER_INVOCATION": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\SCRAPER": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\EVIDENCE\\BUNDLE_20260206_135857": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\SCHEDULER\\HISTORY": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\PHASE4_SHADOW": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\GATES": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\EXECUTION_ADAPTERS": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\FREEZE_TAG": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\SCRAPER\\CONFIG": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\TIMERS": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\SCRAPER\\TEMPLATES": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\_BACKUPS": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\VALIDATION": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\TEMPLATES": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\SCRAPER": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\AGENTS": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\SCRAPER\\ASYNCIO": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\CONFIG": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\RECOMMENDATIONS": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\CEILINGS": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\_STATE\\ROLLBACK_20260206_141932\\PHASE5_AUTONOMY": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\_STATE": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\ADVISORY": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\_AUTONOMY": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\HANDOFF": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\RENDERER\\TEMPLATES": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\AGENTS\\INTELLIGENCE": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\MULTI_MODEL_SYNC": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\RISK": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\SIMULATION": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\_CLONES": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\SANDBOX": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\_CLONES\\monaco-template": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\_STATE\\ROLLBACK_20260206_141932": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\REFLECTION\\SCHEDULER\\CONFIG": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\RENDERER": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\VIZUALX_UI": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\POLICY": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\DAILY_SNAPSHOT": true,
+    "C:\\AI\\quantum-x-builder\\_OPS\\INGESTION": true
+  },
+  "phase": "5 (locked_paused)",
+  "git_head": "64377b8244f12210e51f5adf84c645bb707f6edb",
+  "updated_at": "2026-02-06T23:13:29.7253893-05:00"
 }

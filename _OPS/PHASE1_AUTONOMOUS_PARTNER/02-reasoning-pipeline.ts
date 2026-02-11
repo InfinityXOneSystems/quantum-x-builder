@@ -1,12 +1,12 @@
 /**
  * REASONING PIPELINE
  * ==================
- * 
+ *
  * Pure functions that SYNTHESIZE ONLY (no execution).
- * 
+ *
  * These roles DO NOT act.
  * They contribute to Proposal content via reasoning.
- * 
+ *
  * INTERNAL ROLES (synthesis only):
  * - Planner: breaks intent into steps
  * - Operator: identifies resources and constraints
@@ -15,12 +15,12 @@
  * - User Advocate: ensures human agency preserved
  */
 
-import { Proposal, ProposalResources, ProposalRisk, createProposal } from './01-proposal-schema'
+import { Proposal, ProposalResources, ProposalRisk, createProposal } from './01-proposal-schema';
 
 /**
  * PLANNER ROLE
  * ============
- * 
+ *
  * Breaks a human intent into explicit ACTION STEPS.
  * Returns array of human-readable steps.
  */
@@ -38,15 +38,15 @@ export function plannerSynthesizeActions(intent: string): string[] {
     `[STEP 2] Identify atomic operations needed`,
     `[STEP 3] Sequence operations by dependency`,
     `[STEP 4] Prepare resource list`,
-  ]
+  ];
 
-  return steps
+  return steps;
 }
 
 /**
  * OPERATOR ROLE
  * =============
- * 
+ *
  * Identifies affected RESOURCES and CONSTRAINTS.
  * Returns ProposalResources object.
  */
@@ -65,13 +65,13 @@ export function operatorIdentifyResources(intent: string, actions: string[]): Pr
     files: [],
     accounts: [],
     infra: [],
-  }
+  };
 }
 
 /**
  * CRITIC ROLE
  * ===========
- * 
+ *
  * Assesses RISK and ROLLBACK availability.
  * Returns ProposalRisk object.
  */
@@ -89,26 +89,26 @@ export function criticAssessRisk(
   //
   // For now: return structured placeholder
 
-  const riskLevel = evaluateRiskLevel(intent)
+  const riskLevel = evaluateRiskLevel(intent);
 
   return {
     impact: riskLevel,
     explanation: `Risk assessment for intent: "${intent}" with ${actions.length} actions affecting ${countResources(resources)} resources.`,
     rollbackAvailable: riskLevel !== 'high', // Placeholder logic
-  }
+  };
 }
 
 /**
  * TAP GUARDIAN ROLE
  * =================
- * 
+ *
  * Ensures TRANSPARENCY, ACCOUNTABILITY, PERMISSION.
  * Validates that consent requirements are met.
  * Returns validation result.
  */
 export function tapGuardianValidateConsent(proposal: Proposal): {
-  canPropose: boolean
-  reason: string
+  canPropose: boolean;
+  reason: string;
 } {
   // This is Phase 1: PREPARATION ONLY
   // Consent cannot be auto-granted.
@@ -118,7 +118,7 @@ export function tapGuardianValidateConsent(proposal: Proposal): {
     return {
       canPropose: false,
       reason: 'Proposal is malformed. Cannot seek consent.',
-    }
+    };
   }
 
   // Check: Is status correct?
@@ -126,7 +126,7 @@ export function tapGuardianValidateConsent(proposal: Proposal): {
     return {
       canPropose: false,
       reason: `Invalid status: ${proposal.status}. Must be AWAITING_APPROVAL.`,
-    }
+    };
   }
 
   // Check: Is consent loop valid?
@@ -135,61 +135,61 @@ export function tapGuardianValidateConsent(proposal: Proposal): {
   return {
     canPropose: true,
     reason: 'Proposal is well-formed and ready for human consent request.',
-  }
+  };
 }
 
 /**
  * USER ADVOCATE ROLE
  * ==================
- * 
+ *
  * Ensures HUMAN AGENCY is preserved.
  * Checks that user control is not circumvented.
  */
 export function userAdvocateCheckAgency(proposal: Proposal): {
-  agencyPreserved: boolean
-  concerns: string[]
+  agencyPreserved: boolean;
+  concerns: string[];
 } {
-  const concerns: string[] = []
+  const concerns: string[] = [];
 
   // Check: Are actions explicit and understandable?
-  if (proposal.actions.some((a) => a.includes('auto-') || a.includes('automatically'))) {
-    concerns.push('Some actions appear to be automatic (lacking user control point).')
+  if (proposal.actions.some(a => a.includes('auto-') || a.includes('automatically'))) {
+    concerns.push('Some actions appear to be automatic (lacking user control point).');
   }
 
   // Check: Is rollback available?
   if (proposal.risk.impact === 'high' && !proposal.risk.rollbackAvailable) {
-    concerns.push('High-impact action with no rollback available. User agency at risk.')
+    concerns.push('High-impact action with no rollback available. User agency at risk.');
   }
 
   // Check: Is recommendation too strong?
   if (proposal.recommendation === 'proceed' && proposal.risk.impact === 'high') {
-    concerns.push('Strong recommendation for high-impact action. Ensure user autonomy.')
+    concerns.push('Strong recommendation for high-impact action. Ensure user autonomy.');
   }
 
   return {
     agencyPreserved: concerns.length === 0,
     concerns,
-  }
+  };
 }
 
 /**
  * MASTER REASONING FLOW
  * =====================
- * 
+ *
  * Orchestrates all reasoning roles.
  * Returns a complete Proposal object.
- * 
+ *
  * Pure function. No side effects. No execution.
  */
 export function masterReasoningFlow(intent: string): Proposal {
   // Step 1: Planner synthesizes actions
-  const actions = plannerSynthesizeActions(intent)
+  const actions = plannerSynthesizeActions(intent);
 
   // Step 2: Operator identifies resources
-  const resources = operatorIdentifyResources(intent, actions)
+  const resources = operatorIdentifyResources(intent, actions);
 
   // Step 3: Critic assesses risk
-  const risk = criticAssessRisk(intent, actions, resources)
+  const risk = criticAssessRisk(intent, actions, resources);
 
   // Step 4: TAP Guardian validates consent viability
   // (In Phase 1, we always PREPARE. Consent is handled separately.)
@@ -205,10 +205,10 @@ export function masterReasoningFlow(intent: string): Proposal {
     recommendation: 'caution',
     status: 'AWAITING_APPROVAL',
     createdAt: Date.now(),
-  })
+  });
 
   // Step 6: Synthesize recommendation
-  const recommendation = synthesizeRecommendation(intent, risk, agencyCheck)
+  const recommendation = synthesizeRecommendation(intent, risk, agencyCheck);
 
   // Step 7: Create Proposal
   const proposal = createProposal({
@@ -218,9 +218,9 @@ export function masterReasoningFlow(intent: string): Proposal {
     resources,
     risk,
     recommendation,
-  })
+  });
 
-  return proposal
+  return proposal;
 }
 
 /**
@@ -237,19 +237,19 @@ function evaluateRiskLevel(intent: string): 'low' | 'medium' | 'high' {
     'deploy',
     'database',
     'authentication',
-  ]
-  const mediumRiskKeywords = ['modify', 'update', 'change', 'refactor']
+  ];
+  const mediumRiskKeywords = ['modify', 'update', 'change', 'refactor'];
 
-  const lowerIntent = intent.toLowerCase()
+  const lowerIntent = intent.toLowerCase();
 
-  if (highRiskKeywords.some((kw) => lowerIntent.includes(kw))) {
-    return 'high'
+  if (highRiskKeywords.some(kw => lowerIntent.includes(kw))) {
+    return 'high';
   }
-  if (mediumRiskKeywords.some((kw) => lowerIntent.includes(kw))) {
-    return 'medium'
+  if (mediumRiskKeywords.some(kw => lowerIntent.includes(kw))) {
+    return 'medium';
   }
 
-  return 'low'
+  return 'low';
 }
 
 function countResources(resources: ProposalResources): number {
@@ -258,7 +258,7 @@ function countResources(resources: ProposalResources): number {
     (resources.files?.length || 0) +
     (resources.accounts?.length || 0) +
     (resources.infra?.length || 0)
-  )
+  );
 }
 
 function synthesizeRecommendation(
@@ -270,16 +270,16 @@ function synthesizeRecommendation(
   // In Phase 2+, this would use predictive models.
 
   if (!agencyCheck.agencyPreserved) {
-    return 'caution'
+    return 'caution';
   }
 
   if (risk.impact === 'high') {
-    return 'caution'
+    return 'caution';
   }
 
   if (risk.impact === 'medium' && !risk.rollbackAvailable) {
-    return 'caution'
+    return 'caution';
   }
 
-  return 'caution' // Default to caution in Phase 1
+  return 'caution'; // Default to caution in Phase 1
 }

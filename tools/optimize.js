@@ -59,7 +59,7 @@ async function optimize() {
   for (const dir of buildDirs) {
     const fullPath = path.join(process.cwd(), dir.path);
     const size = getDirectorySize(fullPath);
-    
+
     results.bundleSizes[dir.name] = {
       path: dir.path,
       bytes: size,
@@ -77,7 +77,7 @@ async function optimize() {
   // Load baseline if exists
   const baselineFile = path.join(process.cwd(), '.maintenance', 'bundle-baseline.json');
   let baseline = null;
-  
+
   if (fs.existsSync(baselineFile)) {
     baseline = JSON.parse(fs.readFileSync(baselineFile, 'utf-8'));
     console.log('\n📊 Comparing against baseline...\n');
@@ -115,10 +115,7 @@ async function optimize() {
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
-  fs.writeFileSync(
-    path.join(outputDir, 'optimize-report.json'),
-    JSON.stringify(results, null, 2)
-  );
+  fs.writeFileSync(path.join(outputDir, 'optimize-report.json'), JSON.stringify(results, null, 2));
 
   // Update baseline
   fs.writeFileSync(baselineFile, JSON.stringify(results, null, 2));

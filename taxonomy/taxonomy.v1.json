@@ -1,9 +1,38 @@
 {
   "version": "1.0.0",
   "labels": {
-    "domains": ["frontend", "backend", "data", "security", "performance", "devops", "legal", "finance", "sales", "support"],
-    "task_types": ["spec", "architecture", "implementation", "tests", "audit", "benchmark", "fix", "review", "deploy"],
+    "domains": [
+      "frontend",
+      "backend",
+      "data",
+      "security",
+      "performance",
+      "devops",
+      "legal",
+      "finance",
+      "sales",
+      "support"
+    ],
+    "task_types": [
+      "spec",
+      "architecture",
+      "implementation",
+      "tests",
+      "audit",
+      "benchmark",
+      "fix",
+      "review",
+      "deploy"
+    ],
     "risk": ["low", "med", "high", "critical"],
-    "failure_class": ["compile", "test", "runtime", "performance", "security", "spec_mismatch", "unknown"]
+    "failure_class": [
+      "compile",
+      "test",
+      "runtime",
+      "performance",
+      "security",
+      "spec_mismatch",
+      "unknown"
+    ]
   }
 }
