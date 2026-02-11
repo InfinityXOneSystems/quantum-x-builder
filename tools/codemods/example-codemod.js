@@ -2,16 +2,22 @@
 /**
  * Example Codemod: Convert console.log to logger
  * This is a placeholder example showing how to write codemods with ts-morph
+ * 
+ * To use this codemod:
+ * 1. Install ts-morph: npm install --save-dev ts-morph
+ * 2. Uncomment the require statement below
+ * 3. Uncomment the transformation code
+ * 4. Customize the codemod logic
  */
 
-const { Project } = require('ts-morph');
+// const { Project } = require('ts-morph');
 
 async function runCodemod() {
   console.log('Running example codemod...');
   
   // This is a placeholder. When you want to run real codemods:
-  // 1. Uncomment the code below
-  // 2. Install ts-morph: npm install --save-dev ts-morph
+  // 1. Uncomment the require statement above
+  // 2. Uncomment the code below
   // 3. Customize the codemod logic
   
   /* Example transformation code (commented out to prevent issues):
