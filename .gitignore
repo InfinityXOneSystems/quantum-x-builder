@@ -45,3 +45,6 @@ dist/
 # Allow governance state files
 !/_OPS/_STATE/REHYDRATED_SNAPSHOT.json
 !/_OPS/_STATE/existing_systems.json
+
+# Agent-generated reports
+.github/agents/*-report.json
