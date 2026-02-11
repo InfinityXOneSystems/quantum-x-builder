@@ -154,7 +154,6 @@ async function reinstallDependencies() {
 // Implement healing based on validation report
 async function implementHealing(validationReport, config) {
   const healingActions = [];
-  const maxRetries = config.autonomous.healing.maxRetries;
   const results = {
     lint: { attempted: false, fixed: false },
     formatting: { attempted: false, fixed: false },
