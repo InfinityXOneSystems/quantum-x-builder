@@ -79,7 +79,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: 'validation-agent.yml',
-              ref: 'main',
+              ref: context.ref,
               inputs: {
                 pr_number: '${{ inputs.pr_number }}'
               }
