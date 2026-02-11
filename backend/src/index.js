@@ -18,6 +18,7 @@ import { registerQxbRoutes } from './routes/qxb.js';
 import { registerOpsRoutes } from './routes/ops.js';
 import { registerAdminRoutes } from './routes/admin.js';
 import { registerAiIntegrationRoutes } from './routes/ai-integration.js';
+import { registerNlcRoutes } from './routes/nlc.js';
 import { initDb } from './db.js';
 
 const app = express();
@@ -41,6 +42,7 @@ registerQxbRoutes(app);
 registerOpsRoutes(app);
 registerAdminRoutes(app);
 registerAiIntegrationRoutes(app);
+await registerNlcRoutes(app);
 
 await initDb();
 
