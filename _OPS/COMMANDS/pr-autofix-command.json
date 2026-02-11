@@ -1,0 +1,31 @@
+{
+  "command": "pr_autofix",
+  "intent": "auto-fix-unassigned-prs",
+  "description": "Automatically fix and heal all open PRs with no assignee",
+  "authority": "Neo",
+  "phase": 5,
+  "autonomy": "ON",
+  "created_at": "2026-02-11T05:00:00.000Z",
+  "constraints": [
+    "no policy changes",
+    "no guardrail removal",
+    "rollback required",
+    "safe fixes only"
+  ],
+  "parameters": {
+    "max_prs_per_run": 10,
+    "safe_fixes_only": true,
+    "auto_label": true,
+    "auto_comment": true,
+    "respect_kill_switch": true
+  },
+  "execution": {
+    "agent": "pr-autofix-agent",
+    "workflow": ".github/workflows/pr-autofix-agent.yml",
+    "schedule": "0 */4 * * *",
+    "manual_trigger": true
+  },
+  "rollback_token_format": "qxb-autofix-{timestamp}",
+  "audit_log": "_OPS/AUDIT/pr-autofix-agent.log",
+  "output_summary": "_OPS/OUTPUT/pr-autofix-summary-{timestamp}.json"
+}
