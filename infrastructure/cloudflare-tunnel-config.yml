@@ -1,0 +1,45 @@
+# Cloudflare Tunnel Configuration for Quantum X Builder
+
+tunnel: quantum-x-builder-tunnel
+credentials-file: /home/runner/.cloudflared/credentials.json
+
+# Ingress rules for different services
+ingress:
+  # Command Center (GitHub Pages)
+  - hostname: command.quantum-x-builder.dev
+    service: https://infinityxonesystems.github.io
+    originRequest:
+      noTLSVerify: false
+
+  # Backend API
+  - hostname: api.quantum-x-builder.dev
+    service: http://backend:8787
+    originRequest:
+      noTLSVerify: true
+
+  # Local VS Code Server
+  - hostname: vscode.quantum-x-builder.dev
+    service: http://localhost:8080
+    originRequest:
+      noTLSVerify: true
+
+  # Docker Registry
+  - hostname: docker.quantum-x-builder.dev
+    service: http://localhost:5000
+    originRequest:
+      noTLSVerify: true
+
+  # Ollama API
+  - hostname: ollama.quantum-x-builder.dev
+    service: http://localhost:11434
+    originRequest:
+      noTLSVerify: true
+
+  # WebSocket endpoint
+  - hostname: ws.quantum-x-builder.dev
+    service: ws://backend:8787
+    originRequest:
+      noTLSVerify: true
+
+  # Catch-all rule (required)
+  - service: http_status:404

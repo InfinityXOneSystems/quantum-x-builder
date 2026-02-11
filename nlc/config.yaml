@@ -1,0 +1,43 @@
+# Natural Language Control System Configuration
+
+# NLP Engine Settings
+nlp:
+  confidence_threshold: 0.3 # Minimum confidence to parse command
+  context_timeout: 86400000 # 24 hours in milliseconds
+  max_history: 50 # Maximum commands to keep in history
+
+# Security Settings
+security:
+  require_auth: true
+  audit_logging: true
+  safety_checks: true
+  kill_switch_path: '_OPS/SAFETY/KILL_SWITCH.json'
+
+# Command Execution
+execution:
+  timeout: 30000 # 30 seconds timeout for command execution
+  retry_attempts: 3
+  confirmation_required:
+    - 'agent.stop'
+    - 'config.update'
+    - 'system.reset'
+
+# Integration Settings
+integration:
+  agents_enabled: true
+  workflows_enabled: true
+  api_bridge_enabled: true
+
+# Audit Logging
+audit:
+  log_path: '_OPS/AUDIT/nl-commands.log'
+  max_log_size: 10485760 # 10MB
+  rotation: true
+
+# Feature Flags
+features:
+  text_commands: true
+  voice_interface: false # Future enhancement
+  multi_language: false # Future enhancement
+  context_aware: true
+  ml_patterns: false # Future enhancement
