@@ -28,7 +28,7 @@ jobs:
       should_deploy: ${{ steps.check.outputs.should_deploy }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Check kill-switch
         id: check
@@ -68,7 +68,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Check if service should be deployed
         id: should_deploy

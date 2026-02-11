@@ -1,4 +1,4 @@
-﻿name: Enforce Rehydrate Before Implementation
+name: Enforce Rehydrate Before Implementation
 
 on:
   pull_request:
@@ -13,7 +13,7 @@ jobs:
   require_rehydrate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.GIT_PAT || github.token }}

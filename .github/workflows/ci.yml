@@ -1,4 +1,4 @@
-﻿name: Quantum-X CI
+name: Quantum-X CI
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
       run:
         shell: pwsh
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Node Setup
         uses: actions/setup-node@v4
