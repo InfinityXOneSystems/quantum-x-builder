@@ -1,0 +1,216 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Quantum-X-Builder Natural Language Control",
+    "description": "Natural language interface for complete repository control via ChatGPT Custom Actions",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.github.com/repos/InfinityXOneSystems/quantum-x-builder/dispatches"
+    }
+  ],
+  "paths": {
+    "/": {
+      "post": {
+        "operationId": "executeNaturalLanguageCommand",
+        "summary": "Execute natural language repository command",
+        "description": "Send a natural language command to control the Quantum-X-Builder repository. Supports branch management, PR operations, issue tracking, file operations, workflow triggers, and repository settings.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "event_type": {
+                    "type": "string",
+                    "enum": ["chatgpt-command"],
+                    "description": "Event type for ChatGPT integration"
+                  },
+                  "client_payload": {
+                    "type": "object",
+                    "properties": {
+                      "command": {
+                        "type": "string",
+                        "description": "Natural language command to execute"
+                      },
+                      "source": {
+                        "type": "string",
+                        "enum": ["chatgpt"],
+                        "default": "chatgpt"
+                      },
+                      "user_id": {
+                        "type": "string",
+                        "description": "User identifier for audit logging"
+                      },
+                      "auth_token": {
+                        "type": "string",
+                        "description": "Authentication token (CHATGPT_API_KEY)"
+                      }
+                    },
+                    "required": ["command", "auth_token"]
+                  }
+                },
+                "required": ["event_type", "client_payload"]
+              },
+              "examples": {
+                "createBranch": {
+                  "value": {
+                    "event_type": "chatgpt-command",
+                    "client_payload": {
+                      "command": "create a new branch called feature/new-dashboard",
+                      "source": "chatgpt",
+                      "user_id": "chatgpt-user",
+                      "auth_token": "${CHATGPT_API_KEY}"
+                    }
+                  }
+                },
+                "createPR": {
+                  "value": {
+                    "event_type": "chatgpt-command",
+                    "client_payload": {
+                      "command": "open a PR from develop to main with title 'Release v2.0'",
+                      "source": "chatgpt",
+                      "user_id": "chatgpt-user",
+                      "auth_token": "${CHATGPT_API_KEY}"
+                    }
+                  }
+                },
+                "createIssue": {
+                  "value": {
+                    "event_type": "chatgpt-command",
+                    "client_payload": {
+                      "command": "create an issue for bug tracking",
+                      "source": "chatgpt",
+                      "user_id": "chatgpt-user",
+                      "auth_token": "${CHATGPT_API_KEY}"
+                    }
+                  }
+                },
+                "updateFile": {
+                  "value": {
+                    "event_type": "chatgpt-command",
+                    "client_payload": {
+                      "command": "update the README.md file with new installation instructions",
+                      "source": "chatgpt",
+                      "user_id": "chatgpt-user",
+                      "auth_token": "${CHATGPT_API_KEY}"
+                    }
+                  }
+                },
+                "triggerWorkflow": {
+                  "value": {
+                    "event_type": "chatgpt-command",
+                    "client_payload": {
+                      "command": "trigger the deployment workflow",
+                      "source": "chatgpt",
+                      "user_id": "chatgpt-user",
+                      "auth_token": "${CHATGPT_API_KEY}"
+                    }
+                  }
+                },
+                "addCollaborator": {
+                  "value": {
+                    "event_type": "chatgpt-command",
+                    "client_payload": {
+                      "command": "add collaborator john-doe with write access",
+                      "source": "chatgpt",
+                      "user_id": "chatgpt-user",
+                      "auth_token": "${CHATGPT_API_KEY}"
+                    }
+                  }
+                },
+                "updateDescription": {
+                  "value": {
+                    "event_type": "chatgpt-command",
+                    "client_payload": {
+                      "command": "update repository description to 'Enterprise AI-powered development platform'",
+                      "source": "chatgpt",
+                      "user_id": "chatgpt-user",
+                      "auth_token": "${CHATGPT_API_KEY}"
+                    }
+                  }
+                },
+                "enablePages": {
+                  "value": {
+                    "event_type": "chatgpt-command",
+                    "client_payload": {
+                      "command": "enable GitHub Pages",
+                      "source": "chatgpt",
+                      "user_id": "chatgpt-user",
+                      "auth_token": "${CHATGPT_API_KEY}"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Command accepted and dispatched successfully"
+          },
+          "401": {
+            "description": "Authentication failed - invalid API key"
+          },
+          "403": {
+            "description": "Forbidden - insufficient permissions"
+          },
+          "422": {
+            "description": "Invalid request - command format error"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "GitHub Personal Access Token with repo scope"
+      }
+    }
+  },
+  "x-chatgpt-config": {
+    "authentication": {
+      "type": "bearer",
+      "token_variable": "CHATGPT_API_KEY"
+    },
+    "supported_commands": [
+      "Create a branch called <name>",
+      "Delete branch <name>",
+      "Open a PR from <source> to <target> with title '<title>'",
+      "Merge PR #<number>",
+      "Close PR #<number>",
+      "Create an issue titled '<title>'",
+      "Close issue #<number>",
+      "Reopen issue #<number>",
+      "Add label '<label>' to issue #<number>",
+      "Update file '<path>' with '<content>'",
+      "Create file '<path>' with '<content>'",
+      "Delete file '<path>'",
+      "Trigger workflow '<name>'",
+      "Enable workflow '<name>'",
+      "Disable workflow '<name>'",
+      "Update repository description to '<description>'",
+      "Enable GitHub Pages",
+      "Update repository topics to '<topic1>, <topic2>'",
+      "Add collaborator '<username>' with <permission> access",
+      "Remove collaborator '<username>'",
+      "List secrets",
+      "Deploy to <environment>"
+    ],
+    "rate_limits": {
+      "requests_per_hour": 100,
+      "requests_per_day": 1000
+    },
+    "audit_logging": true
+  }
+}
