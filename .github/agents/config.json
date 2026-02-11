@@ -3,10 +3,12 @@
     "autonomous_agent": "*/30 * * * *",
     "validation_agent": "0 * * * *",
     "healing_agent": "0 */2 * * *",
-    "description": "Rate-limit friendly schedules: autonomous=every 30min, validation=hourly, healing=every 2hrs"
+    "pr_autofix_agent": "0 */4 * * *",
+    "description": "Rate-limit friendly schedules: autonomous=every 30min, validation=hourly, healing=every 2hrs, pr_autofix=every 4hrs"
   },
   "rate_limits": {
     "max_api_calls_per_run": 50,
+    "max_prs_per_run": 10,
     "backoff_on_rate_limit": true,
     "cache_ttl_minutes": 15,
     "skip_if_no_changes": true
@@ -37,6 +39,14 @@
       "security-patches": true,
       "dependency-updates": false
     }
+  },
+  "pr_autofix": {
+    "enabled": true,
+    "target_unassigned_only": true,
+    "auto_label": true,
+    "auto_comment": true,
+    "safe_fixes_only": true,
+    "max_prs_per_run": 10
   },
   "validation": {
     "checks": {

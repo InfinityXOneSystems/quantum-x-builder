@@ -1,0 +1,130 @@
+name: "PR Auto-Fix Agent"
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_prs:
+        description: 'Maximum number of PRs to process'
+        required: false
+        type: number
+        default: 10
+      dry_run:
+        description: 'Dry run mode (no commits/pushes)'
+        required: false
+        type: boolean
+        default: false
+  schedule:
+    - cron: '0 */4 * * *'  # Every 4 hours (rate-limit friendly)
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  actions: write
+
+jobs:
+  autofix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GIT_PAT || github.token }}
+
+    - name: Check Kill-Switch
+      id: killswitch
+      run: |
+        echo "Checking kill-switch status..."
+        if [ -f "_OPS/SAFETY/KILL_SWITCH.json" ]; then
+          KILL_STATUS=$(cat _OPS/SAFETY/KILL_SWITCH.json | jq -r '.kill_switch // "SAFE"')
+          if [ "$KILL_STATUS" = "ARMED" ]; then
+            echo "❌ Kill-switch activated: ARMED"
+            exit 1
+          fi
+        fi
+        echo "✅ Kill-switch check passed"
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        if [ -f package.json ]; then
+          npm ci || npm install || true
+        fi
+      continue-on-error: true
+
+    - name: Setup Git Config
+      run: |
+        git config --global user.name "QXB Auto-Fix Bot"
+        git config --global user.email "bot@infinityxonesystems.com"
+
+    - name: Make agent executable
+      run: chmod +x .github/agents/pr-autofix-agent.js
+
+    - name: Run PR Auto-Fix Agent
+      run: node .github/agents/pr-autofix-agent.js
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.GIT_PAT || github.token }}
+        MAX_PRS: ${{ inputs.max_prs || '10' }}
+        DRY_RUN: ${{ inputs.dry_run || 'false' }}
+
+    - name: Commit Audit Evidence
+      if: success()
+      run: |
+        TIMESTAMP=$(date -u +"%Y%m%dT%H%M%SZ")
+        ROLLBACK_TOKEN="qxb-autofix-audit-${TIMESTAMP}"
+        
+        # Add audit files
+        git add _OPS/AUDIT/pr-autofix-agent.log _OPS/OUTPUT/pr-autofix-summary-*.json || true
+        
+        if ! git diff --cached --quiet 2>/dev/null; then
+          git commit -m "audit: PR auto-fix agent evidence ${ROLLBACK_TOKEN}"
+          git push origin HEAD || echo "No changes to push"
+        else
+          echo "No audit changes to commit"
+        fi
+
+    - name: Generate Summary
+      if: always()
+      run: |
+        echo "### 🤖 PR Auto-Fix Agent Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        # Find the latest summary file
+        LATEST_SUMMARY=$(ls -t _OPS/OUTPUT/pr-autofix-summary-*.json 2>/dev/null | head -1)
+        
+        if [ -f "$LATEST_SUMMARY" ]; then
+          echo "#### Results" >> $GITHUB_STEP_SUMMARY
+          echo '```json' >> $GITHUB_STEP_SUMMARY
+          cat "$LATEST_SUMMARY" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+        else
+          echo "No summary file found" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "#### Configuration" >> $GITHUB_STEP_SUMMARY
+        echo "- **Max PRs**: ${{ inputs.max_prs || '10' }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Dry Run**: ${{ inputs.dry_run || 'false' }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Trigger**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "📝 Full audit log: \`_OPS/AUDIT/pr-autofix-agent.log\`" >> $GITHUB_STEP_SUMMARY
+
+    - name: Upload Artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: pr-autofix-results
+        path: |
+          _OPS/OUTPUT/pr-autofix-summary-*.json
+          _OPS/AUDIT/pr-autofix-agent.log
+        retention-days: 90
