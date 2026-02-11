@@ -1,15 +1,6 @@
 {
-  "forbidden": [
-    "self_expand",
-    "policy_change",
-    "key_access"
-  ],
-  "requires": [
-    "signed_intent",
-    "policy_pass",
-    "evidence_bundle",
-    "human_approval"
-  ],
+  "forbidden": ["self_expand", "policy_change", "key_access"],
+  "requires": ["signed_intent", "policy_pass", "evidence_bundle", "human_approval"],
   "trust": "zero",
   "runner": "self-hosted"
 }

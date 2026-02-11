@@ -1,6 +1,6 @@
 {
-    "blast_radius":  "repo",
-    "rollback_method":  "git_checkout",
-    "reversible":  true,
-    "safe_ref":  "qxb-phase5-lock-2026-02-06"
+  "blast_radius": "repo",
+  "rollback_method": "git_checkout",
+  "reversible": true,
+  "safe_ref": "qxb-phase5-lock-2026-02-06"
 }

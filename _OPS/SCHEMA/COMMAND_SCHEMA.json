@@ -2,10 +2,10 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "QXB Command Schema",
   "type": "object",
-  "required": ["id","type","intent","authority","phase","autonomy","effects","created_at"],
+  "required": ["id", "type", "intent", "authority", "phase", "autonomy", "effects", "created_at"],
   "properties": {
     "id": { "type": "string" },
-    "type": { "enum": ["noop","validate","execute"] },
+    "type": { "enum": ["noop", "validate", "execute"] },
     "intent": { "type": "string" },
     "authority": { "const": "Neo" },
     "phase": { "const": 5 },

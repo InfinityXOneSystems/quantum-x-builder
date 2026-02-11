@@ -1,13 +1,8 @@
 {
   "name": "quantum-x-builder",
-  "dockerComposeFile": [
-    "docker-compose.yml"
-  ],
+  "dockerComposeFile": ["docker-compose.yml"],
   "service": "backend",
-  "runServices": [
-    "backend",
-    "nats"
-  ],
+  "runServices": ["backend", "nats"],
   "initializeCommand": "sh -lc 'cd /var/lib/docker/codespacemount/workspace/quantum-x-builder && if [ ! -f backend/.env ]; then cp backend/.env.example backend/.env; fi'",
   "workspaceFolder": "/workspaces/quantum-x-builder",
   "overrideCommand": false

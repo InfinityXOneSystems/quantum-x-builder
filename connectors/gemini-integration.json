@@ -106,23 +106,15 @@
     },
     "collaborator_management": {
       "operations": ["add", "remove"],
-      "examples": [
-        "add collaborator alice with write access",
-        "remove collaborator bob"
-      ]
+      "examples": ["add collaborator alice with write access", "remove collaborator bob"]
     },
     "security_operations": {
       "operations": ["list_secrets"],
-      "examples": [
-        "list repository secrets"
-      ]
+      "examples": ["list repository secrets"]
     },
     "deployment_operations": {
       "operations": ["deploy"],
-      "examples": [
-        "deploy to production",
-        "deploy to staging"
-      ]
+      "examples": ["deploy to production", "deploy to staging"]
     }
   },
   "rate_limits": {

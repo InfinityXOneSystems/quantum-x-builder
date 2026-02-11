@@ -1,7 +1,7 @@
 ﻿{
-    "phase":  6,
-    "time":  "2026-02-08T10:52:23.7019568-05:00",
-    "authority":  "Neo",
-    "usage":  "Intent + coordination only",
-    "event":  "EXTERNAL_LLM_CHANNEL_READY"
+  "phase": 6,
+  "time": "2026-02-08T10:52:23.7019568-05:00",
+  "authority": "Neo",
+  "usage": "Intent + coordination only",
+  "event": "EXTERNAL_LLM_CHANNEL_READY"
 }

@@ -1,8 +1,8 @@
 {
-    "phase":  "4 (shadow)",
-    "phase5":  "designed_not_unlocked",
-    "enforcement":  "ACTIVE",
-    "entry":  "_OPS/rehydrate.ps1",
-    "system":  "quantum-x-builder",
-    "autonomy":  false
+  "phase": "4 (shadow)",
+  "phase5": "designed_not_unlocked",
+  "enforcement": "ACTIVE",
+  "entry": "_OPS/rehydrate.ps1",
+  "system": "quantum-x-builder",
+  "autonomy": false
 }

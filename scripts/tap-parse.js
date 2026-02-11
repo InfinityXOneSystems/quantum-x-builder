@@ -20,7 +20,7 @@ function parseTAP(tapContent) {
     skipped: 0,
     todo: 0,
     tests: [],
-    status: 'unknown'
+    status: 'unknown',
   };
 
   let inPlan = false;
@@ -28,7 +28,7 @@ function parseTAP(tapContent) {
 
   for (const line of lines) {
     const trimmed = line.trim();
-    
+
     // TAP version
     if (trimmed.startsWith('TAP version')) {
       const match = trimmed.match(/TAP version (\d+)/);
@@ -36,7 +36,7 @@ function parseTAP(tapContent) {
         results.version = parseInt(match[1], 10);
       }
     }
-    
+
     // Test plan (e.g., "1..5")
     else if (/^\d+\.\.\d+/.test(trimmed)) {
       const match = trimmed.match(/^(\d+)\.\.(\d+)/);
@@ -48,22 +48,22 @@ function parseTAP(tapContent) {
         inPlan = true;
       }
     }
-    
+
     // Test result (ok/not ok)
     else if (/^(not )?ok/.test(trimmed)) {
       const isOk = !trimmed.startsWith('not ok');
       const match = trimmed.match(/^(not )?ok\s+(\d+)?\s*-?\s*(.*)/);
-      
+
       if (match) {
         const testNum = match[2] ? parseInt(match[2], 10) : results.tests.length + 1;
         const description = match[3] || `Test ${testNum}`;
-        
+
         const test = {
           number: testNum,
           ok: isOk,
-          description: description.trim()
+          description: description.trim(),
         };
-        
+
         // Check for TODO/SKIP directives
         if (/# TODO/i.test(description)) {
           test.todo = true;
@@ -76,11 +76,11 @@ function parseTAP(tapContent) {
         } else {
           results.failed++;
         }
-        
+
         results.tests.push(test);
       }
     }
-    
+
     // Bail out
     else if (trimmed.startsWith('Bail out!')) {
       results.bailout = true;
@@ -107,7 +107,7 @@ function parseTAP(tapContent) {
 // Main execution
 function main() {
   const args = process.argv.slice(2);
-  
+
   if (args.length === 0) {
     console.error('Usage: tap-parse.js <tap-file>');
     process.exit(1);
@@ -120,7 +120,7 @@ function main() {
     const errorResult = {
       status: 'error',
       error: 'TAP file not found',
-      file: tapFile
+      file: tapFile,
     };
     console.log(JSON.stringify(errorResult, null, 2));
     process.exit(1);
@@ -129,24 +129,24 @@ function main() {
   try {
     const tapContent = fs.readFileSync(tapFile, 'utf8');
     const results = parseTAP(tapContent);
-    
+
     // Output JSON summary
     console.log(JSON.stringify(results, null, 2));
-    
+
     // Exit with error code if tests failed
     if (results.status === 'failed' || results.status === 'bailout') {
       process.exit(1);
     } else if (results.status === 'incomplete') {
       process.exit(2);
     }
-    
+
     process.exit(0);
   } catch (error) {
     console.error(`Error parsing TAP file: ${error.message}`);
     const errorResult = {
       status: 'error',
       error: error.message,
-      file: tapFile
+      file: tapFile,
     };
     console.log(JSON.stringify(errorResult, null, 2));
     process.exit(1);

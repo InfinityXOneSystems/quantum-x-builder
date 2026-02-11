@@ -1,11 +1,11 @@
 {
-    "current_state":  "NOT_AUTHORIZED",
-    "ceremony_steps":  [
-                           "Human declaration",
-                           "Policy file removal",
-                           "Signed approval",
-                           "Dry-run pass",
-                           "Blast radius acceptance",
-                           "Manual switch"
-                       ]
+  "current_state": "NOT_AUTHORIZED",
+  "ceremony_steps": [
+    "Human declaration",
+    "Policy file removal",
+    "Signed approval",
+    "Dry-run pass",
+    "Blast radius acceptance",
+    "Manual switch"
+  ]
 }

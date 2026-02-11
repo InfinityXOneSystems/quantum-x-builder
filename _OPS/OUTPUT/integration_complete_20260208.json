@@ -13,12 +13,7 @@
       "location": "./backend",
       "status": "identified",
       "port": 8787,
-      "integrations": [
-        "google-calendar",
-        "google-tasks",
-        "nats-messaging",
-        "postgresql"
-      ]
+      "integrations": ["google-calendar", "google-tasks", "nats-messaging", "postgresql"]
     },
     {
       "name": "@quantum-x-builder/frontend",
@@ -26,11 +21,7 @@
       "location": "./frontend",
       "status": "identified",
       "port": 3000,
-      "features": [
-        "admin-control-plane",
-        "low-code-panel",
-        "vscode-extension"
-      ]
+      "features": ["admin-control-plane", "low-code-panel", "vscode-extension"]
     },
     {
       "name": "quantum-x-builder-docs",
@@ -50,15 +41,7 @@
       "type": "governance-system",
       "location": "./_OPS",
       "status": "active",
-      "subsystems": [
-        "COMMANDS",
-        "POLICY",
-        "SAFETY",
-        "AUDIT",
-        "OUTPUT",
-        "AUTONOMY",
-        "ROLLBACK"
-      ]
+      "subsystems": ["COMMANDS", "POLICY", "SAFETY", "AUDIT", "OUTPUT", "AUTONOMY", "ROLLBACK"]
     }
   ],
   "artifacts_created": [
