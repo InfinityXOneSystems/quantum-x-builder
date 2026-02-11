@@ -5,6 +5,7 @@
 
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import * as agentIntegration from '../services/agent-integration.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -19,7 +20,13 @@ const nlcPath = join(__dirname, '..', '..', 'nlc', 'api', 'routes.js');
 export async function registerNlcRoutes(app) {
   try {
     // Dynamically import the NLC routes
-    const { registerNlcRoutes: nlcRegister } = await import(nlcPath);
+    const { registerNlcRoutes: nlcRegister, injectAgentIntegration } = await import(nlcPath);
+
+    // Inject agent integration service
+    if (injectAgentIntegration) {
+      injectAgentIntegration(agentIntegration);
+    }
+
     nlcRegister(app);
     console.log('Natural Language Control routes registered');
   } catch (error) {

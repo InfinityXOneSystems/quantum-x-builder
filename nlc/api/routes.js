@@ -3,7 +3,7 @@
  */
 
 import { parseCommand, commandToAction } from '../command-interpreter/parser.js';
-import { executeCommand } from '../command-interpreter/executor.js';
+import { executeCommand, setAgentIntegration } from '../command-interpreter/executor.js';
 import { generateResponse, formatWarnings } from '../command-interpreter/responder.js';
 import { getContext, updateContext, getHistory } from '../nlp-engine/context-manager.js';
 import { requireAuth } from '../security/auth.js';
@@ -11,6 +11,19 @@ import { auditMiddleware } from '../security/audit-logger.js';
 import { validateSafety } from '../security/safety-validator.js';
 import { getAvailableIntents } from '../nlp-engine/intent-recognizer.js';
 import { getKnownEntities } from '../nlp-engine/entity-extractor.js';
+
+// Agent integration will be injected
+let agentIntegrationInjected = false;
+
+/**
+ * Inject agent integration service
+ * @param {object} integration - Agent integration service
+ */
+export function injectAgentIntegration(integration) {
+  setAgentIntegration(integration);
+  agentIntegrationInjected = true;
+  console.log('✓ Agent integration injected into NLC system');
+}
 
 /**
  * Register Natural Language Control routes
