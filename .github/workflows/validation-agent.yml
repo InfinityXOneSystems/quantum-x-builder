@@ -37,8 +37,8 @@ jobs:
           cache: 'npm'
           
       - name: Install Dependencies
+        id: install
         run: npm ci || npm install
-        continue-on-error: true
         
       - name: Run Validation Suite
         id: validate
@@ -46,7 +46,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ inputs.pr_number || github.event.pull_request.number }}
-        continue-on-error: true
           
       - name: Read Validation Report
         id: read_report
@@ -60,6 +59,16 @@ jobs:
             echo "needs_healing=$needs_healing" >> $GITHUB_OUTPUT
           else
             echo "report_exists=false" >> $GITHUB_OUTPUT
+            echo "::error::Validation report not found. Validator may have crashed."
+            exit 1
+          fi
+          
+      - name: Check Validation Result
+        if: always() && steps.read_report.outputs.report_exists == 'true'
+        run: |
+          if [ "${{ steps.read_report.outputs.approved }}" != "true" ]; then
+            echo "::warning::Validation failed. See report for details."
+            exit 1
           fi
           
       - name: Post Validation Report
