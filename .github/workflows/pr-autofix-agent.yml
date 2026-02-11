@@ -56,9 +56,8 @@ jobs:
     - name: Install dependencies
       run: |
         if [ -f package.json ]; then
-          npm ci || npm install || true
+          npm ci || npm install
         fi
-      continue-on-error: true
 
     - name: Setup Git Config
       run: |

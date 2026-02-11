@@ -75,7 +75,10 @@ function applyAutoFixes() {
   // Run Prettier for formatting
   if (fs.existsSync('node_modules/.bin/prettier')) {
     console.log('  - Running Prettier...');
-    execSafe('npx prettier --write "**/*.{js,ts,jsx,tsx,json,md,yml,yaml}" --ignore-path .gitignore');
+    const prettierResult = execSafe('npx prettier --write "**/*.{js,ts,jsx,tsx,json,md,yml,yaml}" --ignore-path .gitignore', { silent: true });
+    if (prettierResult === null) {
+      console.log('    ⚠️  Prettier encountered errors (non-critical)');
+    }
     fixesApplied = true;
   }
   
@@ -89,7 +92,8 @@ function applyAutoFixes() {
   // Run npm audit fix for security issues
   if (fs.existsSync('package.json')) {
     console.log('  - Running npm audit fix...');
-    execSafe('npm audit fix --force 2>/dev/null || npm audit fix 2>/dev/null || true');
+    // Use npm audit fix without --force to avoid breaking changes (only applies safe patches)
+    execSafe('npm audit fix 2>/dev/null || true');
     fixesApplied = true;
   }
   
