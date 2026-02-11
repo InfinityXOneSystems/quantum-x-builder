@@ -17,23 +17,23 @@ const COMMAND_PATTERNS = {
   switchBranch: /(?:switch to|checkout) (?:the )?branch ['"']?([^'"]+)['"']?/i,
   
   // Pull request operations
-  createPR: /(?:create|open) (?:a )?(?:new )?(?:pull request|pr) from ['"']?([^'"]+)['"']? to ['"']?([^'"]+)['"']?(?: with (?:title|name) ['"']?([^'"]+)['"']?)?/i,
+  createPR: /(?:create|open) (?:a )?(?:new )?(?:pull request|pr) from ([^\s]+) to ([^\s]+)(?:(?: with)? (?:title|name)[:\s]+(.+))?/i,
   mergePR: /merge (?:pull request|pr) #?(\d+)/i,
   closePR: /close (?:pull request|pr) #?(\d+)/i,
   
   // Issue operations
-  createIssue: /create (?:a )?(?:new )?issue(?: titled| with title| for)? ['"']?([^'"]+)['"']?/i,
+  createIssue: /create (?:a )?(?:an )?(?:new )?issue (?:titled |for |about |called )?(.+)/i,
   closeIssue: /close issue #?(\d+)/i,
   reopenIssue: /reopen issue #?(\d+)/i,
   addLabel: /add label ['"']?([^'"]+)['"']? to issue #?(\d+)/i,
   
   // File operations
-  updateFile: /update (?:the )?file ['"']?([^'"]+)['"']?(?: with ['"']?([^'"]+)['"']?)?/i,
+  updateFile: /update(?: the)? (?:file )?([a-zA-Z0-9\-_\/\.]+)(?: (?:file|with))?/i,
   createFile: /create (?:a )?(?:new )?file ['"']?([^'"]+)['"']?(?: with ['"']?([^'"]+)['"']?)?/i,
   deleteFile: /delete (?:the )?file ['"']?([^'"]+)['"']?/i,
   
   // Workflow operations
-  triggerWorkflow: /(?:trigger|run) (?:the )?workflow ['"']?([^'"]+)['"']?/i,
+  triggerWorkflow: /(?:trigger|run)(?: the)? ([a-zA-Z0-9\-_\.]+) workflow/i,
   enableWorkflow: /enable (?:the )?workflow ['"']?([^'"]+)['"']?/i,
   disableWorkflow: /disable (?:the )?workflow ['"']?([^'"]+)['"']?/i,
   
