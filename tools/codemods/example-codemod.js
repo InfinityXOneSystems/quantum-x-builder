@@ -68,4 +68,7 @@ async function runCodemod() {
   }
 }
 
-runCodemod();
+runCodemod().catch((error) => {
+  console.error('Unhandled error in codemod:', error);
+  process.exitCode = 1;
+});
