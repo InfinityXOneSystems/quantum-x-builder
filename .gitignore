@@ -1,5 +1,6 @@
-
+node_modules/
 *.tsbuildinfo
+_evidence/
 
 # Fix-All Agent runtime artifacts
 _OPS/AUDIT/fix-all-agent.log
