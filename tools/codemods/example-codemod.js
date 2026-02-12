@@ -23,6 +23,10 @@ async function runCodemod() {
         ({ Project } = await import('ts-morph'));
       }
     } catch (err) {
+      // Only treat MODULE_NOT_FOUND as missing dependency, re-throw other errors
+      if (err.code !== 'MODULE_NOT_FOUND' && err.code !== 'ERR_MODULE_NOT_FOUND') {
+        throw err;
+      }
       console.log('ts-morph not found. Install with: npm install --save-dev ts-morph');
       console.log('Example codemod completed (no changes made)');
       return;
@@ -44,8 +48,8 @@ async function runCodemod() {
       tsConfigFilePath: './tsconfig.json',
     });
 
-    // Note: The glob pattern uses template literal escaping ${'**'} to work around
-    // a Node.js v24 parser issue where ** in comments causes "Unexpected token" errors
+    // Workaround for Node.js v24 parser bug: ** in comments causes syntax errors
+    // Using ${'**'} in template literal to avoid the parser issue
     const sourceFiles = project.getSourceFiles(`tools/${'**'}/*.ts`);
 
     for (const sourceFile of sourceFiles) {
