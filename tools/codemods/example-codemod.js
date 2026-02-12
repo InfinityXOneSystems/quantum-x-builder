@@ -38,6 +38,10 @@ async function runCodemod() {
     // 1. Uncomment the code below
     // 2. Install ts-morph: npm install --save-dev ts-morph
     // 3. Customize the codemod logic
+    //
+    // Note: The glob pattern below uses 'tools/*.ts' instead of 'tools/**/*.ts'
+    // to avoid a Node.js v24 parser bug where glob patterns in multi-line comments
+    // cause syntax errors. When uncommenting, adjust the pattern as needed.
 
     // const project = new Project({
     //   tsConfigFilePath: './tsconfig.json',
@@ -51,7 +55,7 @@ async function runCodemod() {
     //     // Your transformation logic here
     //   });
     //
-    //   // Use the async save API to be compatible with ESM runtimes
+    //   // Use the async save API (changed from saveSync) to be compatible with ESM runtimes
     //   await sourceFile.save();
     // }
     //
