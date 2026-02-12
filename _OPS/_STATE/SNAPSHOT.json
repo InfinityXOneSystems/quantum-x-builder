@@ -1,7 +1,7 @@
 {
-    "phase":  "4",
-    "timestamp":  "2026-02-06T17:20:03.2150815Z",
-    "git_commit":  "940742369f63f811432c4ff972cedcbcb970f1fe",
-    "git_tag":  "qxb-phase3b-lock-2026-02-06-dirty",
-    "autonomy":  false
+  "phase": "4",
+  "timestamp": "2026-02-06T17:20:03.2150815Z",
+  "git_commit": "940742369f63f811432c4ff972cedcbcb970f1fe",
+  "git_tag": "qxb-phase3b-lock-2026-02-06-dirty",
+  "autonomy": false
 }

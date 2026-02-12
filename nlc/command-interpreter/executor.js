@@ -193,7 +193,7 @@ async function handleSystemStatus(action) {
     action: 'system.status',
     status: {
       overall: 'operational',
-      components: targets.map((target) => ({
+      components: targets.map(target => ({
         name: target,
         status: 'running',
         health: 'healthy',

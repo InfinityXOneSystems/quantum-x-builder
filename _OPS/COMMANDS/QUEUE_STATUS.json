@@ -1,16 +1,8 @@
 {
-    "execution_by":  "Copilot",
-    "constraints":  [
-                        "no_policy_changes",
-                        "no_guardrail_removal",
-                        "rollback_required"
-                    ],
-    "accepts_from":  [
-                         "Neo",
-                         "GPT",
-                         "Mobile"
-                     ],
-    "phase":  5,
-    "queue_status":  "READY",
-    "autonomy":  "ON"
+  "execution_by": "Copilot",
+  "constraints": ["no_policy_changes", "no_guardrail_removal", "rollback_required"],
+  "accepts_from": ["Neo", "GPT", "Mobile"],
+  "phase": 5,
+  "queue_status": "READY",
+  "autonomy": "ON"
 }

@@ -1,9 +1,5 @@
 {
-  "blast_radius": [
-    "single-service",
-    "single-commit",
-    "full rollback required"
-  ],
+  "blast_radius": ["single-service", "single-commit", "full rollback required"],
   "rollback_required": true,
   "accepted_by": "Neo",
   "timestamp": "2026-02-06T14:08:49.8287173-05:00"

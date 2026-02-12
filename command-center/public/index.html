@@ -1,496 +1,515 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quantum X Builder - Command Center</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.min.css"
+    />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #e0e0e0;
-            overflow: hidden;
-        }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+          sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #e0e0e0;
+        overflow: hidden;
+      }
 
-        .container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            max-width: 100%;
-        }
+      .container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        max-width: 100%;
+      }
 
-        .header {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+      .header {
+        background: rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        padding: 1rem 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(90deg, #667eea, #f093fb);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        background: linear-gradient(90deg, #667eea, #f093fb);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
 
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+      .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
 
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #4ade80;
-            animation: pulse 2s infinite;
-        }
+      .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #4ade80;
+        animation: pulse 2s infinite;
+      }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
         }
-
-        .main-content {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
+        50% {
+          opacity: 0.5;
         }
+      }
 
+      .main-content {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+      }
+
+      .sidebar {
+        width: 300px;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(10px);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 1.5rem;
+        overflow-y: auto;
+      }
+
+      .sidebar-section {
+        margin-bottom: 2rem;
+      }
+
+      .sidebar-title {
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #9ca3af;
+        margin-bottom: 1rem;
+      }
+
+      .agent-card,
+      .workflow-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .agent-card:hover,
+      .workflow-card:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateX(4px);
+      }
+
+      .agent-name,
+      .workflow-name {
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+      }
+
+      .agent-status,
+      .workflow-status {
+        font-size: 0.75rem;
+        color: #9ca3af;
+      }
+
+      .center-panel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: rgba(0, 0, 0, 0.2);
+      }
+
+      .tabs {
+        display: flex;
+        background: rgba(0, 0, 0, 0.3);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .tab {
+        padding: 0.75rem 1.5rem;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s;
+        font-size: 0.875rem;
+      }
+
+      .tab:hover {
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .tab.active {
+        border-bottom-color: #667eea;
+        background: rgba(102, 126, 234, 0.1);
+      }
+
+      .tab-content {
+        flex: 1;
+        display: none;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .tab-content.active {
+        display: flex;
+      }
+
+      .command-input-container {
+        padding: 1.5rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .command-input-wrapper {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+      }
+
+      .command-input {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 0.5rem;
+        color: #e0e0e0;
+        font-size: 1rem;
+        font-family: 'Consolas', 'Monaco', monospace;
+      }
+
+      .command-input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .send-button {
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        border: none;
+        border-radius: 0.5rem;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+
+      .send-button:hover {
+        transform: scale(1.05);
+      }
+
+      .send-button:active {
+        transform: scale(0.95);
+      }
+
+      .output-container {
+        flex: 1;
+        padding: 1.5rem;
+        overflow-y: auto;
+        font-family: 'Consolas', 'Monaco', monospace;
+        font-size: 0.875rem;
+        line-height: 1.6;
+      }
+
+      .output-line {
+        margin-bottom: 0.5rem;
+        padding: 0.5rem;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 0.25rem;
+      }
+
+      .output-line.user {
+        background: rgba(102, 126, 234, 0.2);
+        border-left: 3px solid #667eea;
+      }
+
+      .output-line.system {
+        background: rgba(74, 222, 128, 0.2);
+        border-left: 3px solid #4ade80;
+      }
+
+      .output-line.error {
+        background: rgba(239, 68, 68, 0.2);
+        border-left: 3px solid #ef4444;
+      }
+
+      .editor-container {
+        flex: 1;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .quick-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+      }
+
+      .quick-action {
+        padding: 0.5rem 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 0.25rem;
+        font-size: 0.75rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .quick-action:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: #667eea;
+      }
+
+      .right-panel {
+        width: 350px;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(10px);
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 1.5rem;
+        overflow-y: auto;
+      }
+
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .metric-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 0.5rem;
+        padding: 1rem;
+      }
+
+      .metric-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+      }
+
+      .metric-label {
+        font-size: 0.75rem;
+        color: #9ca3af;
+        text-transform: uppercase;
+      }
+
+      .activity-list {
+        list-style: none;
+      }
+
+      .activity-item {
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-left: 3px solid #667eea;
+        border-radius: 0.25rem;
+        font-size: 0.875rem;
+      }
+
+      .activity-time {
+        font-size: 0.75rem;
+        color: #9ca3af;
+        margin-top: 0.25rem;
+      }
+
+      @media (max-width: 1024px) {
         .sidebar {
-            width: 300px;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(10px);
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 1.5rem;
-            overflow-y: auto;
+          width: 250px;
         }
-
-        .sidebar-section {
-            margin-bottom: 2rem;
-        }
-
-        .sidebar-title {
-            font-size: 0.875rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #9ca3af;
-            margin-bottom: 1rem;
-        }
-
-        .agent-card, .workflow-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 0.5rem;
-            padding: 0.75rem;
-            margin-bottom: 0.5rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .agent-card:hover, .workflow-card:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateX(4px);
-        }
-
-        .agent-name, .workflow-name {
-            font-weight: 500;
-            margin-bottom: 0.25rem;
-        }
-
-        .agent-status, .workflow-status {
-            font-size: 0.75rem;
-            color: #9ca3af;
-        }
-
-        .center-panel {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        .tabs {
-            display: flex;
-            background: rgba(0, 0, 0, 0.3);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .tab {
-            padding: 0.75rem 1.5rem;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s;
-            font-size: 0.875rem;
-        }
-
-        .tab:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .tab.active {
-            border-bottom-color: #667eea;
-            background: rgba(102, 126, 234, 0.1);
-        }
-
-        .tab-content {
-            flex: 1;
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .tab-content.active {
-            display: flex;
-        }
-
-        .command-input-container {
-            padding: 1.5rem;
-            background: rgba(0, 0, 0, 0.3);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .command-input-wrapper {
-            display: flex;
-            gap: 0.75rem;
-            align-items: center;
-        }
-
-        .command-input {
-            flex: 1;
-            padding: 0.75rem 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 0.5rem;
-            color: #e0e0e0;
-            font-size: 1rem;
-            font-family: 'Consolas', 'Monaco', monospace;
-        }
-
-        .command-input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .send-button {
-            padding: 0.75rem 1.5rem;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            border: none;
-            border-radius: 0.5rem;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .send-button:hover {
-            transform: scale(1.05);
-        }
-
-        .send-button:active {
-            transform: scale(0.95);
-        }
-
-        .output-container {
-            flex: 1;
-            padding: 1.5rem;
-            overflow-y: auto;
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 0.875rem;
-            line-height: 1.6;
-        }
-
-        .output-line {
-            margin-bottom: 0.5rem;
-            padding: 0.5rem;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 0.25rem;
-        }
-
-        .output-line.user {
-            background: rgba(102, 126, 234, 0.2);
-            border-left: 3px solid #667eea;
-        }
-
-        .output-line.system {
-            background: rgba(74, 222, 128, 0.2);
-            border-left: 3px solid #4ade80;
-        }
-
-        .output-line.error {
-            background: rgba(239, 68, 68, 0.2);
-            border-left: 3px solid #ef4444;
-        }
-
-        .editor-container {
-            flex: 1;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .quick-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 0.75rem;
-        }
-
-        .quick-action {
-            padding: 0.5rem 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 0.25rem;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .quick-action:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #667eea;
-        }
-
         .right-panel {
-            width: 350px;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(10px);
-            border-left: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 1.5rem;
-            overflow-y: auto;
+          width: 300px;
         }
+      }
 
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 2rem;
+      @media (max-width: 768px) {
+        .sidebar,
+        .right-panel {
+          display: none;
         }
+      }
 
-        .metric-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 0.5rem;
-            padding: 1rem;
-        }
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: #667eea;
+        animation: spin 1s linear infinite;
+      }
 
-        .metric-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.25rem;
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
         }
-
-        .metric-label {
-            font-size: 0.75rem;
-            color: #9ca3af;
-            text-transform: uppercase;
-        }
-
-        .activity-list {
-            list-style: none;
-        }
-
-        .activity-item {
-            padding: 0.75rem;
-            margin-bottom: 0.5rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-left: 3px solid #667eea;
-            border-radius: 0.25rem;
-            font-size: 0.875rem;
-        }
-
-        .activity-time {
-            font-size: 0.75rem;
-            color: #9ca3af;
-            margin-top: 0.25rem;
-        }
-
-        @media (max-width: 1024px) {
-            .sidebar {
-                width: 250px;
-            }
-            .right-panel {
-                width: 300px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .sidebar, .right-panel {
-                display: none;
-            }
-        }
-
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #667eea;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="header">
-            <div class="logo">⚡ Quantum X Builder</div>
-            <div class="status-indicator">
-                <div class="status-dot"></div>
-                <span>Command Center Online</span>
+      <div class="header">
+        <div class="logo">⚡ Quantum X Builder</div>
+        <div class="status-indicator">
+          <div class="status-dot"></div>
+          <span>Command Center Online</span>
+        </div>
+      </div>
+
+      <div class="main-content">
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+          <div class="sidebar-section">
+            <div class="sidebar-title">Autonomous Agents</div>
+            <div class="agent-card" data-agent="autonomous">
+              <div class="agent-name">Autonomous Agent</div>
+              <div class="agent-status">Every 30 min</div>
             </div>
+            <div class="agent-card" data-agent="validation">
+              <div class="agent-name">Validation Agent</div>
+              <div class="agent-status">Hourly</div>
+            </div>
+            <div class="agent-card" data-agent="healing">
+              <div class="agent-name">Healing Agent</div>
+              <div class="agent-status">Every 2 hours</div>
+            </div>
+            <div class="agent-card" data-agent="fix-all">
+              <div class="agent-name">Fix-All Agent</div>
+              <div class="agent-status">Every 6 hours</div>
+            </div>
+            <div class="agent-card" data-agent="evolution">
+              <div class="agent-name">Evolution Agent</div>
+              <div class="agent-status">4x daily</div>
+            </div>
+          </div>
+
+          <div class="sidebar-section">
+            <div class="sidebar-title">Workflows</div>
+            <div class="workflow-card" data-workflow="fix-all-persistent">
+              <div class="workflow-name">Fix-All Persistent</div>
+              <div class="workflow-status">Every 6 hours</div>
+            </div>
+            <div class="workflow-card" data-workflow="ultimate-fix-all">
+              <div class="workflow-name">Ultimate Fix-All</div>
+              <div class="workflow-status">2x daily</div>
+            </div>
+            <div class="workflow-card" data-workflow="auto-maintain">
+              <div class="workflow-name">Auto-Maintain</div>
+              <div class="workflow-status">Weekly</div>
+            </div>
+          </div>
         </div>
 
-        <div class="main-content">
-            <!-- Left Sidebar -->
-            <div class="sidebar">
-                <div class="sidebar-section">
-                    <div class="sidebar-title">Autonomous Agents</div>
-                    <div class="agent-card" data-agent="autonomous">
-                        <div class="agent-name">Autonomous Agent</div>
-                        <div class="agent-status">Every 30 min</div>
-                    </div>
-                    <div class="agent-card" data-agent="validation">
-                        <div class="agent-name">Validation Agent</div>
-                        <div class="agent-status">Hourly</div>
-                    </div>
-                    <div class="agent-card" data-agent="healing">
-                        <div class="agent-name">Healing Agent</div>
-                        <div class="agent-status">Every 2 hours</div>
-                    </div>
-                    <div class="agent-card" data-agent="fix-all">
-                        <div class="agent-name">Fix-All Agent</div>
-                        <div class="agent-status">Every 6 hours</div>
-                    </div>
-                    <div class="agent-card" data-agent="evolution">
-                        <div class="agent-name">Evolution Agent</div>
-                        <div class="agent-status">4x daily</div>
-                    </div>
-                </div>
+        <!-- Center Panel -->
+        <div class="center-panel">
+          <div class="tabs">
+            <div class="tab active" data-tab="command">Natural Language</div>
+            <div class="tab" data-tab="editor">Code Editor</div>
+            <div class="tab" data-tab="workflows">Workflows</div>
+            <div class="tab" data-tab="logs">Logs</div>
+          </div>
 
-                <div class="sidebar-section">
-                    <div class="sidebar-title">Workflows</div>
-                    <div class="workflow-card" data-workflow="fix-all-persistent">
-                        <div class="workflow-name">Fix-All Persistent</div>
-                        <div class="workflow-status">Every 6 hours</div>
-                    </div>
-                    <div class="workflow-card" data-workflow="ultimate-fix-all">
-                        <div class="workflow-name">Ultimate Fix-All</div>
-                        <div class="workflow-status">2x daily</div>
-                    </div>
-                    <div class="workflow-card" data-workflow="auto-maintain">
-                        <div class="workflow-name">Auto-Maintain</div>
-                        <div class="workflow-status">Weekly</div>
-                    </div>
-                </div>
+          <!-- Command Tab -->
+          <div class="tab-content active" id="command-tab">
+            <div class="command-input-container">
+              <div class="command-input-wrapper">
+                <input
+                  type="text"
+                  class="command-input"
+                  id="nl-input"
+                  placeholder="Enter natural language command (e.g., 'start the evolution agent')"
+                />
+                <button class="send-button" id="send-button">Send</button>
+              </div>
+              <div class="quick-actions">
+                <button class="quick-action" data-cmd="help">Help</button>
+                <button class="quick-action" data-cmd="status">System Status</button>
+                <button class="quick-action" data-cmd="list agents">List Agents</button>
+                <button class="quick-action" data-cmd="list workflows">List Workflows</button>
+              </div>
             </div>
+            <div class="output-container" id="command-output"></div>
+          </div>
 
-            <!-- Center Panel -->
-            <div class="center-panel">
-                <div class="tabs">
-                    <div class="tab active" data-tab="command">Natural Language</div>
-                    <div class="tab" data-tab="editor">Code Editor</div>
-                    <div class="tab" data-tab="workflows">Workflows</div>
-                    <div class="tab" data-tab="logs">Logs</div>
-                </div>
+          <!-- Editor Tab -->
+          <div class="tab-content" id="editor-tab">
+            <div id="monaco-editor" class="editor-container"></div>
+          </div>
 
-                <!-- Command Tab -->
-                <div class="tab-content active" id="command-tab">
-                    <div class="command-input-container">
-                        <div class="command-input-wrapper">
-                            <input 
-                                type="text" 
-                                class="command-input" 
-                                id="nl-input"
-                                placeholder="Enter natural language command (e.g., 'start the evolution agent')"
-                            >
-                            <button class="send-button" id="send-button">
-                                Send
-                            </button>
-                        </div>
-                        <div class="quick-actions">
-                            <button class="quick-action" data-cmd="help">Help</button>
-                            <button class="quick-action" data-cmd="status">System Status</button>
-                            <button class="quick-action" data-cmd="list agents">List Agents</button>
-                            <button class="quick-action" data-cmd="list workflows">List Workflows</button>
-                        </div>
-                    </div>
-                    <div class="output-container" id="command-output"></div>
-                </div>
-
-                <!-- Editor Tab -->
-                <div class="tab-content" id="editor-tab">
-                    <div id="monaco-editor" class="editor-container"></div>
-                </div>
-
-                <!-- Workflows Tab -->
-                <div class="tab-content" id="workflows-tab">
-                    <div class="output-container">
-                        <h3>Workflow Manager</h3>
-                        <p>Trigger and monitor GitHub Actions workflows...</p>
-                    </div>
-                </div>
-
-                <!-- Logs Tab -->
-                <div class="tab-content" id="logs-tab">
-                    <div class="output-container">
-                        <h3>System Logs</h3>
-                        <p>Real-time system logs and activity...</p>
-                    </div>
-                </div>
+          <!-- Workflows Tab -->
+          <div class="tab-content" id="workflows-tab">
+            <div class="output-container">
+              <h3>Workflow Manager</h3>
+              <p>Trigger and monitor GitHub Actions workflows...</p>
             </div>
+          </div>
 
-            <!-- Right Panel -->
-            <div class="right-panel">
-                <div class="sidebar-title">System Metrics</div>
-                <div class="metrics-grid">
-                    <div class="metric-card">
-                        <div class="metric-value" id="agents-active">0</div>
-                        <div class="metric-label">Active Agents</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value" id="workflows-running">0</div>
-                        <div class="metric-label">Workflows</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value" id="commands-today">0</div>
-                        <div class="metric-label">Commands Today</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value" id="uptime">99.9%</div>
-                        <div class="metric-label">Uptime</div>
-                    </div>
-                </div>
-
-                <div class="sidebar-title">Recent Activity</div>
-                <ul class="activity-list" id="activity-list">
-                    <li class="activity-item">
-                        System initialized
-                        <div class="activity-time">Just now</div>
-                    </li>
-                </ul>
+          <!-- Logs Tab -->
+          <div class="tab-content" id="logs-tab">
+            <div class="output-container">
+              <h3>System Logs</h3>
+              <p>Real-time system logs and activity...</p>
             </div>
+          </div>
         </div>
+
+        <!-- Right Panel -->
+        <div class="right-panel">
+          <div class="sidebar-title">System Metrics</div>
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-value" id="agents-active">0</div>
+              <div class="metric-label">Active Agents</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" id="workflows-running">0</div>
+              <div class="metric-label">Workflows</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" id="commands-today">0</div>
+              <div class="metric-label">Commands Today</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" id="uptime">99.9%</div>
+              <div class="metric-label">Uptime</div>
+            </div>
+          </div>
+
+          <div class="sidebar-title">Recent Activity</div>
+          <ul class="activity-list" id="activity-list">
+            <li class="activity-item">
+              System initialized
+              <div class="activity-time">Just now</div>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"
+      integrity="sha384-UcP5/iVWyRzIhnVjcB2o9W1eoYKL5fAhHTRzvFZg8ctOsoAoDeBQyQuyIk+BJ/nh"
+      crossorigin="anonymous"
+    ></script>
     <script src="app.js"></script>
-</body>
+  </body>
 </html>

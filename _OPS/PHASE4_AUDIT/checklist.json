@@ -1,11 +1,11 @@
 {
-    "status":  "READY",
-    "execution":  "read-only",
-    "audit_scope":  [
-                        "repo_integrity",
-                        "policy_enforcement",
-                        "runner_lock",
-                        "phase_alignment",
-                        "reproducibility"
-                    ]
+  "status": "READY",
+  "execution": "read-only",
+  "audit_scope": [
+    "repo_integrity",
+    "policy_enforcement",
+    "runner_lock",
+    "phase_alignment",
+    "reproducibility"
+  ]
 }

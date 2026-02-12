@@ -15,12 +15,12 @@ const path = require('path');
 
 // Integration points for Vizual-X
 const CONFIG = {
-  system: "vizual-x",
-  domain: "vizual-x.com",
-  gcpProject: "quantum-x-builder",
-  vertexAIRegion: "us-central1",
-  auditTrail: "_OPS/AUDIT_IMMUTABLE/autofix.ndjson",
-  sandbox: "_EXTERNAL/SANDBOX"
+  system: 'vizual-x',
+  domain: 'vizual-x.com',
+  gcpProject: 'quantum-x-builder',
+  vertexAIRegion: 'us-central1',
+  auditTrail: '_OPS/AUDIT_IMMUTABLE/autofix.ndjson',
+  sandbox: '_EXTERNAL/SANDBOX',
 };
 
 console.log(`[Vizual-X] Auto-fix script initialized`);

@@ -9,7 +9,7 @@ services:
     env_file:
       - backend/.env
     ports:
-      - "8787:8787"
+      - '8787:8787'
     volumes:
       - ./:/workspace
     environment:
@@ -25,7 +25,7 @@ services:
     env_file:
       - frontend/.env
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - VITE_API_URL=http://backend:8787
       - VITE_AGENT_URL=http://backend:8787
@@ -37,15 +37,13 @@ services:
   nats:
     image: nats:2.10-alpine
     container_name: qxb-nats
-    command: ["-js", "-m", "8222"]
+    command: ['-js', '-m', '8222']
     ports:
-      - "4222:4222"
-      - "8222:8222"
+      - '4222:4222'
+      - '8222:8222'
     networks:
       - vizualx
 
 networks:
   vizualx:
     driver: bridge
-
-

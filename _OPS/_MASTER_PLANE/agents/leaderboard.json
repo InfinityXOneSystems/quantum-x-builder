@@ -1,95 +1,75 @@
 ﻿{
-    "updated_at":  "2026-02-07T01:28:36.4773804-05:00",
-    "agents":  [
-                   {
-                       "trophies":  [
-
-                                    ],
-                       "name":  "Agent-1",
-                       "id":  "GPT-AGENT-1",
-                       "tier":  1,
-                       "points":  0
-                   },
-                   {
-                       "trophies":  [
-
-                                    ],
-                       "name":  "Agent-2",
-                       "id":  "GPT-AGENT-2",
-                       "tier":  1,
-                       "points":  0
-                   },
-                   {
-                       "trophies":  [
-
-                                    ],
-                       "name":  "Agent-3",
-                       "id":  "GPT-AGENT-3",
-                       "tier":  1,
-                       "points":  0
-                   },
-                   {
-                       "trophies":  [
-
-                                    ],
-                       "name":  "Agent-4",
-                       "id":  "GPT-AGENT-4",
-                       "tier":  1,
-                       "points":  0
-                   },
-                   {
-                       "trophies":  [
-
-                                    ],
-                       "name":  "Agent-5",
-                       "id":  "GPT-AGENT-5",
-                       "tier":  1,
-                       "points":  0
-                   },
-                   {
-                       "trophies":  [
-
-                                    ],
-                       "name":  "Agent-6",
-                       "id":  "GPT-AGENT-6",
-                       "tier":  1,
-                       "points":  0
-                   },
-                   {
-                       "trophies":  [
-
-                                    ],
-                       "name":  "Agent-7",
-                       "id":  "GPT-AGENT-7",
-                       "tier":  1,
-                       "points":  0
-                   },
-                   {
-                       "trophies":  [
-
-                                    ],
-                       "name":  "Agent-8",
-                       "id":  "GPT-AGENT-8",
-                       "tier":  1,
-                       "points":  0
-                   },
-                   {
-                       "trophies":  [
-
-                                    ],
-                       "name":  "Agent-9",
-                       "id":  "GPT-AGENT-9",
-                       "tier":  1,
-                       "points":  0
-                   },
-                   {
-                       "trophies":  [
-
-                                    ],
-                       "name":  "Agent-10",
-                       "id":  "GPT-AGENT-10",
-                       "tier":  1,
-                       "points":  0
-                   }
-               ]
+  "updated_at": "2026-02-07T01:28:36.4773804-05:00",
+  "agents": [
+    {
+      "trophies": [],
+      "name": "Agent-1",
+      "id": "GPT-AGENT-1",
+      "tier": 1,
+      "points": 0
+    },
+    {
+      "trophies": [],
+      "name": "Agent-2",
+      "id": "GPT-AGENT-2",
+      "tier": 1,
+      "points": 0
+    },
+    {
+      "trophies": [],
+      "name": "Agent-3",
+      "id": "GPT-AGENT-3",
+      "tier": 1,
+      "points": 0
+    },
+    {
+      "trophies": [],
+      "name": "Agent-4",
+      "id": "GPT-AGENT-4",
+      "tier": 1,
+      "points": 0
+    },
+    {
+      "trophies": [],
+      "name": "Agent-5",
+      "id": "GPT-AGENT-5",
+      "tier": 1,
+      "points": 0
+    },
+    {
+      "trophies": [],
+      "name": "Agent-6",
+      "id": "GPT-AGENT-6",
+      "tier": 1,
+      "points": 0
+    },
+    {
+      "trophies": [],
+      "name": "Agent-7",
+      "id": "GPT-AGENT-7",
+      "tier": 1,
+      "points": 0
+    },
+    {
+      "trophies": [],
+      "name": "Agent-8",
+      "id": "GPT-AGENT-8",
+      "tier": 1,
+      "points": 0
+    },
+    {
+      "trophies": [],
+      "name": "Agent-9",
+      "id": "GPT-AGENT-9",
+      "tier": 1,
+      "points": 0
+    },
+    {
+      "trophies": [],
+      "name": "Agent-10",
+      "id": "GPT-AGENT-10",
+      "tier": 1,
+      "points": 0
+    }
+  ]
 }

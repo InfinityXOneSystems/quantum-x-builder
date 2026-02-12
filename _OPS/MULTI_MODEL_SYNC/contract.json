@@ -1,19 +1,10 @@
 {
-    "rehydrate_sources":  [
-                              "_OPS/_STATE",
-                              "_OPS/PHASE4_SHADOW",
-                              "_OPS/PHASE5_AUTONOMY",
-                              "_OPS/POLICY"
-                          ],
-    "models":  [
-                   "ChatGPT",
-                   "Copilot",
-                   "Gemini"
-               ],
-    "invariants":  [
-                       "Policy \u003e Authority \u003e Truth",
-                       "No execution",
-                       "No autonomy",
-                       "Design only"
-                   ]
+  "rehydrate_sources": ["_OPS/_STATE", "_OPS/PHASE4_SHADOW", "_OPS/PHASE5_AUTONOMY", "_OPS/POLICY"],
+  "models": ["ChatGPT", "Copilot", "Gemini"],
+  "invariants": [
+    "Policy \u003e Authority \u003e Truth",
+    "No execution",
+    "No autonomy",
+    "Design only"
+  ]
 }

@@ -21,7 +21,7 @@ describe('Maintenance Tools', () => {
   it('should have tsconfig.json in root', () => {
     const configPath = path.join(process.cwd(), 'tsconfig.json');
     expect(fs.existsSync(configPath)).toBe(true);
-    
+
     // Just check for strict mode presence in the file content
     const content = fs.readFileSync(configPath, 'utf-8');
     expect(content).toContain('"strict": true');
