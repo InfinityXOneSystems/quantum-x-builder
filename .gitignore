@@ -9,3 +9,4 @@ _OPS/AUDIT/fix-all-state.json
 _OPS/AUDIT/evolution-agent.log
 _OPS/AUDIT/evolution-agent-state.json
 _OPS/OUTPUT/evolution-report-*.json
+node_modules/
