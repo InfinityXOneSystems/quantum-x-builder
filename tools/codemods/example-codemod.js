@@ -58,8 +58,10 @@ async function runCodemod() {
       tsConfigFilePath: './tsconfig.json',
     });
 
-    // Example: Get source files using glob pattern (single-line to avoid Node.js v24 parser bug)
-    const sourceFiles = project.getSourceFiles('tools/${'**'}/*.ts');
+    // Example: Get source files using glob pattern
+    // Note: Using template literal workaround for Node.js v24 parser bug where ** in comments causes syntax errors
+    const globPattern = 'tools/${'**'}/*.ts';
+    const sourceFiles = project.getSourceFiles(globPattern);
 
     for (const sourceFile of sourceFiles) {
       // Example: Find and transform code patterns

@@ -28,5 +28,5 @@ jobs:
       - name: Run codemod (non-destructive)
         run: npm run codemod
 
-      - name: Check for unexpected changes
+      - name: Check for unexpected changes (informational only)
         run: git status --porcelain || true
