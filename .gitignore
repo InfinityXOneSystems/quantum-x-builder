@@ -1,6 +1,9 @@
 
 *.tsbuildinfo
 
+# Dependencies
+node_modules/
+
 # Fix-All Agent runtime artifacts
 _OPS/AUDIT/fix-all-agent.log
 _OPS/AUDIT/fix-all-state.json
