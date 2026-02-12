@@ -431,10 +431,15 @@ function addActivity(message) {
     const now = new Date();
     const timeStr = now.toLocaleTimeString();
     
-    item.innerHTML = `
-        ${message}
-        <div class="activity-time">${timeStr}</div>
-    `;
+    // Append message as plain text to avoid interpreting it as HTML
+    const messageNode = document.createTextNode(message);
+    item.appendChild(messageNode);
+    
+    // Append timestamp in a separate element
+    const timeElement = document.createElement('div');
+    timeElement.className = 'activity-time';
+    timeElement.textContent = timeStr;
+    item.appendChild(timeElement);
     
     activityList.insertBefore(item, activityList.firstChild);
     
