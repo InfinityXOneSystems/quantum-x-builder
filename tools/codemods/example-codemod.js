@@ -44,7 +44,7 @@ async function runCodemod() {
       tsConfigFilePath: './tsconfig.json',
     });
 
-    const sourceFiles = project.getSourceFiles('tools/**' + '/*.ts');
+    const sourceFiles = project.getSourceFiles(`tools/${'**'}/*.ts`);
 
     for (const sourceFile of sourceFiles) {
       // Example: Find and transform code patterns
@@ -52,7 +52,7 @@ async function runCodemod() {
         // Your transformation logic here
       });
 
-      // Use the async save API to be compatible with ESM runtimes
+      // Use the async save API (instead of saveSync) for better compatibility with ESM runtimes
       await sourceFile.save();
     }
 
