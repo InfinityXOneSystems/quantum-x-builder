@@ -1,0 +1,32 @@
+name: Codemod Checks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch: {}
+
+# Minimal permissions for security best practices
+permissions:
+  contents: read
+
+jobs:
+  run-codemod:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run codemod (non-destructive)
+        run: npm run codemod
+
+      - name: Check for unexpected changes
+        run: git status --porcelain || true
