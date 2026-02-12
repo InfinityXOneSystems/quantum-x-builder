@@ -32,12 +32,6 @@ async function runCodemod() {
       throw loadError;
     }
 
-    if (!Project) {
-      console.log('ts-morph not found. Install with: npm install --save-dev ts-morph');
-      console.log('Example codemod completed (no changes made)');
-      return;
-    }
-
     // This is a placeholder. When you want to run real codemods:
     // 1. Uncomment the code below
     // 2. Install ts-morph: npm install --save-dev ts-morph
