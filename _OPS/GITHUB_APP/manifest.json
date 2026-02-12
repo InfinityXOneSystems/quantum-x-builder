@@ -11,12 +11,6 @@
     "actions": "read",
     "issues": "read"
   },
-  "default_events": [
-    "pull_request",
-    "push",
-    "workflow_dispatch",
-    "check_run",
-    "check_suite"
-  ],
+  "default_events": ["pull_request", "push", "workflow_dispatch", "check_run", "check_suite"],
   "public": false
 }

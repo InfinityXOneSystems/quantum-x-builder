@@ -1,10 +1,10 @@
 {
-    "rehydrated_at":  "2026-02-06T15:07:51.1884223-05:00",
-    "authority":  "Neo",
-    "phase":  5,
-    "source_of_truth":  "git",
-    "required_on_boot":  true,
-    "autonomy":  "ON",
-    "governance_mode":  "PAT_ENFORCED",
-    "system":  "Quantum-X-Builder"
+  "rehydrated_at": "2026-02-06T15:07:51.1884223-05:00",
+  "authority": "Neo",
+  "phase": 5,
+  "source_of_truth": "git",
+  "required_on_boot": true,
+  "autonomy": "ON",
+  "governance_mode": "PAT_ENFORCED",
+  "system": "Quantum-X-Builder"
 }

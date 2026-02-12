@@ -1,10 +1,10 @@
 ﻿{
-    "github_event":  "pull_request",
-    "timestamp":  "2026-02-06T22:41:59.6962199-05:00",
-    "github_ref":  "refs/heads/main",
-    "phase_status":  "locked_paused",
-    "reason":  "Phase 5 is LOCKED_PAUSED — execution and merges are forbidden",
-    "verdict":  "BLOCKED",
-    "phase":  "5",
-    "hash":  "B6BB28ED412BB273BD260B1FFA30ABAF25B08BEEF9262A95640DB058CB13E953"
+  "github_event": "pull_request",
+  "timestamp": "2026-02-06T22:41:59.6962199-05:00",
+  "github_ref": "refs/heads/main",
+  "phase_status": "locked_paused",
+  "reason": "Phase 5 is LOCKED_PAUSED — execution and merges are forbidden",
+  "verdict": "BLOCKED",
+  "phase": "5",
+  "hash": "B6BB28ED412BB273BD260B1FFA30ABAF25B08BEEF9262A95640DB058CB13E953"
 }

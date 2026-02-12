@@ -64,9 +64,7 @@
         "capability": "db",
         "severity": "high",
         "source": "Vault",
-        "missing_keys": [
-          "DATABASE_URL"
-        ],
+        "missing_keys": ["DATABASE_URL"],
         "unknown_keys": [],
         "status": "missing"
       },
@@ -74,9 +72,7 @@
         "capability": "ollama",
         "severity": "med",
         "source": "Cloud Run",
-        "missing_keys": [
-          "OLLAMA_URL"
-        ],
+        "missing_keys": ["OLLAMA_URL"],
         "unknown_keys": [],
         "status": "missing"
       },
@@ -84,9 +80,7 @@
         "capability": "manus",
         "severity": "high",
         "source": "Vault",
-        "missing_keys": [
-          "MANUS_BASE_URL"
-        ],
+        "missing_keys": ["MANUS_BASE_URL"],
         "unknown_keys": [],
         "status": "missing"
       },
@@ -121,9 +115,7 @@
         "capability": "browser",
         "severity": "med",
         "source": "Cloud Run",
-        "missing_keys": [
-          "PLAYWRIGHT_ENDPOINT"
-        ],
+        "missing_keys": ["PLAYWRIGHT_ENDPOINT"],
         "unknown_keys": [],
         "status": "missing"
       },
@@ -131,9 +123,7 @@
         "capability": "automl",
         "severity": "med",
         "source": "Vault",
-        "missing_keys": [
-          "AUTOML_PROJECT_ID"
-        ],
+        "missing_keys": ["AUTOML_PROJECT_ID"],
         "unknown_keys": [],
         "status": "missing"
       },

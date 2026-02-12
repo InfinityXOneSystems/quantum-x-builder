@@ -2,28 +2,28 @@
 
 /**
  * Disable GitHub Actions Workflows - Except quantum-x-builder
- * 
- * This script disables GitHub Actions workflows for all repositories 
+ *
+ * This script disables GitHub Actions workflows for all repositories
  * in your GitHub account EXCEPT for quantum-x-builder.
- * 
+ *
  * Requirements:
  *   - Node.js 16+
  *   - GitHub Personal Access Token with 'repo' and 'workflow' scopes
  *   - No external dependencies required (uses Node.js built-ins)
- * 
+ *
  * Usage:
  *   # Dry run (preview what will be changed)
  *   node scripts/disable-workflows-except-qxb.js --dry-run
- * 
+ *
  *   # Interactive mode (confirm each repository)
  *   node scripts/disable-workflows-except-qxb.js --interactive
- * 
+ *
  *   # Automatic mode (disable all except quantum-x-builder)
  *   node scripts/disable-workflows-except-qxb.js --auto
- * 
+ *
  *   # Specify owner/org
  *   node scripts/disable-workflows-except-qxb.js --owner InfinityXOneSystems --auto
- * 
+ *
  * Environment Variables:
  *   GITHUB_TOKEN - GitHub Personal Access Token (required)
  *   GITHUB_OWNER - Default owner/org (optional, defaults to authenticated user)
@@ -130,8 +130,8 @@ function githubRequest(path, method = 'GET', data = null, token) {
       method: method,
       headers: {
         'User-Agent': 'quantum-x-builder-workflow-script/1.0',
-        'Accept': 'application/vnd.github+json',
-        'Authorization': `Bearer ${token}`,
+        Accept: 'application/vnd.github+json',
+        Authorization: `Bearer ${token}`,
         'X-GitHub-Api-Version': '2022-11-28',
       },
     };
@@ -142,9 +142,9 @@ function githubRequest(path, method = 'GET', data = null, token) {
       options.headers['Content-Length'] = Buffer.byteLength(jsonData);
     }
 
-    const req = https.request(options, (res) => {
+    const req = https.request(options, res => {
       let body = '';
-      res.on('data', (chunk) => body += chunk);
+      res.on('data', chunk => (body += chunk));
       res.on('end', () => {
         try {
           const parsed = body ? JSON.parse(body) : {};
@@ -177,7 +177,7 @@ async function getAuthenticatedUser(token) {
 // List all repositories for user/org
 async function listRepositories(owner, token) {
   console.log(colorize(`\n📋 Fetching repositories for: ${owner}...`, 'blue'));
-  
+
   let allRepos = [];
   let page = 1;
   let hasMore = true;
@@ -192,10 +192,10 @@ async function listRepositories(owner, token) {
     } else {
       path = `/users/${owner}/repos?per_page=100&page=${page}`;
     }
-    
+
     try {
       const repos = await githubRequest(path, 'GET', null, token);
-      
+
       if (repos.length === 0) {
         hasMore = false;
       } else {
@@ -254,7 +254,9 @@ async function disableActions(owner, repo, token, dryRun = false) {
     console.log(colorize(`  ✅ Disabled Actions for: ${owner}/${repo}`, 'green'));
     return true;
   } catch (err) {
-    console.error(colorize(`  ❌ Failed to disable Actions for ${owner}/${repo}: ${err.message}`, 'red'));
+    console.error(
+      colorize(`  ❌ Failed to disable Actions for ${owner}/${repo}: ${err.message}`, 'red')
+    );
     return false;
   }
 }
@@ -266,8 +268,8 @@ function askConfirmation(question) {
     output: process.stdout,
   });
 
-  return new Promise((resolve) => {
-    rl.question(question, (answer) => {
+  return new Promise(resolve => {
+    rl.question(question, answer => {
       rl.close();
       resolve(answer.toLowerCase().trim() === 'y' || answer.toLowerCase().trim() === 'yes');
     });
@@ -276,15 +278,21 @@ function askConfirmation(question) {
 
 // Main execution
 async function main() {
-  console.log(colorize('\n╔════════════════════════════════════════════════════════════════╗', 'cyan'));
+  console.log(
+    colorize('\n╔════════════════════════════════════════════════════════════════╗', 'cyan')
+  );
   console.log(colorize('║   Disable GitHub Actions - Except quantum-x-builder          ║', 'cyan'));
-  console.log(colorize('╚════════════════════════════════════════════════════════════════╝\n', 'cyan'));
+  console.log(
+    colorize('╚════════════════════════════════════════════════════════════════╝\n', 'cyan')
+  );
 
   const args = parseArgs();
 
   // Validate token
   if (!args.token) {
-    console.error(colorize('❌ Error: GITHUB_TOKEN environment variable or --token argument required', 'red'));
+    console.error(
+      colorize('❌ Error: GITHUB_TOKEN environment variable or --token argument required', 'red')
+    );
     console.log(colorize('\nGet a token at: https://github.com/settings/tokens', 'blue'));
     console.log(colorize('Required scopes: repo, workflow\n', 'blue'));
     process.exit(1);
@@ -294,23 +302,24 @@ async function main() {
     // Get authenticated user
     const user = await getAuthenticatedUser(args.token);
     const owner = args.owner || user.login;
-    
+
     console.log(colorize(`🔐 Authenticated as: ${user.login}`, 'green'));
     console.log(colorize(`📁 Target owner: ${owner}`, 'blue'));
     console.log(colorize(`🛡️  Protected repository: quantum-x-builder`, 'green'));
-    console.log(colorize(`⚙️  Mode: ${args.dryRun ? 'DRY RUN' : args.interactive ? 'INTERACTIVE' : 'AUTO'}`, 'yellow'));
+    console.log(
+      colorize(
+        `⚙️  Mode: ${args.dryRun ? 'DRY RUN' : args.interactive ? 'INTERACTIVE' : 'AUTO'}`,
+        'yellow'
+      )
+    );
 
     // List all repositories
     const repos = await listRepositories(owner, args.token);
 
     // Filter out excluded repositories
-    const targetRepos = repos.filter(repo => 
-      !EXCLUDED_REPOS.includes(repo.name.toLowerCase())
-    );
+    const targetRepos = repos.filter(repo => !EXCLUDED_REPOS.includes(repo.name.toLowerCase()));
 
-    const excludedRepos = repos.filter(repo => 
-      EXCLUDED_REPOS.includes(repo.name.toLowerCase())
-    );
+    const excludedRepos = repos.filter(repo => EXCLUDED_REPOS.includes(repo.name.toLowerCase()));
 
     console.log(colorize(`\n📊 Repository Summary:`, 'blue'));
     console.log(colorize(`   Total repositories: ${repos.length}`, 'blue'));
@@ -332,7 +341,7 @@ async function main() {
     // Check which repos have Actions enabled
     console.log(colorize(`\n🔍 Checking which repositories have Actions enabled...`, 'blue'));
     const reposWithActions = [];
-    
+
     for (const repo of targetRepos) {
       try {
         const enabled = await isActionsEnabled(owner, repo.name, args.token);
@@ -343,7 +352,9 @@ async function main() {
           console.log(colorize(`   • ${repo.full_name} - Actions already disabled`, 'cyan'));
         }
       } catch (err) {
-        console.error(colorize(`   • ${repo.full_name} - Error checking status: ${err.message}`, 'red'));
+        console.error(
+          colorize(`   • ${repo.full_name} - Error checking status: ${err.message}`, 'red')
+        );
       }
     }
 
@@ -352,7 +363,9 @@ async function main() {
       return;
     }
 
-    console.log(colorize(`\n📋 Found ${reposWithActions.length} repositories with Actions enabled`, 'yellow'));
+    console.log(
+      colorize(`\n📋 Found ${reposWithActions.length} repositories with Actions enabled`, 'yellow')
+    );
 
     // Confirm before proceeding (unless dry-run or auto)
     if (!args.dryRun && !args.auto) {
@@ -395,11 +408,19 @@ async function main() {
     }
 
     // Summary
-    console.log(colorize('\n╔════════════════════════════════════════════════════════════════╗', 'cyan'));
-    console.log(colorize('║                    Operation Summary                          ║', 'cyan'));
-    console.log(colorize('╚════════════════════════════════════════════════════════════════╝', 'cyan'));
+    console.log(
+      colorize('\n╔════════════════════════════════════════════════════════════════╗', 'cyan')
+    );
+    console.log(
+      colorize('║                    Operation Summary                          ║', 'cyan')
+    );
+    console.log(
+      colorize('╚════════════════════════════════════════════════════════════════╝', 'cyan')
+    );
     console.log(colorize(`\n📊 Results:`, 'blue'));
-    console.log(colorize(`   ${args.dryRun ? 'Would disable' : 'Disabled'}: ${successCount}`, 'green'));
+    console.log(
+      colorize(`   ${args.dryRun ? 'Would disable' : 'Disabled'}: ${successCount}`, 'green')
+    );
     if (failedCount > 0) {
       console.log(colorize(`   Failed: ${failedCount}`, 'red'));
     }
@@ -409,11 +430,15 @@ async function main() {
     console.log(colorize(`   Protected: ${excludedRepos.length} (quantum-x-builder)`, 'green'));
 
     if (args.dryRun) {
-      console.log(colorize('\n💡 This was a dry run. Use --auto or --interactive to apply changes.\n', 'yellow'));
+      console.log(
+        colorize(
+          '\n💡 This was a dry run. Use --auto or --interactive to apply changes.\n',
+          'yellow'
+        )
+      );
     } else {
       console.log(colorize('\n✅ Operation completed successfully!\n', 'green'));
     }
-
   } catch (err) {
     console.error(colorize(`\n❌ Error: ${err.message}\n`, 'red'));
     console.error(err.stack);

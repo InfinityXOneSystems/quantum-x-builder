@@ -1,10 +1,10 @@
 ﻿{
-    "github_event":  null,
-    "timestamp":  "2026-02-06T22:10:34.6524004-05:00",
-    "github_ref":  null,
-    "phase_status":  "locked_paused",
-    "reason":  "Allowed",
-    "verdict":  "PASS",
-    "phase":  "5",
-    "hash":  "4BD843AE69D7E3DF7C96BFB4AE003F0DE90B541540FF61DF284C2C57BEEF0196"
+  "github_event": null,
+  "timestamp": "2026-02-06T22:10:34.6524004-05:00",
+  "github_ref": null,
+  "phase_status": "locked_paused",
+  "reason": "Allowed",
+  "verdict": "PASS",
+  "phase": "5",
+  "hash": "4BD843AE69D7E3DF7C96BFB4AE003F0DE90B541540FF61DF284C2C57BEEF0196"
 }

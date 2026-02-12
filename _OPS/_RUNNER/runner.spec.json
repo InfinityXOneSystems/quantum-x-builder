@@ -1,7 +1,7 @@
 {
-    "gate":  "AUTONOMY_OFF",
-    "runner":  "self-hosted",
-    "execution":  "disabled",
-    "trust":  "zero-trust",
-    "permissions":  "read-only"
+  "gate": "AUTONOMY_OFF",
+  "runner": "self-hosted",
+  "execution": "disabled",
+  "trust": "zero-trust",
+  "permissions": "read-only"
 }

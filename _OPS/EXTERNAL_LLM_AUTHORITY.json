@@ -1,20 +1,8 @@
 ﻿{
   "authority": "external_llm",
-  "allowed_agents": [
-    "chatgpt",
-    "gemini"
-  ],
-  "capabilities": [
-    "analyze",
-    "propose",
-    "coordinate",
-    "log_intent"
-  ],
-  "forbidden": [
-    "direct_execution",
-    "infra_mutation",
-    "account_changes"
-  ],
+  "allowed_agents": ["chatgpt", "gemini"],
+  "capabilities": ["analyze", "propose", "coordinate", "log_intent"],
+  "forbidden": ["direct_execution", "infra_mutation", "account_changes"],
   "execution_path": "via_repo_and_copilot_only",
   "phase": 6,
   "timestamp": "' + (Get-Date -Format o) + '"

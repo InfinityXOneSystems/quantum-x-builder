@@ -2,7 +2,7 @@
 # Cloudflare Tunnel Configuration
 # vizual-x.com - Zero Trust Network Access
 # ============================================================================
-# 
+#
 # This configuration enables authenticated tunnel access to Vizual-X services
 # through Cloudflare's Zero Trust platform.
 #
@@ -17,7 +17,7 @@
 
 # Tunnel configuration
 tunnel: vizual-x-production
-credentials-file: /path/to/credentials.json  # Replace with actual path
+credentials-file: /path/to/credentials.json # Replace with actual path
 logfile: /var/log/cloudflared/tunnel.log
 loglevel: info
 
@@ -33,12 +33,12 @@ ingress:
       tcpKeepAlive: 30s
       noTLSVerify: false
       disableChunkedEncoding: false
-      
+
   - hostname: www.vizual-x.com
     service: http://localhost:3000
     originRequest:
       httpHostHeader: www.vizual-x.com
-      
+
   # API routes (protected by IAP)
   - hostname: api.vizual-x.com
     service: http://localhost:8787
@@ -52,7 +52,7 @@ ingress:
         X-Forwarded-Proto: https
         X-Real-IP: true
         X-Forwarded-For: true
-      
+
   # Agent routes (protected by IAP)
   - hostname: agent.vizual-x.com
     service: http://localhost:8787
@@ -65,17 +65,17 @@ ingress:
         X-Forwarded-Proto: https
         X-Real-IP: true
         X-Forwarded-For: true
-      
+
   # Health check endpoint
   - hostname: health.vizual-x.com
     service: http://localhost:3000/health
-    
+
   # Metrics endpoint (internal only)
   - hostname: metrics.vizual-x.com
     service: http://localhost:8787/metrics
     originRequest:
       connectTimeout: 30s
-      
+
   # Default catch-all (return 404)
   - service: http_status:404
 
@@ -86,26 +86,26 @@ originRequest:
   tcpKeepAlive: 30s
   noTLSVerify: false
   disableChunkedEncoding: false
-  
+
 # Connection pool configuration
 proxy-service-monitor:
   enabled: true
-  
+
 # Health check configuration
 features:
   - protocol: http2
   - ipv6: true
   - gracefulShutdown: true
-  
+
 # Metrics and diagnostics
 metrics:
   enabled: true
-  address: "127.0.0.1:7834"
+  address: '127.0.0.1:7834'
   readTimeout: 30s
   writeTimeout: 30s
-  
+
 # Advanced settings
-max-fetch-size: 4294967296  # 4GB max request/response size
+max-fetch-size: 4294967296 # 4GB max request/response size
 keep-alive-connections: 32
 keep-alive-timeout: 30s
 
@@ -115,32 +115,32 @@ tls:
   insecureSkipVerify: false
   clientauth:
     enabled: false
-    
+
 # Error reporting
 reporting:
   enabled: true
   captureErrorResponse: true
-  
+
 ---
 # DNS routing configuration (apply in Cloudflare dashboard)
-# 
+#
 # Create CNAME records pointing to your tunnel:
-# 
+#
 # Name: vizual-x.com
 # Type: CNAME
 # Content: <tunnel-id>.cfargotunnel.com
 # Proxy status: Proxied
-# 
+#
 # Name: www
 # Type: CNAME
 # Content: <tunnel-id>.cfargotunnel.com
 # Proxy status: Proxied
-# 
+#
 # Name: api
 # Type: CNAME
 # Content: <tunnel-id>.cfargotunnel.com
 # Proxy status: Proxied
-# 
+#
 # Name: agent
 # Type: CNAME
 # Content: <tunnel-id>.cfargotunnel.com
@@ -153,9 +153,9 @@ reporting:
 
 ---
 # Access Policy Configuration
-# 
+#
 # In Cloudflare Zero Trust > Applications:
-# 
+#
 # Application 1: API Gateway
 #   Domain: api.vizual-x.com
 #   Auth Type: OAuth 2.0 (Google)

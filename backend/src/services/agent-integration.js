@@ -3,7 +3,7 @@
  * Connects NLC commands to actual agent execution
  */
 
-import { execSync } from 'child_process';
+import { execFileSync } from 'child_process';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -112,12 +112,25 @@ export async function startAgent(agentName) {
 
   const scriptPath = path.join(REPO_ROOT, agent.script);
 
-  // Execute agent script
+  // Validate script path to prevent path traversal
+  const resolvedPath = path.resolve(scriptPath);
+  if (!resolvedPath.startsWith(REPO_ROOT)) {
+    throw new Error('Invalid script path: path traversal detected');
+  }
+
+  // Verify script file exists
+  try {
+    await fs.access(resolvedPath);
+  } catch {
+    throw new Error(`Script not found: ${agent.script}`);
+  }
+
+  // Execute agent script using execFileSync for security (prevents shell injection)
   try {
     broadcastActivity(`Starting ${agent.name}...`);
     broadcastAgentStatus(agentName, 'starting');
 
-    const output = execSync(`node ${scriptPath}`, {
+    const output = execFileSync('node', [resolvedPath], {
       cwd: REPO_ROOT,
       encoding: 'utf-8',
       stdio: 'pipe',

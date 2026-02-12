@@ -1,13 +1,13 @@
 {
-    "scope":  "Human-Executable Only",
-    "title":  "Phase-5 Operator Handbook",
-    "authority":  "HUMAN_ONLY",
-    "sections":  [
-                     "Unlock criteria",
-                     "Non-negotiable stop conditions",
-                     "Rollback doctrine",
-                     "Audit \u0026 evidence requirements",
-                     "Failure containment"
-                 ],
-    "autonomy":  "DISABLED"
+  "scope": "Human-Executable Only",
+  "title": "Phase-5 Operator Handbook",
+  "authority": "HUMAN_ONLY",
+  "sections": [
+    "Unlock criteria",
+    "Non-negotiable stop conditions",
+    "Rollback doctrine",
+    "Audit \u0026 evidence requirements",
+    "Failure containment"
+  ],
+  "autonomy": "DISABLED"
 }
