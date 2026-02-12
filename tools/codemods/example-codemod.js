@@ -37,6 +37,9 @@ async function runCodemod() {
     // 2. Install ts-morph: npm install --save-dev ts-morph
     // 3. Customize the codemod logic
 
+    // Verify ts-morph loaded successfully
+    console.log('ts-morph loaded successfully:', Project.name);
+
     // const project = new Project({
     //   tsConfigFilePath: './tsconfig.json',
     // });
