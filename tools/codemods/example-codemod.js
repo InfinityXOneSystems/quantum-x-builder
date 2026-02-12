@@ -44,6 +44,8 @@ async function runCodemod() {
       tsConfigFilePath: './tsconfig.json',
     });
 
+    // Note: The glob pattern uses template literal escaping ${'**'} to work around
+    // a Node.js v24 parser issue where ** in comments causes "Unexpected token" errors
     const sourceFiles = project.getSourceFiles(`tools/${'**'}/*.ts`);
 
     for (const sourceFile of sourceFiles) {
@@ -52,7 +54,7 @@ async function runCodemod() {
         // Your transformation logic here
       });
 
-      // Use the async save API (instead of saveSync) for better compatibility with ESM runtimes
+      // Changed from saveSync() to async save() for better ESM compatibility
       await sourceFile.save();
     }
 
