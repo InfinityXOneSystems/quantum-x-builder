@@ -1,6 +1,12 @@
 
 *.tsbuildinfo
 
+# Node.js dependencies
+node_modules/
+
+# Evidence artifacts
+_evidence/
+
 # Fix-All Agent runtime artifacts
 _OPS/AUDIT/fix-all-agent.log
 _OPS/AUDIT/fix-all-state.json

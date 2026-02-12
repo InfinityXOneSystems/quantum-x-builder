@@ -1,0 +1,30 @@
+name: Codemod Checks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch: {}
+
+jobs:
+  run-codemod:
+    name: Run example codemod
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run codemod script
+        run: npm run codemod
+
+      - name: Show git status (debug)
+        run: git status --porcelain || true
