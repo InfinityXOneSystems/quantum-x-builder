@@ -5,6 +5,10 @@
 node_modules/
 package-lock.json
 
+# Build artifacts and caches
+.vite/
+node_modules/.vite/
+
 # Fix-All Agent runtime artifacts
 _OPS/AUDIT/fix-all-agent.log
 _OPS/AUDIT/fix-all-state.json
