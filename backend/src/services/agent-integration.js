@@ -3,7 +3,7 @@
  * Connects NLC commands to actual agent execution
  */
 
-import { execSync } from 'child_process';
+import { execFileSync } from 'child_process';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -117,7 +117,7 @@ export async function startAgent(agentName) {
     broadcastActivity(`Starting ${agent.name}...`);
     broadcastAgentStatus(agentName, 'starting');
 
-    const output = execSync(`node ${scriptPath}`, {
+    const output = execFileSync('node', [scriptPath], {
       cwd: REPO_ROOT,
       encoding: 'utf-8',
       stdio: 'pipe',
