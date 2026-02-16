@@ -1,4 +1,4 @@
-﻿name: Quantum-X CI
+name: Quantum-X CI
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Node Setup
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 20
 
