@@ -161,7 +161,7 @@ jobs:
         if: |
           steps.changes.outputs.has_changes == 'true' && 
           (inputs.create_pr == 'true' || inputs.create_pr == '' || github.event_name == 'schedule')
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ steps.app-token.outputs.token }}
           commit-message: |
