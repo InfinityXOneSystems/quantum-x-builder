@@ -133,7 +133,7 @@ jobs:
         continue-on-error: true
       
       - name: Upload analysis results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: analysis-results
@@ -166,7 +166,7 @@ jobs:
         continue-on-error: true
       
       - name: Upload diagnostic report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: diagnostic-report
@@ -364,7 +364,7 @@ jobs:
         continue-on-error: true
       
       - name: Upload optimization report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: optimization-report
@@ -402,7 +402,7 @@ jobs:
           npm audit --json > .maintenance/npm-audit.json || true
       
       - name: Upload audit results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: security-audit

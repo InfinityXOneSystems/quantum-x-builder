@@ -277,7 +277,7 @@ jobs:
       
       - name: Upload TypeScript Error Log
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: typescript-errors-${{ github.run_number }}
           path: /tmp/tsc-errors.log
@@ -638,7 +638,7 @@ jobs:
       
       - name: Upload Test Results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-results-${{ github.run_number }}
           path: |
